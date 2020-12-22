@@ -1,0 +1,54 @@
+﻿<Window x:Class="WireGuardServerForWindows.Controls.ConfigurationEditor"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WireGuardServerForWindows.Controls"
+        xmlns:models="clr-namespace:WireGuardServerForWindows.Models"
+        mc:Ignorable="d"
+        d:DataContext="{d:DesignInstance Type=models:ServerConfiguration}"
+        Width="600" Height="500"
+        Title="Server Configuration">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0" Grid.ColumnSpan="3">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <TextBlock Margin="10" Grid.Column="0" Grid.Row="0" Text="Private Key:"/>
+            <TextBox Margin="10" Grid.Column="1" Grid.Row="0" HorizontalAlignment="Stretch" Text="{Binding PrivateKey}"
+                     IsReadOnly="True"/>
+
+            <Button Grid.Row="0" Grid.Column="2" Content="Generate" VerticalAlignment="Center" Margin="5" Padding="2"
+                    Command="{Binding Commands.GeneratePrivateKeyCommand}"/>
+
+            <TextBlock Margin="10" Grid.Column="0" Grid.Row="1" Text="Listen port:"/>
+            <TextBox Margin="10" Grid.Column="1" Grid.Row="1" Text="{Binding ListenPort}"/>
+
+            <TextBlock Margin="10" Grid.Column="0" Grid.Row="2" Text="Address:"/>
+            <TextBox Margin="10" Grid.Column="1" Grid.Row="2" Text="{Binding Address}"/>
+        </Grid>
+
+        <Button Grid.Column="1" Grid.Row="1" Margin="10" Padding="10,5,10,5" HorizontalAlignment="Right" Content="Cancel" Click="CancelButton_Click"/>
+        <Button Grid.Column="2" Grid.Row="1" Margin="10" Padding="10,5,10,5" HorizontalAlignment="Right" Content="Save" Click="SaveButton_Click"/>
+    </Grid>
+</Window>

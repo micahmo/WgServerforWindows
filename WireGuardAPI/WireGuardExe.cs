@@ -14,15 +14,13 @@ namespace WireGuardAPI
 
         public WireGuardExe()
         {
-            // Upon construction, make sure that we can find the exe in the path.
-            _path = GetPath();
         }
 
         #endregion
 
         #region Private methods
 
-        private string GetPath()
+        private string GetPath(string whichExe)
         {
             string result = default;
 
@@ -31,7 +29,7 @@ namespace WireGuardAPI
             {
                 foreach (string path in pathEnv.Split(';'))
                 {
-                    string wireGuardExePath = Path.Combine(path, "wireguard.exe");
+                    string wireGuardExePath = Path.Combine(path, whichExe);
                     if (File.Exists(wireGuardExePath))
                     {
                         result = wireGuardExePath;
@@ -47,26 +45,37 @@ namespace WireGuardAPI
 
         #region Public properties
 
-        // Re-evaluate every time, in case it gets installed (or UNinstalled) after we're instantiated
-        public bool Exists => string.IsNullOrEmpty(_path = GetPath()) == false;
-
-        #endregion
-        
-        #region Private fields
-
-        private string _path;
+        public bool Exists => string.IsNullOrEmpty(GetPath("wireguard.exe")) == false;
 
         #endregion
 
         #region Public methods
 
-        public void ExecuteCommand(WireGuardCommand command)
+        public string ExecuteCommand(WireGuardCommand command)
         {
+            string result = default;
+
             switch (command.WhichExe)
             {
                 case WhichExe.WireGuardExe:
                     break;
                 case WhichExe.WGExe:
+                    Process process = new Process
+                    {
+                        StartInfo = new ProcessStartInfo
+                        {
+                            FileName = GetPath("wg.exe"),
+                            Arguments = string.Join(' ', new[] {command.Switch}.Union(command.Args ?? Enumerable.Empty<string>())),
+                            RedirectStandardOutput = true,
+                            CreateNoWindow = true,
+                        }
+                    };
+
+                    process.Start();
+                    process.WaitForExit();
+
+                    result = process.StandardOutput.ReadToEnd().Trim();
+
                     break;
                 case WhichExe.Custom:
                     Process.Start(new ProcessStartInfo
@@ -78,6 +87,8 @@ namespace WireGuardAPI
                     })?.WaitForExit();
                     break;
             }
+
+            return result;
         }
 
         #endregion

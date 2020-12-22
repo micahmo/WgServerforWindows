@@ -1,28 +1,33 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Input;
 using WireGuardAPI;
-using WireGuardServerForWindows.Models;
 
-namespace WireGuardServerForWindows
+namespace WireGuardServerForWindows.Models
 {
     public class WireGuardExePrerequisite : PrerequisiteItem
     {
-        public WireGuardExePrerequisite()
+        public WireGuardExePrerequisite() : base
+        (
+            title: "WireGuard.exe",
+            successMessage: "Found WireGuard.exe in PATH.",
+            errorMessage: "WireGuard.exe is not found in the PATH. It must be downloaded and installed.",
+            resolveText: "Download and install WireGuard",
+            configureText: "Uninstall WireGuard"
+        )
         {
-            Title = "WireGuard.exe";
-            SuccessMessage = "Found WireGuard.exe in PATH.";
-            ErrorMessage = "WireGuard.exe is not found in the PATH. It must be downloaded and installed.";
-            ResolveText = "Download and install WireGuard";
-            ConfigureText = "Uninstall WireGuard";
+        }
 
-            _wireGuardExe = new WireGuardExe();
-            Fulfilled = _wireGuardExe.Exists;
+        public override bool Fulfilled
+        {
+            get
+            {
+                _wireGuardExe ??= new WireGuardExe();
+                return _wireGuardExe.Exists;
+            }
         }
 
         public override void Resolve()
@@ -57,17 +62,13 @@ namespace WireGuardServerForWindows
         {
             while (!Fulfilled)
             {
-                Refresh();
                 await Task.Delay((int)TimeSpan.FromSeconds(1).TotalMilliseconds);
             }
-        }
 
-        public override void Refresh()
-        {
-            Fulfilled = _wireGuardExe.Exists;
+            Refresh();
         }
 
         private readonly string wireGuardExeDownload = @"https://download.wireguard.com/windows-client/wireguard-installer.exe";
-        private readonly WireGuardExe _wireGuardExe;
+        private WireGuardExe _wireGuardExe;
     }
 }

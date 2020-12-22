@@ -8,9 +8,16 @@ namespace WireGuardServerForWindows.Models
     {
         #region Constructor
 
-        protected PrerequisiteItem()
+        protected PrerequisiteItem(string title, string successMessage, string errorMessage, string resolveText, string configureText)
         {
+            Title = title;
+            SuccessMessage = successMessage;
+            ErrorMessage = errorMessage;
+            ResolveText = resolveText;
+            ConfigureText = configureText;
             Commands = new PrerequisiteItemCommands(this);
+
+            Refresh();
         }
 
         #endregion
@@ -26,12 +33,7 @@ namespace WireGuardServerForWindows.Models
         }
         private string _title;
 
-        public bool Fulfilled
-        {
-            get => _fulfilled;
-            set => Set(nameof(Fulfilled), ref _fulfilled, value);
-        }
-        private bool _fulfilled;
+        public abstract bool Fulfilled { get; }
 
         public string SuccessMessage
         {
@@ -69,7 +71,10 @@ namespace WireGuardServerForWindows.Models
 
         public abstract void Configure();
 
-        public abstract void Refresh();
+        public void Refresh()
+        {
+            RaisePropertyChanged(nameof(Fulfilled));
+        }
 
         #endregion
     }

@@ -14,6 +14,7 @@ namespace WireGuardServerForWindows
 
             MainWindowModel mainWindowModel = new MainWindowModel();
             mainWindowModel.PrerequisiteItems.Add(new WireGuardExePrerequisite());
+            mainWindowModel.PrerequisiteItems.Add(new ServerConfigurationPrerequisite());
             DataContext = Model = mainWindowModel;
         }
 
