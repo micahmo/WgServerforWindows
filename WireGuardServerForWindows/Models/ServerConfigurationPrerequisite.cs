@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Windows.Input;
 using WireGuardAPI;
 using WireGuardServerForWindows.Controls;
 
@@ -16,14 +17,38 @@ namespace WireGuardServerForWindows.Models
             configureText: "Edit server configuration"
         ) { }
 
-        public override bool Fulfilled => File.Exists(_configurationPath);
+        public override bool Fulfilled
+        {
+            get
+            {
+                bool result = true;
+
+                if (File.Exists(_configurationPath) == false)
+                {
+                    result = false;
+                    ErrorMessage = "Server configuration file (.conf) not found.";
+                }
+                else
+                {
+                    // The file exists, make sure it has all the fields
+                    ServerConfiguration serverConfiguration = new ServerConfiguration(new WireGuardExe()).Load(_configurationPath);
+                    if (string.IsNullOrEmpty(serverConfiguration.Validate()) == false)
+                    {
+                        result = false;
+                        ErrorMessage = "Server configuration not completed. Some fields are missing or incorrect.";
+                    }
+                }
+
+                return result;
+            }
+        }
 
         public override void Resolve()
         {
             if (File.Exists(_configurationPath) == false)
             {
                 Directory.CreateDirectory(Path.GetDirectoryName(_configurationPath));
-                File.Create(_configurationPath);
+                using (File.Create(_configurationPath));
             }
 
             Configure();
@@ -35,8 +60,12 @@ namespace WireGuardServerForWindows.Models
             ConfigurationEditor configurationEditor = new ConfigurationEditor { DataContext = serverConfiguration };
             if (configurationEditor.ShowDialog() == true)
             {
+                Mouse.OverrideCursor = Cursors.Wait;
                 serverConfiguration.Save(_configurationPath);
+                Mouse.OverrideCursor = null;
             }
+
+            Refresh();
         }
 
         #region Private fields

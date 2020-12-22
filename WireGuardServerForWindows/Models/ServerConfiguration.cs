@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Reflection;
 using System.Text;
 using System.Windows.Input;
@@ -12,7 +14,7 @@ using WireGuardAPI.Commands;
 
 namespace WireGuardServerForWindows.Models
 {
-    public class ServerConfiguration : ObservableObject
+    public class ServerConfiguration : ObservableObject, IDataErrorInfo
     {
         public ServerConfiguration(WireGuardExe wireGuardExe)
             => (WireGuardExe, Commands) = (wireGuardExe, new ServerConfigurationCommands(this));
@@ -21,7 +23,7 @@ namespace WireGuardServerForWindows.Models
         {
             foreach (string line in File.ReadAllLines(configurationFilePath))
             {
-                List<string> parts = line.Split('=', StringSplitOptions.RemoveEmptyEntries).Select(str => str.Trim()).ToList();
+                List<string> parts = line.Split('=', 2, StringSplitOptions.RemoveEmptyEntries).Select(str => str.Trim()).ToList();
                 string propertyName = parts.FirstOrDefault();
                 string value = parts.LastOrDefault();
 
@@ -42,7 +44,7 @@ namespace WireGuardServerForWindows.Models
             fileContents.AppendLine("#Server config");
             fileContents.AppendLine("[Interface]");
 
-            foreach (PropertyInfo property in GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public))
+            foreach (PropertyInfo property in GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public).Where(prop => Attribute.IsDefined(prop, typeof(ServerConfigPropertyAttribute))))
             {
                 fileContents.AppendLine($"{property.Name} = {property.GetValue(this)}");
             }
@@ -76,13 +78,69 @@ namespace WireGuardServerForWindows.Models
             get => _address;
             set => Set(nameof(Address), ref _address, value);
         }
-        private string _address;
+        private string _address = "192.168.1.1/24";
 
         #endregion
 
         #region Internal properties
 
         internal WireGuardExe WireGuardExe { get; }
+
+        #endregion
+
+        #region IDataErrorInfo members
+
+        // Not used by WPF binding validation
+        public string Error => throw new NotImplementedException();
+
+        public string this[string columnName]
+        {
+            get
+            {
+                string result = default;
+                
+                switch (columnName)
+                {
+                    case nameof(PrivateKey):
+                        if (string.IsNullOrEmpty(PrivateKey))
+                        {
+                            result = "Private key must not be empty";
+                        }
+                        break;
+                    case nameof(ListenPort):
+                        if (int.TryParse(ListenPort, out int port))
+                        {
+                            if (port < 0 || port > 65535)
+                            {
+                                result = "Port must be between 0 and 65535.";
+                            }
+                        }
+                        else
+                        {
+                            result = "Port must be numerical.";
+                        }
+                        break;
+                    case nameof(Address):
+                        if (IPNetwork.TryParse(Address, out _) == false)
+                        {
+                            result = "Network must be in valid CIDR notation. For example: 192.168.1.1/24";
+                        }
+                        break;
+                    default:
+                        break;
+                }
+
+                return result;
+            }
+        }
+
+        /// <summary>
+        /// Validates all fields. Returns null if all fields pass. Returns the first error if not.
+        /// </summary>
+        public string Validate()
+        {
+            return this[nameof(PrivateKey)] ?? this[nameof(ListenPort)] ?? this[nameof(Address)];
+        }
 
         #endregion
     }
