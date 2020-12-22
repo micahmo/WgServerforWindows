@@ -1,4 +1,6 @@
-﻿using System.Windows.Input;
+﻿using System;
+using System.Threading.Tasks;
+using System.Windows.Input;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 
@@ -74,6 +76,21 @@ namespace WireGuardServerForWindows.Models
         public void Refresh()
         {
             RaisePropertyChanged(nameof(Fulfilled));
+        }
+
+        public async void WaitForFulfilled()
+        {
+            await WaitForFulfilled(true);
+        }
+
+        public async Task WaitForFulfilled(bool value)
+        {
+            while (Fulfilled != value)
+            {
+                await Task.Delay((int) TimeSpan.FromSeconds(1).TotalMilliseconds);
+            }
+
+            Refresh();
         }
 
         #endregion

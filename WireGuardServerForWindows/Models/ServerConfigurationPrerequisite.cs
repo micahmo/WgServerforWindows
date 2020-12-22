@@ -23,7 +23,7 @@ namespace WireGuardServerForWindows.Models
             {
                 bool result = true;
 
-                if (File.Exists(_configurationPath) == false)
+                if (File.Exists(ConfigurationPath) == false)
                 {
                     result = false;
                     ErrorMessage = "Server configuration file (.conf) not found.";
@@ -31,7 +31,7 @@ namespace WireGuardServerForWindows.Models
                 else
                 {
                     // The file exists, make sure it has all the fields
-                    ServerConfiguration serverConfiguration = new ServerConfiguration(new WireGuardExe()).Load(_configurationPath);
+                    ServerConfiguration serverConfiguration = new ServerConfiguration(new WireGuardExe()).Load(ConfigurationPath);
                     if (string.IsNullOrEmpty(serverConfiguration.Validate()) == false)
                     {
                         result = false;
@@ -45,10 +45,10 @@ namespace WireGuardServerForWindows.Models
 
         public override void Resolve()
         {
-            if (File.Exists(_configurationPath) == false)
+            if (File.Exists(ConfigurationPath) == false)
             {
-                Directory.CreateDirectory(Path.GetDirectoryName(_configurationPath));
-                using (File.Create(_configurationPath));
+                Directory.CreateDirectory(Path.GetDirectoryName(ConfigurationPath));
+                using (File.Create(ConfigurationPath));
             }
 
             Configure();
@@ -56,21 +56,21 @@ namespace WireGuardServerForWindows.Models
 
         public override void Configure()
         {
-            ServerConfiguration serverConfiguration = new ServerConfiguration(new WireGuardExe()).Load(_configurationPath);
+            ServerConfiguration serverConfiguration = new ServerConfiguration(new WireGuardExe()).Load(ConfigurationPath);
             ConfigurationEditor configurationEditor = new ConfigurationEditor { DataContext = serverConfiguration };
             if (configurationEditor.ShowDialog() == true)
             {
                 Mouse.OverrideCursor = Cursors.Wait;
-                serverConfiguration.Save(_configurationPath);
+                serverConfiguration.Save(ConfigurationPath);
                 Mouse.OverrideCursor = null;
             }
 
             Refresh();
         }
 
-        #region Private fields
+        #region Public properties
 
-        private string _configurationPath => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "WS4W", "wg_server.conf");
+        public string ConfigurationPath => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "WS4W", "wg_server.conf");
 
         #endregion
     }

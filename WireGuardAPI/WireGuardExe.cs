@@ -20,16 +20,22 @@ namespace WireGuardAPI
 
         #region Private methods
 
-        private string GetPath(string whichExe)
+        private string GetPath(WhichExe whichExe)
         {
             string result = default;
+
+            string fileName = whichExe switch
+            {
+                WhichExe.WireGuardExe => "wireguard.exe",
+                WhichExe.WGExe => "wg.exe"
+            };
 
             // Must use EnvironmentVariableTarget.Machine so that we always get the latest variables, even if they change after our process starts.
             if (Environment.GetEnvironmentVariable("path", EnvironmentVariableTarget.Machine) is string pathEnv)
             {
                 foreach (string path in pathEnv.Split(';'))
                 {
-                    string wireGuardExePath = Path.Combine(path, whichExe);
+                    string wireGuardExePath = Path.Combine(path, fileName);
                     if (File.Exists(wireGuardExePath))
                     {
                         result = wireGuardExePath;
@@ -45,7 +51,7 @@ namespace WireGuardAPI
 
         #region Public properties
 
-        public bool Exists => string.IsNullOrEmpty(GetPath("wireguard.exe")) == false;
+        public bool Exists => string.IsNullOrEmpty(GetPath(WhichExe.WireGuardExe)) == false;
 
         #endregion
 
@@ -58,23 +64,35 @@ namespace WireGuardAPI
             switch (command.WhichExe)
             {
                 case WhichExe.WireGuardExe:
-                    break;
                 case WhichExe.WGExe:
                     Process process = new Process
                     {
                         StartInfo = new ProcessStartInfo
                         {
-                            FileName = GetPath("wg.exe"),
-                            Arguments = string.Join(' ', new[] {command.Switch}.Union(command.Args ?? Enumerable.Empty<string>())),
-                            RedirectStandardOutput = true,
-                            CreateNoWindow = true,
+                            FileName = GetPath(command.WhichExe),
+                            Arguments = string.Join(' ', new[] {command.Switch}.Union(command.Args ?? Enumerable.Empty<string>()))
                         }
                     };
+
+                    switch (command.Mode)
+                    {
+                        case Mode.CaptureOutput:
+                            process.StartInfo.RedirectStandardOutput = true;
+                            process.StartInfo.CreateNoWindow = true;
+                            break;
+                        case Mode.RunAsAdministrator:
+                            process.StartInfo.Verb = "runas";
+                            process.StartInfo.UseShellExecute = true;
+                            break;
+                    }
 
                     process.Start();
                     process.WaitForExit();
 
-                    result = process.StandardOutput.ReadToEnd().Trim();
+                    if (command.Mode == Mode.CaptureOutput)
+                    {
+                        result = process.StandardOutput.ReadToEnd().Trim();
+                    }
 
                     break;
                 case WhichExe.Custom:

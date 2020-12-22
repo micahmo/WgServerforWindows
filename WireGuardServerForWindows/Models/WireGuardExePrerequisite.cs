@@ -43,7 +43,7 @@ namespace WireGuardServerForWindows.Models
                 UseShellExecute = true // Must be true to use "runas"
             });
 
-            Task.Run(WaitForWireGuardProcess);
+            Task.Run(WaitForFulfilled);
 
             Mouse.OverrideCursor = null;
         }
@@ -56,16 +56,6 @@ namespace WireGuardServerForWindows.Models
             Refresh();
 
             Mouse.OverrideCursor = null;
-        }
-
-        private async void WaitForWireGuardProcess()
-        {
-            while (!Fulfilled)
-            {
-                await Task.Delay((int)TimeSpan.FromSeconds(1).TotalMilliseconds);
-            }
-
-            Refresh();
         }
 
         private readonly string wireGuardExeDownload = @"https://download.wireguard.com/windows-client/wireguard-installer.exe";

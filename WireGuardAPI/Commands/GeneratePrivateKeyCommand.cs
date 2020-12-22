@@ -5,7 +5,9 @@
         public GeneratePrivateKeyCommand() : base
         (
             @switch: "genkey",
-            whichExe: WhichExe.WGExe)
+            whichExe: WhichExe.WGExe,
+            mode: Mode.CaptureOutput
+        )
         {
         }
     }
