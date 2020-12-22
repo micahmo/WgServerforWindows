@@ -1,0 +1,29 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <ApplicationIcon>logo.ico</ApplicationIcon>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Images\cancel.png" />
+    <None Remove="Images\checked.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CalcBinding" Version="2.5.2" />
+    <PackageReference Include="MvvmLightLibs" Version="5.3.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\WireGuardAPI\WireGuardAPI.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Images\cancel.png" />
+    <Resource Include="Images\checked.png" />
+  </ItemGroup>
+
+</Project>
