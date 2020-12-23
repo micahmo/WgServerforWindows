@@ -10,7 +10,7 @@
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance Type=models:ServerConfiguration}"
         Width="600" Height="250"
-        Title="Server Configuration">
+        Title="{x:Static properties:Resources.ServerConfiguration}">
     
     <Window.Resources>
         <converters:ResourceStringConverter x:Key="ResourceStringConverter"/>
@@ -98,7 +98,7 @@
             </ItemsControl>
         </ScrollViewer>
 
-        <Button Grid.Column="1" Grid.Row="1" Margin="10,10,5,10" Padding="10,5,10,5" HorizontalAlignment="Right" Content="Cancel" Click="CancelButton_Click"/>
-        <Button Grid.Column="2" Grid.Row="1" Margin="5,10,10,10" Padding="10,5,10,5" HorizontalAlignment="Right" Content="Save" Click="SaveButton_Click"/>
+        <Button Grid.Column="1" Grid.Row="1" Margin="10,10,5,10" Padding="10,5,10,5" HorizontalAlignment="Right" Content="{x:Static properties:Resources.Cancel}" Click="CancelButton_Click"/>
+        <Button Grid.Column="2" Grid.Row="1" Margin="5,10,10,10" Padding="10,5,10,5" HorizontalAlignment="Right" Content="{x:Static properties:Resources.Save}" Click="SaveButton_Click"/>
     </Grid>
 </Window>

@@ -70,6 +70,33 @@ namespace WireGuardServerForWindows.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Cancel.
+        /// </summary>
+        public static string Cancel {
+            get {
+                return ResourceManager.GetString("Cancel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Install tunnel service.
+        /// </summary>
+        public static string InstallTunnelService {
+            get {
+                return ResourceManager.GetString("InstallTunnelService", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Download and install WireGuard.
+        /// </summary>
+        public static string InstallWireGuard {
+            get {
+                return ResourceManager.GetString("InstallWireGuard", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Listen Port.
         /// </summary>
         public static string ListenPortProperty {
@@ -142,6 +169,114 @@ namespace WireGuardServerForWindows.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Save.
+        /// </summary>
+        public static string Save {
+            get {
+                return ResourceManager.GetString("Save", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Server Configuration.
+        /// </summary>
+        public static string ServerConfiguration {
+            get {
+                return ResourceManager.GetString("ServerConfiguration", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Edit server configuration.
+        /// </summary>
+        public static string ServerConfigurationConfigureText {
+            get {
+                return ResourceManager.GetString("ServerConfigurationConfigureText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Server configuration not completed. Some fields are missing or incorrect..
+        /// </summary>
+        public static string ServerConfigurationIncompleteErrorMessage {
+            get {
+                return ResourceManager.GetString("ServerConfigurationIncompleteErrorMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Server configuration file (.conf) not found..
+        /// </summary>
+        public static string ServerConfigurationMissingErrorMessage {
+            get {
+                return ResourceManager.GetString("ServerConfigurationMissingErrorMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Create and edit server configuration.
+        /// </summary>
+        public static string ServerConfigurationResolveText {
+            get {
+                return ResourceManager.GetString("ServerConfigurationResolveText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Server configuration file (.conf) found..
+        /// </summary>
+        public static string ServerConfigurationSuccessMessage {
+            get {
+                return ResourceManager.GetString("ServerConfigurationSuccessMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Tunnel Service.
+        /// </summary>
+        public static string TunnelService {
+            get {
+                return ResourceManager.GetString("TunnelService", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Tunnel service installed..
+        /// </summary>
+        public static string TunnelServiceInstalled {
+            get {
+                return ResourceManager.GetString("TunnelServiceInstalled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Tunnel service not installed..
+        /// </summary>
+        public static string TunnelServiceNotInstalled {
+            get {
+                return ResourceManager.GetString("TunnelServiceNotInstalled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Uninstall tunnel service.
+        /// </summary>
+        public static string UninstallTunnelService {
+            get {
+                return ResourceManager.GetString("UninstallTunnelService", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Uninstall WireGuard.
+        /// </summary>
+        public static string UninstallWireGuard {
+            get {
+                return ResourceManager.GetString("UninstallWireGuard", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to {0}
         ///
         ///{1}.
@@ -149,6 +284,33 @@ namespace WireGuardServerForWindows.Properties {
         public static string ValidationErrorFormat {
             get {
                 return ResourceManager.GetString("ValidationErrorFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to WireGuard.exe.
+        /// </summary>
+        public static string WireGuardExe {
+            get {
+                return ResourceManager.GetString("WireGuardExe", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Found WireGuard.exe in PATH..
+        /// </summary>
+        public static string WireGuardExeFound {
+            get {
+                return ResourceManager.GetString("WireGuardExeFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to WireGuard.exe is not found in the PATH. It must be downloaded and installed..
+        /// </summary>
+        public static string WireGuardExeNotFound {
+            get {
+                return ResourceManager.GetString("WireGuardExeNotFound", resourceCulture);
             }
         }
     }

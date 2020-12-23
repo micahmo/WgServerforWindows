@@ -2,6 +2,7 @@
 using System.IO;
 using System.Windows.Input;
 using WireGuardServerForWindows.Controls;
+using WireGuardServerForWindows.Properties;
 
 namespace WireGuardServerForWindows.Models
 {
@@ -9,11 +10,11 @@ namespace WireGuardServerForWindows.Models
     {
         public ServerConfigurationPrerequisite() : base
         (
-            title: "Server Configuration",
-            successMessage: "Server configuration file (.conf) found.",
-            errorMessage: "Server configuration file (.conf) not found.",
-            resolveText: "Create and edit server configuration",
-            configureText: "Edit server configuration"
+            title: Resources.ServerConfiguration,
+            successMessage: Resources.ServerConfigurationSuccessMessage,
+            errorMessage: Resources.ServerConfigurationMissingErrorMessage,
+            resolveText: Resources.ServerConfigurationResolveText,
+            configureText: Resources.ServerConfigurationConfigureText
         ) { }
 
         public override bool Fulfilled
@@ -25,7 +26,7 @@ namespace WireGuardServerForWindows.Models
                 if (File.Exists(ConfigurationPath) == false)
                 {
                     result = false;
-                    ErrorMessage = "Server configuration file (.conf) not found.";
+                    ErrorMessage = Resources.ServerConfigurationMissingErrorMessage;
                 }
                 else
                 {
@@ -37,7 +38,7 @@ namespace WireGuardServerForWindows.Models
                         if (string.IsNullOrEmpty(property.Validation?.Validate?.Invoke(property)) == false)
                         {
                             result = false;
-                            ErrorMessage = "Server configuration not completed. Some fields are missing or incorrect.";
+                            ErrorMessage = Resources.ServerConfigurationIncompleteErrorMessage;
                             break;
                         }
                     }

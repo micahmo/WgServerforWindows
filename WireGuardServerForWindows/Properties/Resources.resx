@@ -151,4 +151,58 @@
 {1}</value>
     <comment>{0} is the original value. {1} is the validation error, shown on a separate line.</comment>
   </data>
+  <data name="ServerConfiguration" xml:space="preserve">
+    <value>Server Configuration</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="Save" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="ServerConfigurationSuccessMessage" xml:space="preserve">
+    <value>Server configuration file (.conf) found.</value>
+  </data>
+  <data name="ServerConfigurationMissingErrorMessage" xml:space="preserve">
+    <value>Server configuration file (.conf) not found.</value>
+  </data>
+  <data name="ServerConfigurationResolveText" xml:space="preserve">
+    <value>Create and edit server configuration</value>
+  </data>
+  <data name="ServerConfigurationConfigureText" xml:space="preserve">
+    <value>Edit server configuration</value>
+  </data>
+  <data name="ServerConfigurationIncompleteErrorMessage" xml:space="preserve">
+    <value>Server configuration not completed. Some fields are missing or incorrect.</value>
+  </data>
+  <data name="TunnelService" xml:space="preserve">
+    <value>Tunnel Service</value>
+  </data>
+  <data name="TunnelServiceInstalled" xml:space="preserve">
+    <value>Tunnel service installed.</value>
+  </data>
+  <data name="TunnelServiceNotInstalled" xml:space="preserve">
+    <value>Tunnel service not installed.</value>
+  </data>
+  <data name="InstallTunnelService" xml:space="preserve">
+    <value>Install tunnel service</value>
+  </data>
+  <data name="UninstallTunnelService" xml:space="preserve">
+    <value>Uninstall tunnel service</value>
+  </data>
+  <data name="WireGuardExe" xml:space="preserve">
+    <value>WireGuard.exe</value>
+  </data>
+  <data name="WireGuardExeFound" xml:space="preserve">
+    <value>Found WireGuard.exe in PATH.</value>
+  </data>
+  <data name="WireGuardExeNotFound" xml:space="preserve">
+    <value>WireGuard.exe is not found in the PATH. It must be downloaded and installed.</value>
+  </data>
+  <data name="InstallWireGuard" xml:space="preserve">
+    <value>Download and install WireGuard</value>
+  </data>
+  <data name="UninstallWireGuard" xml:space="preserve">
+    <value>Uninstall WireGuard</value>
+  </data>
 </root>

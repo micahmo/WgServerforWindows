@@ -1,10 +1,10 @@
-﻿using System;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using WireGuardAPI;
+using WireGuardServerForWindows.Properties;
 
 namespace WireGuardServerForWindows.Models
 {
@@ -12,11 +12,11 @@ namespace WireGuardServerForWindows.Models
     {
         public WireGuardExePrerequisite() : base
         (
-            title: "WireGuard.exe",
-            successMessage: "Found WireGuard.exe in PATH.",
-            errorMessage: "WireGuard.exe is not found in the PATH. It must be downloaded and installed.",
-            resolveText: "Download and install WireGuard",
-            configureText: "Uninstall WireGuard"
+            title: Resources.WireGuardExe,
+            successMessage: Resources.WireGuardExeFound,
+            errorMessage: Resources.WireGuardExeNotFound,
+            resolveText: Resources.InstallWireGuard,
+            configureText: Resources.UninstallWireGuard
         )
         {
         }

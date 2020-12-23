@@ -1,11 +1,11 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Linq;
 using System.Net.NetworkInformation;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using WireGuardAPI;
 using WireGuardAPI.Commands;
+using WireGuardServerForWindows.Properties;
 
 namespace WireGuardServerForWindows.Models
 {
@@ -13,11 +13,11 @@ namespace WireGuardServerForWindows.Models
     {
         public TunnelServicePrerequisite(ServerConfigurationPrerequisite serverConfiguration) : base
         (
-            title: "Tunnel Service",
-            successMessage: "Tunnel service installed.",
-            errorMessage: "Tunnel service not installed.",
-            resolveText: "Install tunnel service",
-            configureText: "Uninstall tunnel service"
+            title: Resources.TunnelService,
+            successMessage: Resources.TunnelServiceInstalled,
+            errorMessage: Resources.TunnelServiceNotInstalled,
+            resolveText: Resources.InstallTunnelService,
+            configureText: Resources.UninstallTunnelService
         )
         {
             _serverConfigurationPrerequisite = serverConfiguration;
