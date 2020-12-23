@@ -4,20 +4,17 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:models="clr-namespace:WireGuardServerForWindows.Models"
+        xmlns:converters="clr-namespace:WireGuardServerForWindows.Converters"
+        xmlns:properties="clr-namespace:WireGuardServerForWindows.Properties"
+        xmlns:c="clr-namespace:CalcBinding;assembly=CalcBinding"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance Type=models:ServerConfiguration}"
         Width="600" Height="250"
         Title="Server Configuration">
+    
     <Window.Resources>
-        <Style x:Key="ValidatedTextBoxStyle" TargetType="{x:Type TextBox}">
-            <Style.Triggers>
-                <Trigger Property="Validation.HasError" Value="true">
-                    <Setter Property="ToolTip"
-                            Value="{Binding RelativeSource={x:Static RelativeSource.Self},
-                        Path=(Validation.Errors)/ErrorContent}"/>
-                </Trigger>
-            </Style.Triggers>
-        </Style>
+        <converters:ResourceStringConverter x:Key="ResourceStringConverter"/>
+        <converters:MultiValueStringFormatConverter x:Key="MultiValueStringFormatConverter"/>
     </Window.Resources>
 
     <Grid>
@@ -33,35 +30,72 @@
         </Grid.RowDefinitions>
 
         <ScrollViewer Grid.Row="0" Grid.ColumnSpan="3" VerticalScrollBarVisibility="Auto">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="Auto"/>
-                </Grid.ColumnDefinitions>
+            <ItemsControl ItemsSource="{Binding Properties}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Grid Margin="10">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="4*"/>
+                                <ColumnDefinition Width="1*"/>
+                            </Grid.ColumnDefinitions>
 
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                </Grid.RowDefinitions>
+                            <TextBlock Grid.Column="0" TextTrimming="CharacterEllipsis"
+                                       Text="{Binding Name, Converter={StaticResource ResourceStringConverter}, StringFormat={x:Static properties:Resources.PropertyNameFormat}}"
+                                       ToolTip="{Binding Name, Converter={StaticResource ResourceStringConverter}}"/>
+                            <TextBox x:Name="tb" Grid.Column="1" Grid.ColumnSpan="{c:Binding 'Action=null?2:1'}"
+                                     Text="{Binding Value, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}">
+                                <TextBox.Style>
+                                    <Style TargetType="{x:Type TextBox}">
+                                        <Style.Triggers>
+                                            <Trigger Property="Validation.HasError" Value="True">
+                                                <Setter Property="ToolTip" >
+                                                    <Setter.Value>
+                                                        <!-- 
+                                                            Have to use a multivalue converter instead of a StringFormat
+                                                            Because the target of the multibinding is a ToolTip, which expects an object, not a string
+                                                            (We could set the ToolTip Content to be a TextBox and then bind in the TextBox's Text property
+                                                            but then we'd lose access to the trigger, which is in the parent ToolTip's parent.)
+                                                        -->
+                                                        <MultiBinding Converter="{StaticResource MultiValueStringFormatConverter}"
+                                                                      ConverterParameter="{x:Static properties:Resources.ValidationErrorFormat}">
+                                                            <Binding Path="Value"/>
 
-                <TextBlock Margin="10" Grid.Column="0" Grid.Row="0" Text="Private Key:" VerticalAlignment="Center"/>
-                <TextBox Style="{StaticResource ValidatedTextBoxStyle}" Margin="10" Height="22" Grid.Column="1" Grid.Row="0" HorizontalAlignment="Stretch"
-                         Text="{Binding PrivateKey, ValidatesOnDataErrors=True}"
-                         IsReadOnly="True" VerticalContentAlignment="Center"/>
+                                                            <!--
+                                                                For some reason this doesn't work as a single line, like:
+                                                                 <Binding RelativeSource="{RelativeSource Mode=Self}" Path="(Validation.Errors)/ErrorContent}"/>
+                                                                But it works fine as is below, with each property set separately!
+                                                            -->
+                                                            <Binding>
+                                                                <Binding.RelativeSource>
+                                                                    <RelativeSource Mode="Self"/>
+                                                                </Binding.RelativeSource>
+                                                                <Binding.Path>
+                                                                    (Validation.Errors)/ErrorContent
+                                                                </Binding.Path>
+                                                            </Binding>
+                                                        </MultiBinding>
+                                                    </Setter.Value>
+                                                </Setter>
+                                            </Trigger>
+                                            <Trigger Property="Validation.HasError" Value="False">
+                                                <Setter Property="ToolTip" Value="{Binding Value}"/>
+                                            </Trigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBox.Style>
+                            </TextBox>
 
-                <Button Grid.Row="0" Grid.Column="2" Height="22" Content="Generate" VerticalAlignment="Center" Margin="5,5,10,5" Padding="5,0,5,0"
-                    Command="{Binding Commands.GeneratePrivateKeyCommand}"/>
-
-                <TextBlock Margin="10" Grid.Column="0" Grid.Row="1" Text="Listen port:" VerticalAlignment="Center"/>
-                <TextBox Style="{StaticResource ValidatedTextBoxStyle}" Margin="10" Height="22" Grid.Column="1" Grid.Row="1" 
-                     VerticalContentAlignment="Center" Text="{Binding ListenPort, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
-
-                <TextBlock Margin="10" Grid.Column="0" Grid.Row="2" Text="Address:" VerticalAlignment="Center"/>
-                <TextBox  Style="{StaticResource ValidatedTextBoxStyle}" Margin="10" Height="22" Grid.Column="1" Grid.Row="2" VerticalContentAlignment="Center"
-                          Text="{Binding Address, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
-            </Grid>
+                            <Button Grid.Column="2" Margin="10,0,0,0" Command="{Binding ExecuteActionCommand}"
+                                    Visibility="{c:Binding 'Action != null', FalseToVisibility=Collapsed}">
+                                <Button.Content>
+                                    <TextBlock Text="{Binding Action.Name, Converter={StaticResource ResourceStringConverter}}" TextTrimming="CharacterEllipsis"/>
+                                </Button.Content>
+                            </Button>
+                        </Grid>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
         </ScrollViewer>
 
         <Button Grid.Column="1" Grid.Row="1" Margin="10,10,5,10" Padding="10,5,10,5" HorizontalAlignment="Right" Content="Cancel" Click="CancelButton_Click"/>

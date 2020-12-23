@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Windows.Input;
-using WireGuardAPI;
 using WireGuardServerForWindows.Controls;
 
 namespace WireGuardServerForWindows.Models
@@ -31,11 +30,16 @@ namespace WireGuardServerForWindows.Models
                 else
                 {
                     // The file exists, make sure it has all the fields
-                    ServerConfiguration serverConfiguration = new ServerConfiguration(new WireGuardExe()).Load(ConfigurationPath);
-                    if (string.IsNullOrEmpty(serverConfiguration.Validate()) == false)
+                    ServerConfiguration serverConfiguration = new ServerConfiguration().Load(ConfigurationPath);
+
+                    foreach (ServerConfigurationProperty property in serverConfiguration.Properties)
                     {
-                        result = false;
-                        ErrorMessage = "Server configuration not completed. Some fields are missing or incorrect.";
+                        if (string.IsNullOrEmpty(property.Validation?.Validate?.Invoke(property)) == false)
+                        {
+                            result = false;
+                            ErrorMessage = "Server configuration not completed. Some fields are missing or incorrect.";
+                            break;
+                        }
                     }
                 }
 
@@ -56,8 +60,10 @@ namespace WireGuardServerForWindows.Models
 
         public override void Configure()
         {
-            ServerConfiguration serverConfiguration = new ServerConfiguration(new WireGuardExe()).Load(ConfigurationPath);
-            ConfigurationEditor configurationEditor = new ConfigurationEditor { DataContext = serverConfiguration };
+            ServerConfiguration serverConfiguration = new ServerConfiguration().Load(ConfigurationPath);
+            ConfigurationEditor configurationEditor = new ConfigurationEditor {DataContext = serverConfiguration};
+
+            Mouse.OverrideCursor = Cursors.Wait;
             if (configurationEditor.ShowDialog() == true)
             {
                 Mouse.OverrideCursor = Cursors.Wait;

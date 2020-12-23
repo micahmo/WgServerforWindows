@@ -1,4 +1,6 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
+using System.Windows.Input;
 
 namespace WireGuardServerForWindows.Controls
 {
@@ -10,6 +12,11 @@ namespace WireGuardServerForWindows.Controls
         public ConfigurationEditor()
         {
             InitializeComponent();
+        }
+
+        protected override void OnActivated(EventArgs e)
+        {
+            Mouse.OverrideCursor = null;
         }
 
         #region Event handlers

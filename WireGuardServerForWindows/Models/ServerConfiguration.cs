@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -8,16 +7,22 @@ using System.Reflection;
 using System.Text;
 using System.Windows.Input;
 using GalaSoft.MvvmLight;
-using GalaSoft.MvvmLight.Command;
 using WireGuardAPI;
 using WireGuardAPI.Commands;
+using WireGuardServerForWindows.Properties;
 
 namespace WireGuardServerForWindows.Models
 {
-    public class ServerConfiguration : ObservableObject, IDataErrorInfo
+    public class ServerConfiguration : ObservableObject
     {
-        public ServerConfiguration(WireGuardExe wireGuardExe)
-            => (WireGuardExe, Commands) = (wireGuardExe, new ServerConfigurationCommands(this));
+        public ServerConfiguration()
+        {
+            foreach (PropertyInfo property in GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public)
+                .Where(p => typeof(ServerConfigurationProperty).IsAssignableFrom(p.PropertyType)))
+            {
+                Properties.Add(property.GetValue(this) as ServerConfigurationProperty);
+            }
+        }
 
         public ServerConfiguration Load(string configurationFilePath)
         {
@@ -28,10 +33,9 @@ namespace WireGuardServerForWindows.Models
                 string value = parts.LastOrDefault();
 
                 if (propertyName is { } && value is { } &&
-                    GetType().GetProperty(propertyName, BindingFlags.Instance | BindingFlags.Public) is PropertyInfo propertyInfo &&
-                    Attribute.IsDefined(propertyInfo, typeof(ServerConfigPropertyAttribute)))
+                    Properties.FirstOrDefault(p => p.PersistentPropertyName == propertyName) is { } property)
                 {
-                    propertyInfo.SetValue(this, value);
+                    property.Value = value;
                 }
             }
 
@@ -44,9 +48,9 @@ namespace WireGuardServerForWindows.Models
             fileContents.AppendLine("#Server config");
             fileContents.AppendLine("[Interface]");
 
-            foreach (PropertyInfo property in GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public).Where(prop => Attribute.IsDefined(prop, typeof(ServerConfigPropertyAttribute))))
+            foreach (ServerConfigurationProperty property in Properties)
             {
-                fileContents.AppendLine($"{property.Name} = {property.GetValue(this)}");
+                fileContents.AppendLine($"{property.PersistentPropertyName} = {property.Value}");
             }
 
             File.WriteAllText(configurationFilePath, fileContents.ToString());
@@ -54,125 +58,82 @@ namespace WireGuardServerForWindows.Models
 
         #region Public properties
 
-        public ServerConfigurationCommands Commands { get; }
+        public List<ServerConfigurationProperty> Properties { get; } = new List<ServerConfigurationProperty>();
 
-        [ServerConfigProperty]
-        public string PrivateKey
+        public ServerConfigurationProperty PrivateKeyProperty { get; } = new ServerConfigurationProperty
         {
-            get => _privateKey;
-            set => Set(nameof(PrivateKey), ref _privateKey, value);
-        }
-        private string _privateKey;
-
-        [ServerConfigProperty]
-        public string ListenPort
-        {
-            get => _listenPort;
-            set => Set(nameof(ListenPort), ref _listenPort, value);
-        }
-        private string _listenPort = "51820";
-
-        [ServerConfigProperty]
-        public string Address
-        {
-            get => _address;
-            set => Set(nameof(Address), ref _address, value);
-        }
-        private string _address = "192.168.1.1/24";
-
-        #endregion
-
-        #region Internal properties
-
-        internal WireGuardExe WireGuardExe { get; }
-
-        #endregion
-
-        #region IDataErrorInfo members
-
-        // Not used by WPF binding validation
-        public string Error => throw new NotImplementedException();
-
-        public string this[string columnName]
-        {
-            get
+            PersistentPropertyName = "PrivateKey", Name = nameof(PrivateKeyProperty),
+            Action = new ServerConfigurationPropertyAction
             {
-                string result = default;
-                
-                switch (columnName)
+                Name = $"{nameof(PrivateKeyProperty)}{nameof(ServerConfigurationProperty.Action)}",
+                Action = obj =>
                 {
-                    case nameof(PrivateKey):
-                        if (string.IsNullOrEmpty(PrivateKey))
-                        {
-                            result = "Private key must not be empty";
-                        }
-                        break;
-                    case nameof(ListenPort):
-                        if (int.TryParse(ListenPort, out int port))
-                        {
-                            if (port < 0 || port > 65535)
-                            {
-                                result = "Port must be between 0 and 65535.";
-                            }
-                        }
-                        else
-                        {
-                            result = "Port must be numerical.";
-                        }
-                        break;
-                    case nameof(Address):
-                        if (IPNetwork.TryParse(Address, out _) == false)
-                        {
-                            result = "Network must be in valid CIDR notation. For example: 192.168.1.1/24";
-                        }
-                        break;
-                    default:
-                        break;
+                    Mouse.OverrideCursor = Cursors.Wait;
+                    obj.Value = new WireGuardExe().ExecuteCommand(new GeneratePrivateKeyCommand());
+                    Mouse.OverrideCursor = null;
                 }
+            },
+            Validation = new ServerConfigurationPropertyValidation
+            {
+                Validate = obj =>
+                {
+                    string result = default;
 
-                return result;
+                    if (string.IsNullOrEmpty(obj.Value))
+                    {
+                        result = Resources.PrivateKeyValidationError;
+                    }
+
+                    return result;
+                }
             }
-        }
+        };
 
-        /// <summary>
-        /// Validates all fields. Returns null if all fields pass. Returns the first error if not.
-        /// </summary>
-        public string Validate()
+        public ServerConfigurationProperty ListenPortProperty { get; } = new ServerConfigurationProperty
         {
-            return this[nameof(PrivateKey)] ?? this[nameof(ListenPort)] ?? this[nameof(Address)];
-        }
+            PersistentPropertyName = "ListenPort", Name = nameof(ListenPortProperty), DefaultValue = "51820",
+            Validation = new ServerConfigurationPropertyValidation
+            {
+                Validate = obj =>
+                {
+                    string result = default;
+
+                    if (int.TryParse(obj.Value, out int port))
+                    {
+                        if (port < 0 || port > 65535)
+                        {
+                            result = Resources.PortRangeValidationError;
+                        }
+                    }
+                    else
+                    {
+                        result = Resources.PortValidationError;
+                    }
+
+                    return result;
+                }
+            }
+        };
+
+        public ServerConfigurationProperty AddressProperty { get; } = new ServerConfigurationProperty
+        {
+            PersistentPropertyName = "Address", Name = nameof(AddressProperty), DefaultValue = "10.253.0.2/32",
+            Validation = new ServerConfigurationPropertyValidation
+            {
+                Validate = obj =>
+                {
+                    string result = default;
+
+                    if (IPNetwork.TryParse(obj.Value, out _) == false)
+                    {
+                        result = Resources.NetworkAddressValidationError;
+                    }
+
+                    return result;
+                }
+            }
+        };
 
         #endregion
     }
-
-    public class ServerConfigurationCommands
-    {
-        public ServerConfigurationCommands(ServerConfiguration serverConfiguration) =>
-            ServerConfiguration = serverConfiguration;
-
-        private ServerConfiguration ServerConfiguration { get; }
-
-        #region ICommands
-
-        public ICommand GeneratePrivateKeyCommand => _generatePrivateKeyCommand ??= new RelayCommand(GeneratePrivateKey);
-        private RelayCommand _generatePrivateKeyCommand;
-
-        #endregion
-
-        #region Command implementations
-
-        private void GeneratePrivateKey()
-        {
-            Mouse.OverrideCursor = Cursors.Wait;
-
-            ServerConfiguration.PrivateKey = ServerConfiguration.WireGuardExe.ExecuteCommand(new GeneratePrivateKeyCommand());
-
-            Mouse.OverrideCursor = null;
-        }
-
-        #endregion
-    }
-
-    [AttributeUsage(AttributeTargets.Property)]
-    internal class ServerConfigPropertyAttribute : Attribute { }
 }

@@ -31,7 +31,7 @@ namespace WireGuardAPI
             };
 
             // Must use EnvironmentVariableTarget.Machine so that we always get the latest variables, even if they change after our process starts.
-            if (Environment.GetEnvironmentVariable("path", EnvironmentVariableTarget.Machine) is string pathEnv)
+            if (Environment.GetEnvironmentVariable("path", EnvironmentVariableTarget.Machine) is { } pathEnv)
             {
                 foreach (string path in pathEnv.Split(';'))
                 {
