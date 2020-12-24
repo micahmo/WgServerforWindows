@@ -6,7 +6,7 @@ using GalaSoft.MvvmLight.Command;
 
 namespace WireGuardServerForWindows.Models
 {
-    public class ServerConfigurationProperty : ObservableObject, IDataErrorInfo
+    public class ConfigurationProperty : ObservableObject, IDataErrorInfo
     {
         #region Public properties
 
@@ -24,9 +24,11 @@ namespace WireGuardServerForWindows.Models
 
         public string DefaultValue { get; set; }
 
-        public ServerConfigurationPropertyAction Action { get; set; }
+        public bool IsReadOnly { get; set; }
 
-        public ServerConfigurationPropertyValidation Validation { get; set; }
+        public ConfigurationPropertyAction Action { get; set; }
+
+        public ConfigurationPropertyValidation Validation { get; set; }
 
         #region Commands
 

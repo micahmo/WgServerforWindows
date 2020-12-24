@@ -22,7 +22,7 @@ namespace WireGuardServerForWindows.Converters
             {
                 if (string.IsNullOrEmpty(result))
                 {
-                    result = value?.ToString();
+                    result = $"***{value}***";
                 }
             }
 

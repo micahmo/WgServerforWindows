@@ -14,11 +14,10 @@ namespace WireGuardServerForWindows
 
             MainWindowModel mainWindowModel = new MainWindowModel();
             mainWindowModel.PrerequisiteItems.Add(new WireGuardExePrerequisite());
-            
-            ServerConfigurationPrerequisite serverConfigurationPrerequisite = new ServerConfigurationPrerequisite();
-            mainWindowModel.PrerequisiteItems.Add(serverConfigurationPrerequisite);
-            mainWindowModel.PrerequisiteItems.Add(new TunnelServicePrerequisite(serverConfigurationPrerequisite));
-            
+            mainWindowModel.PrerequisiteItems.Add(new ServerConfigurationPrerequisite());
+            mainWindowModel.PrerequisiteItems.Add(new ClientConfigurationsPrerequisite());
+            mainWindowModel.PrerequisiteItems.Add(new TunnelServicePrerequisite());
+
             DataContext = Model = mainWindowModel;
         }
 

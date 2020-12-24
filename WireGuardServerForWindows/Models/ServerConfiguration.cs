@@ -3,28 +3,19 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Reflection;
 using System.Text;
 using System.Windows.Input;
-using GalaSoft.MvvmLight;
 using WireGuardAPI;
 using WireGuardAPI.Commands;
 using WireGuardServerForWindows.Properties;
 
 namespace WireGuardServerForWindows.Models
 {
-    public class ServerConfiguration : ObservableObject
+    public class ServerConfiguration : ConfigurationBase
     {
-        public ServerConfiguration()
-        {
-            foreach (PropertyInfo property in GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public)
-                .Where(p => typeof(ServerConfigurationProperty).IsAssignableFrom(p.PropertyType)))
-            {
-                Properties.Add(property.GetValue(this) as ServerConfigurationProperty);
-            }
-        }
+        #region ConfigurationBase members
 
-        public ServerConfiguration Load(string configurationFilePath)
+        public override ConfigurationBase Load(string configurationFilePath)
         {
             foreach (string line in File.ReadAllLines(configurationFilePath))
             {
@@ -42,30 +33,50 @@ namespace WireGuardServerForWindows.Models
             return this;
         }
 
-        public void Save(string configurationFilePath)
+        public override void Save(string configurationFilePath)
         {
-            StringBuilder fileContents = new StringBuilder();
-            fileContents.AppendLine("#Server config");
-            fileContents.AppendLine("[Interface]");
+            string contents = string.Join(
+                Environment.NewLine,
+                ClientConfigurations.Select(c => c.ToString<ServerConfiguration>()).Union(new[] {ToString<ServerConfiguration>()}));
 
-            foreach (ServerConfigurationProperty property in Properties)
+            File.WriteAllText(configurationFilePath, contents);
+        }
+
+        public override string ToString<TTarget>()
+        {
+            string result = default;
+
+            if (typeof(ServerConfiguration).IsAssignableFrom(typeof(TTarget)))
             {
-                fileContents.AppendLine($"{property.PersistentPropertyName} = {property.Value}");
+                StringBuilder fileContents = new StringBuilder();
+                fileContents.AppendLine("#Server config");
+                fileContents.AppendLine("[Interface]");
+
+                foreach (ConfigurationProperty property in Properties)
+                {
+                    fileContents.AppendLine($"{property.PersistentPropertyName} = {property.Value}");
+                }
+
+                result = fileContents.ToString();
+            }
+            else if (typeof(ClientConfiguration).IsAssignableFrom(typeof(TTarget)))
+            {
+
             }
 
-            File.WriteAllText(configurationFilePath, fileContents.ToString());
+            return result;
         }
+
+        #endregion
 
         #region Public properties
 
-        public List<ServerConfigurationProperty> Properties { get; } = new List<ServerConfigurationProperty>();
-
-        public ServerConfigurationProperty PrivateKeyProperty { get; } = new ServerConfigurationProperty
+        public ConfigurationProperty PrivateKeyProperty { get; } = new ConfigurationProperty
         {
-            PersistentPropertyName = "PrivateKey", Name = nameof(PrivateKeyProperty),
-            Action = new ServerConfigurationPropertyAction
+            PersistentPropertyName = "PrivateKey", Name = nameof(PrivateKeyProperty), IsReadOnly = true,
+            Action = new ConfigurationPropertyAction
             {
-                Name = $"{nameof(PrivateKeyProperty)}{nameof(ServerConfigurationProperty.Action)}",
+                Name = $"{nameof(PrivateKeyProperty)}{nameof(ConfigurationProperty.Action)}",
                 Action = obj =>
                 {
                     Mouse.OverrideCursor = Cursors.Wait;
@@ -73,26 +84,13 @@ namespace WireGuardServerForWindows.Models
                     Mouse.OverrideCursor = null;
                 }
             },
-            Validation = new ServerConfigurationPropertyValidation
-            {
-                Validate = obj =>
-                {
-                    string result = default;
-
-                    if (string.IsNullOrEmpty(obj.Value))
-                    {
-                        result = Resources.PrivateKeyValidationError;
-                    }
-
-                    return result;
-                }
-            }
+            Validation = new EmptyStringValidation(Resources.PrivateKeyValidationError)
         };
 
-        public ServerConfigurationProperty ListenPortProperty { get; } = new ServerConfigurationProperty
+        public ConfigurationProperty ListenPortProperty { get; } = new ConfigurationProperty
         {
             PersistentPropertyName = "ListenPort", Name = nameof(ListenPortProperty), DefaultValue = "51820",
-            Validation = new ServerConfigurationPropertyValidation
+            Validation = new ConfigurationPropertyValidation
             {
                 Validate = obj =>
                 {
@@ -115,10 +113,10 @@ namespace WireGuardServerForWindows.Models
             }
         };
 
-        public ServerConfigurationProperty AddressProperty { get; } = new ServerConfigurationProperty
+        public ConfigurationProperty AddressProperty { get; } = new ConfigurationProperty
         {
             PersistentPropertyName = "Address", Name = nameof(AddressProperty), DefaultValue = "10.253.0.2/32",
-            Validation = new ServerConfigurationPropertyValidation
+            Validation = new ConfigurationPropertyValidation
             {
                 Validate = obj =>
                 {
@@ -133,6 +131,9 @@ namespace WireGuardServerForWindows.Models
                 }
             }
         };
+
+        // The list of client peers accepted by this server
+        public List<ClientConfiguration> ClientConfigurations { get; } = new List<ClientConfiguration>();
 
         #endregion
     }

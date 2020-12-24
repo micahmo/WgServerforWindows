@@ -31,9 +31,9 @@ namespace WireGuardServerForWindows.Models
                 else
                 {
                     // The file exists, make sure it has all the fields
-                    ServerConfiguration serverConfiguration = new ServerConfiguration().Load(ConfigurationPath);
+                    var serverConfiguration = new ServerConfiguration().Load(ConfigurationPath);
 
-                    foreach (ServerConfigurationProperty property in serverConfiguration.Properties)
+                    foreach (ConfigurationProperty property in serverConfiguration.Properties)
                     {
                         if (string.IsNullOrEmpty(property.Validation?.Validate?.Invoke(property)) == false)
                         {
@@ -61,11 +61,11 @@ namespace WireGuardServerForWindows.Models
 
         public override void Configure()
         {
-            ServerConfiguration serverConfiguration = new ServerConfiguration().Load(ConfigurationPath);
-            ConfigurationEditor configurationEditor = new ConfigurationEditor {DataContext = serverConfiguration};
+            var serverConfiguration = new ServerConfiguration().Load(ConfigurationPath);
+            ServerConfigurationEditorWindow serverConfigurationEditor = new ServerConfigurationEditorWindow {DataContext = serverConfiguration};
 
             Mouse.OverrideCursor = Cursors.Wait;
-            if (configurationEditor.ShowDialog() == true)
+            if (serverConfigurationEditor.ShowDialog() == true)
             {
                 Mouse.OverrideCursor = Cursors.Wait;
                 serverConfiguration.Save(ConfigurationPath);

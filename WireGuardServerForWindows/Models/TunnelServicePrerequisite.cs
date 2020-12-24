@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Linq;
 using System.Net.NetworkInformation;
 using System.Threading.Tasks;
@@ -11,7 +12,7 @@ namespace WireGuardServerForWindows.Models
 {
     public class TunnelServicePrerequisite : PrerequisiteItem
     {
-        public TunnelServicePrerequisite(ServerConfigurationPrerequisite serverConfiguration) : base
+        public TunnelServicePrerequisite() : base
         (
             title: Resources.TunnelService,
             successMessage: Resources.TunnelServiceInstalled,
@@ -20,10 +21,7 @@ namespace WireGuardServerForWindows.Models
             configureText: Resources.UninstallTunnelService
         )
         {
-            _serverConfigurationPrerequisite = serverConfiguration;
         }
-
-        private readonly ServerConfigurationPrerequisite _serverConfigurationPrerequisite;
 
         public override bool Fulfilled => NetworkInterface.GetAllNetworkInterfaces()
             .Any(nic => nic.Name == _interfaceName);
@@ -32,7 +30,7 @@ namespace WireGuardServerForWindows.Models
         {
             Mouse.OverrideCursor = Cursors.Wait;
             
-            new WireGuardExe().ExecuteCommand(new InstallTunnelServiceCommand(_serverConfigurationPrerequisite.ConfigurationPath));
+            new WireGuardExe().ExecuteCommand(new InstallTunnelServiceCommand(_configurationPath));
             Task.Run(WaitForFulfilled);
             
             Mouse.OverrideCursor = null;
@@ -50,7 +48,9 @@ namespace WireGuardServerForWindows.Models
 
         #region Private properties
 
-        private string _interfaceName => Path.GetFileNameWithoutExtension(_serverConfigurationPrerequisite.ConfigurationPath);
+        private string _interfaceName => Path.GetFileNameWithoutExtension(_configurationPath);
+
+        private string _configurationPath => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "WS4W", "wg_server.conf");
 
         #endregion
     }

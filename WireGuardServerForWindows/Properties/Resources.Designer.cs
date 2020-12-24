@@ -79,6 +79,69 @@ namespace WireGuardServerForWindows.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Client Configuration.
+        /// </summary>
+        public static string ClientConfiguration {
+            get {
+                return ResourceManager.GetString("ClientConfiguration", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Client Configuration(s).
+        /// </summary>
+        public static string ClientConfigurations {
+            get {
+                return ResourceManager.GetString("ClientConfigurations", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to One or more clients has missing or incorrect configuration..
+        /// </summary>
+        public static string ClientConfigurationsIncompleteErrorMessage {
+            get {
+                return ResourceManager.GetString("ClientConfigurationsIncompleteErrorMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No client(s) configured..
+        /// </summary>
+        public static string ClientConfigurationsMissingErrorMessage {
+            get {
+                return ResourceManager.GetString("ClientConfigurationsMissingErrorMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Configure client(s).
+        /// </summary>
+        public static string ClientConfigurationsResolveText {
+            get {
+                return ResourceManager.GetString("ClientConfigurationsResolveText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to One or more clients is configured..
+        /// </summary>
+        public static string ClientConfigurationsSuccessMessage {
+            get {
+                return ResourceManager.GetString("ClientConfigurationsSuccessMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Client must have a name.
+        /// </summary>
+        public static string EmptyClientNameError {
+            get {
+                return ResourceManager.GetString("EmptyClientNameError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Install tunnel service.
         /// </summary>
         public static string InstallTunnelService {
@@ -102,6 +165,15 @@ namespace WireGuardServerForWindows.Properties {
         public static string ListenPortProperty {
             get {
                 return ResourceManager.GetString("ListenPortProperty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Name.
+        /// </summary>
+        public static string NameProperty {
+            get {
+                return ResourceManager.GetString("NameProperty", resourceCulture);
             }
         }
         

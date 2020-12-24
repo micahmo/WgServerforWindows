@@ -5,11 +5,11 @@ using System.Windows.Input;
 namespace WireGuardServerForWindows.Controls
 {
     /// <summary>
-    /// Interaction logic for ConfigurationEditor.xaml
+    /// Interaction logic for ServerConfigurationEditor.xaml
     /// </summary>
-    public partial class ConfigurationEditor : Window
+    public partial class ClientConfigurationEditorWindow : Window
     {
-        public ConfigurationEditor()
+        public ClientConfigurationEditorWindow()
         {
             InitializeComponent();
         }

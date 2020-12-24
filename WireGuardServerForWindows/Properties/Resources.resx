@@ -154,6 +154,9 @@
   <data name="ServerConfiguration" xml:space="preserve">
     <value>Server Configuration</value>
   </data>
+  <data name="ClientConfigurations" xml:space="preserve">
+    <value>Client Configuration(s)</value>
+  </data>
   <data name="Cancel" xml:space="preserve">
     <value>Cancel</value>
   </data>
@@ -163,17 +166,29 @@
   <data name="ServerConfigurationSuccessMessage" xml:space="preserve">
     <value>Server configuration file (.conf) found.</value>
   </data>
+  <data name="ClientConfigurationsSuccessMessage" xml:space="preserve">
+    <value>One or more clients is configured.</value>
+  </data>
   <data name="ServerConfigurationMissingErrorMessage" xml:space="preserve">
     <value>Server configuration file (.conf) not found.</value>
   </data>
   <data name="ServerConfigurationResolveText" xml:space="preserve">
     <value>Create and edit server configuration</value>
   </data>
+  <data name="ClientConfigurationsMissingErrorMessage" xml:space="preserve">
+    <value>No client(s) configured.</value>
+  </data>
+  <data name="ClientConfigurationsResolveText" xml:space="preserve">
+    <value>Configure client(s)</value>
+  </data>
   <data name="ServerConfigurationConfigureText" xml:space="preserve">
     <value>Edit server configuration</value>
   </data>
   <data name="ServerConfigurationIncompleteErrorMessage" xml:space="preserve">
     <value>Server configuration not completed. Some fields are missing or incorrect.</value>
+  </data>
+  <data name="ClientConfigurationsIncompleteErrorMessage" xml:space="preserve">
+    <value>One or more clients has missing or incorrect configuration.</value>
   </data>
   <data name="TunnelService" xml:space="preserve">
     <value>Tunnel Service</value>
@@ -204,5 +219,14 @@
   </data>
   <data name="UninstallWireGuard" xml:space="preserve">
     <value>Uninstall WireGuard</value>
+  </data>
+  <data name="EmptyClientNameError" xml:space="preserve">
+    <value>Client must have a name</value>
+  </data>
+  <data name="ClientConfiguration" xml:space="preserve">
+    <value>Client Configuration</value>
+  </data>
+  <data name="NameProperty" xml:space="preserve">
+    <value>Name</value>
   </data>
 </root>
