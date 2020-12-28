@@ -8,6 +8,9 @@ namespace WireGuardServerForWindows.Models
 {
     public class ConfigurationProperty : ObservableObject, IDataErrorInfo
     {
+        public ConfigurationProperty(ConfigurationBase configuration) =>
+            _configuration = configuration;
+        
         #region Public properties
 
         public string Name { get; set; }
@@ -34,11 +37,17 @@ namespace WireGuardServerForWindows.Models
 
         public ICommand ExecuteActionCommand => _executeActionCommand ??= new RelayCommand(() =>
         {
-            Action.Action?.Invoke(this);
+            Action.Action?.Invoke(_configuration, this);
         });
         private RelayCommand _executeActionCommand;
 
         #endregion
+
+        #endregion
+
+        #region Private fields
+
+        private readonly ConfigurationBase _configuration;
 
         #endregion
 

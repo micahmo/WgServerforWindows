@@ -61,6 +61,15 @@ namespace WireGuardServerForWindows.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Add Client.
+        /// </summary>
+        public static string AddClient {
+            get {
+                return ResourceManager.GetString("AddClient", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Address.
         /// </summary>
         public static string AddressProperty {
@@ -129,6 +138,33 @@ namespace WireGuardServerForWindows.Properties {
         public static string ClientConfigurationsSuccessMessage {
             get {
                 return ResourceManager.GetString("ClientConfigurationsSuccessMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Confirm.
+        /// </summary>
+        public static string Confirm {
+            get {
+                return ResourceManager.GetString("Confirm", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Are you sure you want to delete the client?.
+        /// </summary>
+        public static string ConfirmDeleteClient {
+            get {
+                return ResourceManager.GetString("ConfirmDeleteClient", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Delete.
+        /// </summary>
+        public static string Delete {
+            get {
+                return ResourceManager.GetString("Delete", resourceCulture);
             }
         }
         

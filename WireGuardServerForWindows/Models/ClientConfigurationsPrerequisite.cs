@@ -35,7 +35,7 @@ namespace WireGuardServerForWindows.Models
                     // Validate all of the client(s)
                     foreach (string clientConfigurationFile in Directory.GetFiles(ClientConfigurationDirectory, "*.conf"))
                     {
-                        var clientConfiguration = new ClientConfiguration().Load(clientConfigurationFile);
+                        var clientConfiguration = new ClientConfiguration(null).Load(clientConfigurationFile);
 
                         foreach (ConfigurationProperty property in clientConfiguration.Properties)
                         {
@@ -66,20 +66,12 @@ namespace WireGuardServerForWindows.Models
 
         public override void Configure()
         {
-            List<ConfigurationBase> clientConfigurations = new List<ConfigurationBase>();
+            ClientConfigurationList clientConfigurations = new ClientConfigurationList();
 
             foreach (string clientConfigurationFile in Directory.GetFiles(ClientConfigurationDirectory, "*.conf"))
             {
-                clientConfigurations.Add(new ClientConfiguration().Load(clientConfigurationFile));
+                clientConfigurations.List.Add(new ClientConfiguration(clientConfigurations).Load<ClientConfiguration>(clientConfigurationFile));
             }
-
-            // JUST FOR TESTING
-
-            clientConfigurations.Add(new ClientConfiguration());
-            clientConfigurations.Add(new ClientConfiguration());
-            clientConfigurations.Add(new ClientConfiguration());
-
-            // JUST FOR TESTING
 
             ClientConfigurationEditorWindow clientConfigurationEditorWindow = new ClientConfigurationEditorWindow {DataContext = clientConfigurations};
 
@@ -87,7 +79,7 @@ namespace WireGuardServerForWindows.Models
             if (clientConfigurationEditorWindow.ShowDialog() == true)
             {
                 Mouse.OverrideCursor = Cursors.Wait;
-                foreach (ConfigurationBase clientConfiguration in clientConfigurations)
+                foreach (ClientConfiguration clientConfiguration in clientConfigurations.List)
                 {
                     clientConfiguration.Save(Path.Combine(ClientConfigurationDirectory, $"{clientConfiguration.Name}.conf"));
                 }

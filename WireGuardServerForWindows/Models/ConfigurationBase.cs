@@ -41,4 +41,12 @@ namespace WireGuardServerForWindows.Models
 
         #endregion
     }
+
+    public static class ConfigurationBaseExtensions
+    {
+        public static TConfig Load<TConfig>(this TConfig configuration, string configurationFilePath) where TConfig : ConfigurationBase
+        {
+            return configuration.Load(configurationFilePath) as TConfig;
+        }
+    }
 }

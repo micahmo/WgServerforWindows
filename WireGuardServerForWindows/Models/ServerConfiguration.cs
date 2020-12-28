@@ -71,23 +71,24 @@ namespace WireGuardServerForWindows.Models
 
         #region Public properties
 
-        public ConfigurationProperty PrivateKeyProperty { get; } = new ConfigurationProperty
+        public ConfigurationProperty PrivateKeyProperty => _privateKeyProperty ??= new ConfigurationProperty(this)
         {
             PersistentPropertyName = "PrivateKey", Name = nameof(PrivateKeyProperty), IsReadOnly = true,
             Action = new ConfigurationPropertyAction
             {
                 Name = $"{nameof(PrivateKeyProperty)}{nameof(ConfigurationProperty.Action)}",
-                Action = obj =>
+                Action = (conf, prop) =>
                 {
                     Mouse.OverrideCursor = Cursors.Wait;
-                    obj.Value = new WireGuardExe().ExecuteCommand(new GeneratePrivateKeyCommand());
+                    prop.Value = new WireGuardExe().ExecuteCommand(new GeneratePrivateKeyCommand());
                     Mouse.OverrideCursor = null;
                 }
             },
             Validation = new EmptyStringValidation(Resources.PrivateKeyValidationError)
         };
+        private ConfigurationProperty _privateKeyProperty;
 
-        public ConfigurationProperty ListenPortProperty { get; } = new ConfigurationProperty
+        public ConfigurationProperty ListenPortProperty => _listenPortProperty ??= new ConfigurationProperty(this)
         {
             PersistentPropertyName = "ListenPort", Name = nameof(ListenPortProperty), DefaultValue = "51820",
             Validation = new ConfigurationPropertyValidation
@@ -112,8 +113,9 @@ namespace WireGuardServerForWindows.Models
                 }
             }
         };
+        private ConfigurationProperty _listenPortProperty;
 
-        public ConfigurationProperty AddressProperty { get; } = new ConfigurationProperty
+        public ConfigurationProperty AddressProperty => _addressProperty ??= new ConfigurationProperty(this)
         {
             PersistentPropertyName = "Address", Name = nameof(AddressProperty), DefaultValue = "10.253.0.2/32",
             Validation = new ConfigurationPropertyValidation
@@ -131,6 +133,7 @@ namespace WireGuardServerForWindows.Models
                 }
             }
         };
+        private ConfigurationProperty _addressProperty;
 
         // The list of client peers accepted by this server
         public List<ClientConfiguration> ClientConfigurations { get; } = new List<ClientConfiguration>();

@@ -1,17 +1,25 @@
 ﻿using System;
 using System.IO;
+using System.Windows;
 using System.Windows.Input;
-using WireGuardAPI;
-using WireGuardAPI.Commands;
+using System.Windows.Threading;
+using GalaSoft.MvvmLight.Command;
 using WireGuardServerForWindows.Properties;
 
 namespace WireGuardServerForWindows.Models
 {
     public class ClientConfiguration : ConfigurationBase
     {
+        #region Constructor
+
+        public ClientConfiguration(ClientConfigurationList parentList) =>
+            _parentList = parentList;
+
+        #endregion
+
         #region ConfigurationBase members
 
-        public override ConfigurationBase Load(string configurationFile)
+        public override ConfigurationBase Load(string configurationFilePath)
         {
             throw new NotImplementedException();
         }
@@ -49,13 +57,26 @@ namespace WireGuardServerForWindows.Models
         // Every client has a reference to its server
         public ServerConfiguration ServerConfiguration { get; set; }
 
-        public ConfigurationProperty NameProperty { get; } = new ConfigurationProperty
+        public ConfigurationProperty NameProperty => _nameProperty ??= new ConfigurationProperty(this)
         {
             PersistentPropertyName = "[Name]", Name = nameof(NameProperty),
-            Validation = new EmptyStringValidation(Resources.EmptyClientNameError)
+            Validation = new EmptyStringValidation(Resources.EmptyClientNameError),
+            Action = new ConfigurationPropertyAction
+            {
+                Name = Resources.Delete,
+                Action = (conf, prop) =>
+                {
+                    MessageBoxResult res = MessageBox.Show(Resources.ConfirmDeleteClient, Resources.Confirm, MessageBoxButton.YesNo);
+                    if (res == MessageBoxResult.Yes)
+                    {
+                        (conf as ClientConfiguration)?.RemoveClientCommand?.Execute(null);
+                    }
+                }
+            }
         };
+        private ConfigurationProperty _nameProperty;
 
-        public ConfigurationProperty PrivateKeyProperty { get; } = new ConfigurationProperty
+        public ConfigurationProperty PrivateKeyProperty => _privateKeyProperty ??= new ConfigurationProperty(this)
         {
             PersistentPropertyName = "PrivateKey",
             Name = nameof(PrivateKeyProperty),
@@ -63,7 +84,7 @@ namespace WireGuardServerForWindows.Models
             Action = new ConfigurationPropertyAction
             {
                 Name = $"{nameof(PrivateKeyProperty)}{nameof(ConfigurationProperty.Action)}",
-                Action = obj =>
+                Action = (conf, prop) =>
                 {
                     Mouse.OverrideCursor = Cursors.Wait;
                     // TODO
@@ -73,6 +94,22 @@ namespace WireGuardServerForWindows.Models
             },
             Validation = new EmptyStringValidation(Resources.PrivateKeyValidationError)
         };
+        private ConfigurationProperty _privateKeyProperty;
+
+        public ICommand RemoveClientCommand => _removeClientCommand ??= new RelayCommand(() =>
+        {
+            using (new WaitCursor(dispatcherPriority: DispatcherPriority.Render, restoreCursorToNull: true))
+            {
+                _parentList?.List.Remove(this);
+            }
+        });
+        private RelayCommand _removeClientCommand;
+
+        #endregion
+
+        #region Private fields
+
+        private readonly ClientConfigurationList _parentList;
 
         #endregion
     }

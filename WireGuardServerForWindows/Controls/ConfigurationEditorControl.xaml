@@ -35,7 +35,7 @@
                                 <Style TargetType="{x:Type TextBox}">
                                     <Style.Triggers>
                                         <Trigger Property="Validation.HasError" Value="True">
-                                            <Setter Property="ToolTip" >
+                                            <Setter Property="ToolTip">
                                                 <Setter.Value>
                                                     <!-- 
                                                         Have to use a multivalue converter instead of a StringFormat

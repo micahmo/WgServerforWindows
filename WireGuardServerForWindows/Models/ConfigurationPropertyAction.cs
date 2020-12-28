@@ -6,7 +6,7 @@ namespace WireGuardServerForWindows.Models
     {
         public string Name { get; set; }
 
-        public Action<ConfigurationProperty> Action { get; set; }
+        public Action<ConfigurationBase, ConfigurationProperty> Action { get; set; }
     }
 
     public class ConfigurationPropertyValidation

@@ -229,4 +229,16 @@
   <data name="NameProperty" xml:space="preserve">
     <value>Name</value>
   </data>
+  <data name="AddClient" xml:space="preserve">
+    <value>Add Client</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="ConfirmDeleteClient" xml:space="preserve">
+    <value>Are you sure you want to delete the client?</value>
+  </data>
+  <data name="Confirm" xml:space="preserve">
+    <value>Confirm</value>
+  </data>
 </root>
