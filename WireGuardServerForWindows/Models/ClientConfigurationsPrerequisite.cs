@@ -81,7 +81,7 @@ namespace WireGuardServerForWindows.Models
                 Mouse.OverrideCursor = Cursors.Wait;
                 foreach (ClientConfiguration clientConfiguration in clientConfigurations.List)
                 {
-                    clientConfiguration.Save(Path.Combine(ClientConfigurationDirectory, $"{clientConfiguration.Name}.conf"));
+                    clientConfiguration.Save(Path.Combine(ClientConfigurationDirectory, $"{clientConfiguration.NameProperty.Value}.conf"));
                 }
                 Mouse.OverrideCursor = null;
             }

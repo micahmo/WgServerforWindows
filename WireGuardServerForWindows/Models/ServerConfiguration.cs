@@ -3,30 +3,60 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Text;
-using System.Windows.Input;
-using WireGuardAPI;
-using WireGuardAPI.Commands;
 using WireGuardServerForWindows.Properties;
 
 namespace WireGuardServerForWindows.Models
 {
     public class ServerConfiguration : ConfigurationBase
     {
+        #region Constructor
+
+        public ServerConfiguration()
+        {
+            // Server properties
+            PrivateKeyProperty.TargetTypes.Add(GetType());
+            AddressProperty.TargetTypes.Add(GetType());
+            ListenPortProperty.TargetTypes.Add(GetType());
+
+            // Client properties
+            PresharedKeyProperty.TargetTypes.Add(typeof(ClientConfiguration));
+            PublicKeyProperty.TargetTypes.Add(typeof(ClientConfiguration));
+        }
+
+        #endregion
+
         #region ConfigurationBase members
 
         public override ConfigurationBase Load(string configurationFilePath)
         {
+            bool start = false;
+            bool stop = false;
+
             foreach (string line in File.ReadAllLines(configurationFilePath))
             {
-                List<string> parts = line.Split('=', 2, StringSplitOptions.RemoveEmptyEntries).Select(str => str.Trim()).ToList();
-                string propertyName = parts.FirstOrDefault();
-                string value = parts.LastOrDefault();
-
-                if (propertyName is { } && value is { } &&
-                    Properties.FirstOrDefault(p => p.PersistentPropertyName == propertyName) is { } property)
+                if (line == "[Interface]")
                 {
-                    property.Value = value;
+                    start = true;
+                    continue;
+                }
+                else if (line == "[Peer]")
+                {
+                    stop = true;
+                    continue;
+                }
+
+                if (start && !stop)
+                {
+                    List<string> parts = line.Split('=', 2, StringSplitOptions.RemoveEmptyEntries).Select(str => str.Trim()).ToList();
+                    string propertyName = parts.FirstOrDefault();
+                    string value = parts.LastOrDefault();
+
+                    if (propertyName is { } && value is { } &&
+                        Properties.FirstOrDefault(p => p.PersistentPropertyName == propertyName) is { } property)
+                    {
+                        property.Value = value;
+                    }
+
                 }
             }
 
@@ -37,59 +67,18 @@ namespace WireGuardServerForWindows.Models
         {
             string contents = string.Join(
                 Environment.NewLine,
-                ClientConfigurations.Select(c => c.ToString<ServerConfiguration>()).Union(new[] {ToString<ServerConfiguration>()}));
+                new[] { ToString<ServerConfiguration>() }.Union(ClientConfigurations.Select(c => c.ToString<ServerConfiguration>())));
 
             File.WriteAllText(configurationFilePath, contents);
-        }
-
-        public override string ToString<TTarget>()
-        {
-            string result = default;
-
-            if (typeof(ServerConfiguration).IsAssignableFrom(typeof(TTarget)))
-            {
-                StringBuilder fileContents = new StringBuilder();
-                fileContents.AppendLine("#Server config");
-                fileContents.AppendLine("[Interface]");
-
-                foreach (ConfigurationProperty property in Properties)
-                {
-                    fileContents.AppendLine($"{property.PersistentPropertyName} = {property.Value}");
-                }
-
-                result = fileContents.ToString();
-            }
-            else if (typeof(ClientConfiguration).IsAssignableFrom(typeof(TTarget)))
-            {
-
-            }
-
-            return result;
         }
 
         #endregion
 
         #region Public properties
 
-        public ConfigurationProperty PrivateKeyProperty => _privateKeyProperty ??= new ConfigurationProperty(this)
-        {
-            PersistentPropertyName = "PrivateKey", Name = nameof(PrivateKeyProperty), IsReadOnly = true,
-            Action = new ConfigurationPropertyAction
-            {
-                Name = $"{nameof(PrivateKeyProperty)}{nameof(ConfigurationProperty.Action)}",
-                Action = (conf, prop) =>
-                {
-                    Mouse.OverrideCursor = Cursors.Wait;
-                    prop.Value = new WireGuardExe().ExecuteCommand(new GeneratePrivateKeyCommand());
-                    Mouse.OverrideCursor = null;
-                }
-            },
-            Validation = new EmptyStringValidation(Resources.PrivateKeyValidationError)
-        };
-        private ConfigurationProperty _privateKeyProperty;
-
         public ConfigurationProperty ListenPortProperty => _listenPortProperty ??= new ConfigurationProperty(this)
         {
+            Index = 1,
             PersistentPropertyName = "ListenPort", Name = nameof(ListenPortProperty), DefaultValue = "51820",
             Validation = new ConfigurationPropertyValidation
             {
@@ -117,6 +106,7 @@ namespace WireGuardServerForWindows.Models
 
         public ConfigurationProperty AddressProperty => _addressProperty ??= new ConfigurationProperty(this)
         {
+            Index = 2,
             PersistentPropertyName = "Address", Name = nameof(AddressProperty), DefaultValue = "10.253.0.2/32",
             Validation = new ConfigurationPropertyValidation
             {

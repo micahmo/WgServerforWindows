@@ -2,6 +2,8 @@
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using CliWrap;
+using CliWrap.Buffered;
 
 namespace WireGuardAPI
 {
@@ -65,33 +67,26 @@ namespace WireGuardAPI
             {
                 case WhichExe.WireGuardExe:
                 case WhichExe.WGExe:
-                    Process process = new Process
+                    if (command.RunAsAdministrator)
                     {
-                        StartInfo = new ProcessStartInfo
+                        // Special case. Can't use CliWrap for this :(
+                        Process.Start(new ProcessStartInfo
                         {
                             FileName = GetPath(command.WhichExe),
-                            Arguments = string.Join(' ', new[] {command.Switch}.Union(command.Args ?? Enumerable.Empty<string>()))
-                        }
-                    };
-
-                    switch (command.Mode)
-                    {
-                        case Mode.CaptureOutput:
-                            process.StartInfo.RedirectStandardOutput = true;
-                            process.StartInfo.CreateNoWindow = true;
-                            break;
-                        case Mode.RunAsAdministrator:
-                            process.StartInfo.Verb = "runas";
-                            process.StartInfo.UseShellExecute = true;
-                            break;
+                            Arguments = string.Join(' ', new[] {command.Switch}.Union(command.Args ?? Enumerable.Empty<string>())),
+                            Verb = "runas",
+                            UseShellExecute = true
+                        })?.WaitForExit();
                     }
-
-                    process.Start();
-                    process.WaitForExit();
-
-                    if (command.Mode == Mode.CaptureOutput)
+                    else
                     {
-                        result = process.StandardOutput.ReadToEnd().Trim();
+                        var cmd = command.StandardInput | Cli.Wrap(GetPath(command.WhichExe)).WithArguments(a => a
+                            .Add(command.Switch)
+                            .Add(command.Args)).WithValidation(CommandResultValidation.None);
+
+                        // For some reason, awaiting this can hang, so this method must do everything synchronously.
+                        var bufferedResult = cmd.ExecuteBufferedAsync().Task.Result;
+                        result = bufferedResult.StandardOutput.Trim();
                     }
 
                     break;

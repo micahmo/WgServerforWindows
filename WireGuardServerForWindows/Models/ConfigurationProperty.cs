@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows.Input;
 using GalaSoft.MvvmLight;
@@ -8,10 +9,16 @@ namespace WireGuardServerForWindows.Models
 {
     public class ConfigurationProperty : ObservableObject, IDataErrorInfo
     {
-        public ConfigurationProperty(ConfigurationBase configuration) =>
+        public ConfigurationProperty(ConfigurationBase configuration, ConfigurationProperty dependentProperty = null) =>
             _configuration = configuration;
         
         #region Public properties
+
+        /// <summary>
+        /// Allows ordering Properties. Default value is <see cref="int.MaxValue"/>,
+        /// so any other value will order the property before properties with no index.
+        /// </summary>
+        public int Index { get; set; } = int.MaxValue;
 
         public string Name { get; set; }
 
@@ -32,6 +39,8 @@ namespace WireGuardServerForWindows.Models
         public ConfigurationPropertyAction Action { get; set; }
 
         public ConfigurationPropertyValidation Validation { get; set; }
+
+        public HashSet<Type> TargetTypes { get; } = new HashSet<Type>();
 
         #region Commands
 

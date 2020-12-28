@@ -6,10 +6,10 @@
         (
             @switch: "/uninstalltunnelservice",
             whichExe: WhichExe.WireGuardExe,
-            mode: Mode.RunAsAdministrator,
             serviceName
         )
         {
+            RunAsAdministrator = true;
         }
     }
 }

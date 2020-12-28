@@ -5,7 +5,7 @@ namespace WireGuardAPI
 {
     public class UninstallCommand : WireGuardCommand
     {
-        public UninstallCommand() : base(string.Empty, WhichExe.Custom, Mode.None)
+        public UninstallCommand() : base(string.Empty, WhichExe.Custom)
         {
             Args = FindUninstallCommand().Split();
         }

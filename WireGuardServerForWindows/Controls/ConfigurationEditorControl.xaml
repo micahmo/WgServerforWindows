@@ -73,7 +73,9 @@
                         </TextBox>
 
                         <Button Grid.Column="2" Margin="10,0,0,0" Command="{Binding ExecuteActionCommand}"
-                                    Visibility="{c:Binding 'Action != null', FalseToVisibility=Collapsed}">
+                                    Visibility="{c:Binding 'Action != null', FalseToVisibility=Collapsed}"
+                                    ToolTip="{Binding Action.Name, Converter={StaticResource ResourceStringConverter}}"
+                                    IsEnabled="{Binding Action.DependencySatisfied}">
                             <Button.Content>
                                 <TextBlock Text="{Binding Action.Name, Converter={StaticResource ResourceStringConverter}}" TextTrimming="CharacterEllipsis"/>
                             </Button.Content>

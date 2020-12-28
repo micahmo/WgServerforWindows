@@ -133,8 +133,8 @@
     <value>{0}:</value>
     <comment>{0} is the name of the property</comment>
   </data>
-  <data name="PrivateKeyValidationError" xml:space="preserve">
-    <value>Private key must not be empty</value>
+  <data name="KeyValidationError" xml:space="preserve">
+    <value>Key must not be empty</value>
   </data>
   <data name="PortRangeValidationError" xml:space="preserve">
     <value>Port must be between 0 and 65535.</value>
@@ -240,5 +240,17 @@
   </data>
   <data name="Confirm" xml:space="preserve">
     <value>Confirm</value>
+  </data>
+  <data name="PublicKeyProperty" xml:space="preserve">
+    <value>Public Key</value>
+  </data>
+  <data name="PublicKeyPropertyAction" xml:space="preserve">
+    <value>Generate</value>
+  </data>
+  <data name="PresharedKeyProperty" xml:space="preserve">
+    <value>Preshared Key</value>
+  </data>
+  <data name="PresharedKeyPropertyAction" xml:space="preserve">
+    <value>Generate</value>
   </data>
 </root>

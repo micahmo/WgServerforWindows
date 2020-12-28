@@ -196,6 +196,15 @@ namespace WireGuardServerForWindows.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Key must not be empty.
+        /// </summary>
+        public static string KeyValidationError {
+            get {
+                return ResourceManager.GetString("KeyValidationError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Listen Port.
         /// </summary>
         public static string ListenPortProperty {
@@ -241,6 +250,24 @@ namespace WireGuardServerForWindows.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Preshared Key.
+        /// </summary>
+        public static string PresharedKeyProperty {
+            get {
+                return ResourceManager.GetString("PresharedKeyProperty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Generate.
+        /// </summary>
+        public static string PresharedKeyPropertyAction {
+            get {
+                return ResourceManager.GetString("PresharedKeyPropertyAction", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Private Key.
         /// </summary>
         public static string PrivateKeyProperty {
@@ -259,20 +286,29 @@ namespace WireGuardServerForWindows.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Private key must not be empty.
-        /// </summary>
-        public static string PrivateKeyValidationError {
-            get {
-                return ResourceManager.GetString("PrivateKeyValidationError", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to {0}:.
         /// </summary>
         public static string PropertyNameFormat {
             get {
                 return ResourceManager.GetString("PropertyNameFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Public Key.
+        /// </summary>
+        public static string PublicKeyProperty {
+            get {
+                return ResourceManager.GetString("PublicKeyProperty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Generate.
+        /// </summary>
+        public static string PublicKeyPropertyAction {
+            get {
+                return ResourceManager.GetString("PublicKeyPropertyAction", resourceCulture);
             }
         }
         

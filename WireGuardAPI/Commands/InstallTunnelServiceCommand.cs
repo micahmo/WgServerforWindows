@@ -6,10 +6,10 @@
         (
             @switch: "/installtunnelservice",
             whichExe: WhichExe.WireGuardExe,
-            mode: Mode.RunAsAdministrator,
             configurationFile
         )
         {
+            RunAsAdministrator = true;
         }
     }
 }
