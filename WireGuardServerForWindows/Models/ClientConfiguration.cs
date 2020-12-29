@@ -21,6 +21,7 @@ namespace WireGuardServerForWindows.Models
             // Client properties
             PrivateKeyProperty.TargetTypes.Add(GetType());
             DnsProperty.TargetTypes.Add(GetType());
+            AddressProperty.TargetTypes.Add(GetType());
 
             // Server properties
             PresharedKeyProperty.TargetTypes.Add(typeof(ServerConfiguration));
