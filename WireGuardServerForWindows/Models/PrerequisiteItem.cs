@@ -93,6 +93,8 @@ namespace WireGuardServerForWindows.Models
             Refresh();
         }
 
+        public virtual void Update() { }
+
         #endregion
     }
 

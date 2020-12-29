@@ -10,6 +10,8 @@ namespace WireGuardServerForWindows.Models
 {
     public class ServerConfigurationPrerequisite : PrerequisiteItem
     {
+        #region Constructor
+
         public ServerConfigurationPrerequisite() : base
         (
             title: Resources.ServerConfiguration,
@@ -18,6 +20,10 @@ namespace WireGuardServerForWindows.Models
             resolveText: Resources.ServerConfigurationResolveText,
             configureText: Resources.ServerConfigurationConfigureText
         ) { }
+
+        #endregion
+
+        #region PrerequisiteItem members
 
         public override bool Fulfilled
         {
@@ -86,28 +92,55 @@ namespace WireGuardServerForWindows.Models
                 Mouse.OverrideCursor = Cursors.Wait;
 
                 // Save to Data
-                serverConfiguration.ToConfiguration().SaveToFile(ServerDataPath);
+                SaveData(serverConfiguration);
 
                 // Save to WG
-                var configuration = serverConfiguration.ToConfiguration<ServerConfiguration>();
+                SaveWG(serverConfiguration);
 
-                if (Directory.Exists(ClientConfigurationsPrerequisite.ClientDataDirectory))
-                {
-                    foreach (string clientConfigurationFile in Directory.GetFiles(ClientConfigurationsPrerequisite.ClientDataDirectory, "*.conf"))
-                    {
-                        configuration = configuration.Merge(new ClientConfiguration(null)
-                            .Load<ClientConfiguration>(Configuration.LoadFromFile(clientConfigurationFile))
-                            .ToConfiguration<ServerConfiguration>());
-                    }
-                }
-
-                configuration.SaveToFile(ServerWGPath);
+                // Update clients
+                new ClientConfigurationsPrerequisite().Update();
 
                 Mouse.OverrideCursor = null;
             }
 
             Refresh();
         }
+
+        public override void Update()
+        {
+            if (File.Exists(ServerDataPath))
+            {
+                SaveWG(new ServerConfiguration().Load<ServerConfiguration>(Configuration.LoadFromFile(ServerDataPath)));
+            }
+        }
+
+        #endregion
+
+        #region Private methods
+
+        private void SaveData(ServerConfiguration serverConfiguration)
+        {
+            serverConfiguration.ToConfiguration().SaveToFile(ServerDataPath);
+        }
+
+        private void SaveWG(ServerConfiguration serverConfiguration)
+        {
+            var configuration = serverConfiguration.ToConfiguration<ServerConfiguration>();
+
+            if (Directory.Exists(ClientConfigurationsPrerequisite.ClientDataDirectory))
+            {
+                foreach (string clientConfigurationFile in Directory.GetFiles(ClientConfigurationsPrerequisite.ClientDataDirectory, "*.conf"))
+                {
+                    configuration = configuration.Merge(new ClientConfiguration(null)
+                        .Load<ClientConfiguration>(Configuration.LoadFromFile(clientConfigurationFile))
+                        .ToConfiguration<ServerConfiguration>());
+                }
+            }
+
+            configuration.SaveToFile(ServerWGPath);
+        }
+
+        #endregion
 
         #region Public static properties
 
