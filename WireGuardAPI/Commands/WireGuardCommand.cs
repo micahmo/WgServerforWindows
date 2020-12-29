@@ -17,7 +17,7 @@
 
         public bool RunAsAdministrator { get; protected set; }
 
-        public string StandardInput { get; protected set; }
+        public string StandardInput { get; protected set; } = string.Empty;
     }
 
     public enum WhichExe

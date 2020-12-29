@@ -12,7 +12,7 @@ namespace WireGuardServerForWindows.Models
         {
             // Server properties
             PrivateKeyProperty.TargetTypes.Add(GetType());
-            AddressProperty.TargetTypes.Add(GetType());
+            //AddressProperty.TargetTypes.Add(GetType());
             ListenPortProperty.TargetTypes.Add(GetType());
 
             // Client properties
@@ -22,7 +22,7 @@ namespace WireGuardServerForWindows.Models
             EndpointProperty.TargetTypes.Add(typeof(ClientConfiguration));
 
             // Set some properties that are unique to server
-            AddressProperty.DefaultValue = "10.253.0.0/24";
+            AddressProperty.DefaultValue = "10.253.0.1/24";
             AddressProperty.Index = 3;
 
             // Resort after changing the index of AddressProperty

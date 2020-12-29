@@ -24,6 +24,13 @@ namespace WireGuardServerForWindows.Models
             {
                 Properties.Add(property);
             }
+
+            foreach (ConfigurationPropertyAction action in GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public)
+                .Where(p => typeof(ConfigurationPropertyAction).IsAssignableFrom(p.PropertyType))
+                .Select(p => p.GetValue(this) as ConfigurationPropertyAction))
+            {
+                TopLevelActions.Add(action);
+            }
         }
 
         #endregion
@@ -107,7 +114,7 @@ namespace WireGuardServerForWindows.Models
             PersistentPropertyName = "PrivateKey",
             Name = nameof(PrivateKeyProperty),
             IsReadOnly = true,
-            Action = new ConfigurationPropertyAction
+            Action = new ConfigurationPropertyAction(this)
             {
                 Name = $"{nameof(PrivateKeyProperty)}{nameof(ConfigurationProperty.Action)}",
                 Action = (conf, prop) =>
@@ -126,7 +133,7 @@ namespace WireGuardServerForWindows.Models
             PersistentPropertyName = "PublicKey",
             Name = nameof(PublicKeyProperty),
             IsReadOnly = true,
-            Action = new ConfigurationPropertyAction()
+            Action = new ConfigurationPropertyAction(this)
             {
                 Name = $"{nameof(PublicKeyProperty)}{nameof(ConfigurationProperty.Action)}",
                 Action = (conf, prop) =>
@@ -147,7 +154,7 @@ namespace WireGuardServerForWindows.Models
             PersistentPropertyName = "PresharedKey",
             Name = nameof(PresharedKeyProperty),
             IsReadOnly = true,
-            Action = new ConfigurationPropertyAction()
+            Action = new ConfigurationPropertyAction(this)
             {
                 Name = $"{nameof(PresharedKeyProperty)}{nameof(ConfigurationProperty.Action)}",
                 Action = (conf, prop) =>
@@ -186,6 +193,8 @@ namespace WireGuardServerForWindows.Models
         public List<ConfigurationProperty> Properties { get; } = new List<ConfigurationProperty>();
 
         public IEnumerable<ConfigurationProperty> UiProperties => Properties.Where(p => p.IsHidden == false);
+
+        public List<ConfigurationPropertyAction> TopLevelActions { get; } = new List<ConfigurationPropertyAction>();
 
         #endregion
     }

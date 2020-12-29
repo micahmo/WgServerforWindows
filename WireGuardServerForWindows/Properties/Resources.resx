@@ -279,4 +279,14 @@
   <data name="EndpointPortMismatch" xml:space="preserve">
     <value>Endpoint port should match Listen Port property.</value>
   </data>
+  <data name="GenerateQrCodeAction" xml:space="preserve">
+    <value>Generate QR Code</value>
+  </data>
+  <data name="ExportConfigurationFileAction" xml:space="preserve">
+    <value>Export Configuration File</value>
+  </data>
+  <data name="ClientConfigurationTitle" xml:space="preserve">
+    <value>'{0}' Client Configuration</value>
+    <comment>{0} is the client configuration name</comment>
+  </data>
 </root>

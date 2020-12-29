@@ -2,6 +2,8 @@
 using System.IO;
 using System.Windows.Input;
 using SharpConfig;
+using WireGuardAPI;
+using WireGuardAPI.Commands;
 using WireGuardServerForWindows.Controls;
 using WireGuardServerForWindows.Extensions;
 using WireGuardServerForWindows.Properties;
@@ -98,7 +100,14 @@ namespace WireGuardServerForWindows.Models
                 SaveWG(serverConfiguration);
 
                 // Update clients
-                new ClientConfigurationsPrerequisite().Update();
+                var clientConfigurationsPrerequisite = new ClientConfigurationsPrerequisite();
+                clientConfigurationsPrerequisite.Update();
+
+                // Update the tunnel service, if everyone is happy
+                if (Fulfilled && clientConfigurationsPrerequisite.Fulfilled && new TunnelServicePrerequisite().Fulfilled)
+                {
+                    new WireGuardExe().ExecuteCommand(new SyncConfigurationCommand(Path.GetFileNameWithoutExtension(ServerWGPath), ServerWGPath));
+                }
 
                 Mouse.OverrideCursor = null;
             }

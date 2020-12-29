@@ -23,7 +23,9 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <controls:ConfigurationEditorControl Grid.Row="0" Grid.ColumnSpan="3" DataContext="{Binding}"/>
+        <ScrollViewer Grid.Row="0" Grid.ColumnSpan="3" VerticalScrollBarVisibility="Auto">
+            <controls:ConfigurationEditorControl DataContext="{Binding}"/>
+        </ScrollViewer>
 
         <Button Grid.Column="1" Grid.Row="1" Margin="10,10,5,10" Padding="10,5,10,5" HorizontalAlignment="Right" Content="{x:Static properties:Resources.Cancel}" Click="CancelButton_Click"/>
         <Button Grid.Column="2" Grid.Row="1" Margin="5,10,10,10" Padding="10,5,10,5" HorizontalAlignment="Right" Content="{x:Static properties:Resources.Save}" Click="SaveButton_Click"/>

@@ -15,7 +15,28 @@
         <converters:MultiValueStringFormatConverter x:Key="MultiValueStringFormatConverter"/>
     </Grid.Resources>
 
-    <ScrollViewer VerticalScrollBarVisibility="Auto">
+    <StackPanel Orientation="Vertical">
+        <ItemsControl ItemsSource="{Binding TopLevelActions}">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <StackPanel HorizontalAlignment="Center" Orientation="Horizontal"/>
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <Button Margin="10,0,0,0" Padding="5" Command="{Binding ExecuteActionCommand}"
+                            ToolTip="{Binding Description}"
+                            IsEnabled="{Binding DependencySatisfied}">
+                        <Button.Content>
+                            <TextBlock Text="{Binding Name, Converter={StaticResource ResourceStringConverter}}"
+                                       TextWrapping="Wrap" TextAlignment="Center"/>
+                        </Button.Content>
+                    </Button>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+
         <ItemsControl ItemsSource="{Binding UiProperties}">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
@@ -87,5 +108,5 @@
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ItemsControl>
-    </ScrollViewer>
+    </StackPanel>
 </Grid>

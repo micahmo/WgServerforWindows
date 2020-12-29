@@ -75,7 +75,8 @@ namespace WireGuardAPI
                             FileName = GetPath(command.WhichExe),
                             Arguments = string.Join(' ', new[] {command.Switch}.Union(command.Args ?? Enumerable.Empty<string>())),
                             Verb = "runas",
-                            UseShellExecute = true
+                            UseShellExecute = true,
+                            CreateNoWindow = true
                         })?.WaitForExit();
                     }
                     else

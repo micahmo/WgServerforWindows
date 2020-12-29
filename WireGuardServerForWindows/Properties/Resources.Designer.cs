@@ -151,6 +151,15 @@ namespace WireGuardServerForWindows.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to &apos;{0}&apos; Client Configuration.
+        /// </summary>
+        public static string ClientConfigurationTitle {
+            get {
+                return ResourceManager.GetString("ClientConfigurationTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Confirm.
         /// </summary>
         public static string Confirm {
@@ -224,6 +233,15 @@ namespace WireGuardServerForWindows.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Export Configuration File.
+        /// </summary>
+        public static string ExportConfigurationFileAction {
+            get {
+                return ResourceManager.GetString("ExportConfigurationFileAction", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Generate an IP in the range defined by the server address (currently: {0}).
         /// </summary>
         public static string GenerateClientAddressActionDescription {
@@ -238,6 +256,15 @@ namespace WireGuardServerForWindows.Properties {
         public static string GenerateFromServerAction {
             get {
                 return ResourceManager.GetString("GenerateFromServerAction", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Generate QR Code.
+        /// </summary>
+        public static string GenerateQrCodeAction {
+            get {
+                return ResourceManager.GetString("GenerateQrCodeAction", resourceCulture);
             }
         }
         

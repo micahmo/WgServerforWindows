@@ -1,12 +1,18 @@
 ﻿using System;
+using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Threading;
 using GalaSoft.MvvmLight.Command;
+using QRCoder;
 using SharpConfig;
+using WireGuardServerForWindows.Extensions;
 using WireGuardServerForWindows.Properties;
+using ECCLevel = QRCoder.QRCodeGenerator.ECCLevel;
+using Image = System.Windows.Controls.Image;
 
 namespace WireGuardServerForWindows.Models
 {
@@ -27,25 +33,11 @@ namespace WireGuardServerForWindows.Models
             PresharedKeyProperty.TargetTypes.Add(typeof(ServerConfiguration));
             PublicKeyProperty.TargetTypes.Add(typeof(ServerConfiguration));
 
-            // Add support for deleting client config (not supported in server)
-            NameProperty.Action = new ConfigurationPropertyAction
-            {
-                Name = nameof(Resources.DeleteAction),
-                Action = (conf, prop) =>
-                {
-                    MessageBoxResult res = MessageBox.Show(Resources.ConfirmDeleteClient, Resources.Confirm, MessageBoxButton.YesNo);
-                    if (res == MessageBoxResult.Yes)
-                    {
-                        (conf as ClientConfiguration)?.RemoveClientCommand?.Execute(null);
-                    }
-                }
-            };
-
             var serverConfiguration = new ServerConfiguration().Load<ServerConfiguration>(Configuration.LoadFromFile(ServerConfigurationPrerequisite.ServerDataPath));
             string serverIp = serverConfiguration.AddressProperty.Value;
 
             // Add support for generating client IP
-            AddressProperty.Action = new ConfigurationPropertyAction
+            AddressProperty.Action = new ConfigurationPropertyAction(this)
             {
                 Name = nameof(Resources.GenerateFromServerAction),
                 Description = string.Format(Resources.GenerateClientAddressActionDescription, serverIp),
@@ -94,6 +86,14 @@ namespace WireGuardServerForWindows.Models
             AddressProperty.Index = 1;
             DnsProperty.Index = 2;
             SortProperties();
+
+            Properties.ForEach(p => p.PropertyChanged += (_, args) =>
+            {
+                if (args.PropertyName == nameof(p.Value))
+                {
+                    GenerateQrCodeAction.RaisePropertyChanged(nameof(GenerateQrCodeAction.DependencySatisfied));
+                }
+            });
         }
 
         #endregion
@@ -135,6 +135,85 @@ namespace WireGuardServerForWindows.Models
             }
         };
         private ConfigurationProperty _dnsProperty;
+
+        public ConfigurationPropertyAction DeleteAction => _deleteAction ??= new ConfigurationPropertyAction(this)
+        {
+            Name = nameof(Resources.DeleteAction),
+            Action = (conf, prop) =>
+            {
+                MessageBoxResult res = MessageBox.Show(Resources.ConfirmDeleteClient, Resources.Confirm, MessageBoxButton.YesNo);
+                if (res == MessageBoxResult.Yes)
+                {
+                    (conf as ClientConfiguration)?.RemoveClientCommand?.Execute(null);
+                }
+            }
+        };
+        private ConfigurationPropertyAction _deleteAction;
+
+        public ConfigurationPropertyAction GenerateQrCodeAction => _generateQrCodeAction ??= new ConfigurationPropertyAction(this)
+        {
+            Name = nameof(Resources.GenerateQrCodeAction),
+            Action = (conf, prop) =>
+            {
+                Configuration configuration = ToConfiguration<ClientConfiguration>();
+
+                Configuration serverConfiguration = default;
+                if (File.Exists(ServerConfigurationPrerequisite.ServerDataPath))
+                {
+                    serverConfiguration = new ServerConfiguration()
+                        .Load<ServerConfiguration>(Configuration.LoadFromFile(ServerConfigurationPrerequisite.ServerDataPath))
+                        .ToConfiguration<ClientConfiguration>();
+                }
+
+                using MemoryStream memoryStream = new MemoryStream();
+                configuration.Merge(serverConfiguration).SaveToStream(memoryStream);
+
+                using StreamReader streamReader = new StreamReader(memoryStream);
+                // Have to seek to the beginning before reading
+                memoryStream.Seek(0, SeekOrigin.Begin);
+
+                QRCode code = new QRCode(new QRCodeGenerator().CreateQrCode(streamReader.ReadToEnd(), ECCLevel.Q));
+                Bitmap image = code.GetGraphic(20);
+
+                new Window
+                {
+                    Content = new Image
+                    {
+                        Source = image.ToImageSource()
+                    },
+                    Width = 300,
+                    Height = 300,
+                    Title = string.Format(Resources.ClientConfigurationTitle, conf.NameProperty.Value)
+                }.ShowDialog();
+            },
+            DependencySatisfiedFunc = _ => Properties.All(p => string.IsNullOrEmpty(p.Validation?.Validate?.Invoke(p))),
+        };
+        private ConfigurationPropertyAction _generateQrCodeAction;
+
+        public ConfigurationPropertyAction ExportConfigurationFileAction => _exportConfigurationFileAction ??= new ConfigurationPropertyAction(this)
+        {
+            Name = nameof(Resources.ExportConfigurationFileAction),
+            Action = (conf, prop) =>
+            {
+                var saveFileDialog = new Microsoft.Win32.SaveFileDialog {FileName = $"{conf.NameProperty.Value}.conf", Filter = "Configuration Files (*.conf)|*.conf"};
+                if (saveFileDialog.ShowDialog() == true)
+                {
+                    Configuration configuration = ToConfiguration<ClientConfiguration>();
+
+                    Configuration serverConfiguration = default;
+                    if (File.Exists(ServerConfigurationPrerequisite.ServerDataPath))
+                    {
+                        serverConfiguration = new ServerConfiguration()
+                            .Load<ServerConfiguration>(Configuration.LoadFromFile(ServerConfigurationPrerequisite.ServerDataPath))
+                            .ToConfiguration<ClientConfiguration>();
+                    }
+
+                    configuration.Merge(serverConfiguration).SaveToFile(saveFileDialog.FileName);
+                }
+            },
+            DependencySatisfiedFunc = _ => Properties.All(p => string.IsNullOrEmpty(p.Validation?.Validate?.Invoke(p))),
+        };
+        private ConfigurationPropertyAction _exportConfigurationFileAction;
 
         public ICommand RemoveClientCommand => _removeClientCommand ??= new RelayCommand(() =>
         {
