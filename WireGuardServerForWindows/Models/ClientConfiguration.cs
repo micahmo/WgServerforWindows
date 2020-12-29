@@ -1,6 +1,4 @@
-﻿using System;
-using System.IO;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Input;
 using System.Windows.Threading;
 using GalaSoft.MvvmLight.Command;
@@ -40,29 +38,7 @@ namespace WireGuardServerForWindows.Models
 
         #endregion
 
-        #region ConfigurationBase members
-
-        public override ConfigurationBase Load(string configurationFilePath)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override void Save(string configurationFile)
-        {
-            string contents = string.Join(
-                Environment.NewLine,
-                ServerConfiguration.ToString<ClientConfiguration>(),
-                ToString<ClientConfiguration>());
-
-            File.WriteAllText(configurationFile, contents);
-        }
-
-        #endregion
-
         #region Public properties
-
-        // Every client has a reference to its server
-        public ServerConfiguration ServerConfiguration { get; set; }
 
         public ICommand RemoveClientCommand => _removeClientCommand ??= new RelayCommand(() =>
         {

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Net;
 using WireGuardServerForWindows.Properties;
 
@@ -21,55 +18,6 @@ namespace WireGuardServerForWindows.Models
             // Client properties
             PresharedKeyProperty.TargetTypes.Add(typeof(ClientConfiguration));
             PublicKeyProperty.TargetTypes.Add(typeof(ClientConfiguration));
-        }
-
-        #endregion
-
-        #region ConfigurationBase members
-
-        public override ConfigurationBase Load(string configurationFilePath)
-        {
-            bool start = false;
-            bool stop = false;
-
-            foreach (string line in File.ReadAllLines(configurationFilePath))
-            {
-                if (line == "[Interface]")
-                {
-                    start = true;
-                    continue;
-                }
-                else if (line == "[Peer]")
-                {
-                    stop = true;
-                    continue;
-                }
-
-                if (start && !stop)
-                {
-                    List<string> parts = line.Split('=', 2, StringSplitOptions.RemoveEmptyEntries).Select(str => str.Trim()).ToList();
-                    string propertyName = parts.FirstOrDefault();
-                    string value = parts.LastOrDefault();
-
-                    if (propertyName is { } && value is { } &&
-                        Properties.FirstOrDefault(p => p.PersistentPropertyName == propertyName) is { } property)
-                    {
-                        property.Value = value;
-                    }
-
-                }
-            }
-
-            return this;
-        }
-
-        public override void Save(string configurationFilePath)
-        {
-            string contents = string.Join(
-                Environment.NewLine,
-                new[] { ToString<ServerConfiguration>() }.Union(ClientConfigurations.Select(c => c.ToString<ServerConfiguration>())));
-
-            File.WriteAllText(configurationFilePath, contents);
         }
 
         #endregion

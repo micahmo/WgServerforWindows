@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 using System.Windows.Input;
 using GalaSoft.MvvmLight;
+using SharpConfig;
 using WireGuardAPI;
 using WireGuardAPI.Commands;
 using WireGuardServerForWindows.Properties;
@@ -29,26 +29,54 @@ namespace WireGuardServerForWindows.Models
 
         #region Public (abstract) methods
 
-        public abstract ConfigurationBase Load(string configurationFile);
-
-        public abstract void Save(string configurationFile);
-
-        /// <summary>
-        /// The string representation of this configuration, targeted to <see cref="TTarget"/> config file.
-        /// </summary>
-        public string ToString<TTarget>() where TTarget : ConfigurationBase
+        public ConfigurationBase Load(Configuration configuration)
         {
-            StringBuilder fileContents = new StringBuilder();
-
-            fileContents.AppendLine(this is TTarget ? "[Interface]" : "[Peer]");
-            fileContents.AppendLine($"#{NameProperty.Value}");
-
-            foreach (ConfigurationProperty property in Properties.Where(p => p.TargetTypes.Contains(GetType())))
+            if (configuration.FirstOrDefault(s => s.Name == "Interface") is { } section)
             {
-                fileContents.AppendLine($"{property.PersistentPropertyName} = {property.Value}");
+                foreach (Setting setting in section)
+                {
+                    if (Properties.FirstOrDefault(p => p.PersistentPropertyName == setting.Name) is { } property)
+                    {
+                        property.Value = setting.StringValue;
+                    }
+                }
             }
 
-            return fileContents.ToString();
+            return this;
+        }
+
+        /// <summary>
+        /// The serialized representation of this configuration, not targeted to a particular config type, but intended to hold all properties
+        /// </summary>
+        public Configuration ToConfiguration()
+        {
+            string sectionName = "Interface";
+
+            var configuration = new Configuration();
+            configuration[sectionName].PreComment = NameProperty.Value;
+            foreach (ConfigurationProperty property in Properties)
+            {
+                configuration[sectionName][property.PersistentPropertyName].StringValue = property.Value;
+            }
+
+            return configuration;
+        }
+
+        /// <summary>
+        /// The serialized representation of this configuration, targeted to <see cref="TTarget"/> config file.
+        /// </summary>
+        public Configuration ToConfiguration<TTarget>() where TTarget : ConfigurationBase
+        {
+            string sectionName = this is TTarget ? "Interface" : "Peer";
+
+            var configuration = new Configuration();
+            configuration[sectionName].PreComment = NameProperty.Value;
+            foreach (ConfigurationProperty property in Properties.Where(p => p.TargetTypes.Contains(GetType())))
+            {
+                configuration[sectionName][property.PersistentPropertyName].StringValue = property.Value;
+            }
+
+            return configuration;
         }
 
         #endregion
@@ -58,7 +86,7 @@ namespace WireGuardServerForWindows.Models
         public ConfigurationProperty NameProperty => _nameProperty ??= new ConfigurationProperty(this)
         {
             Index = 0,
-            PersistentPropertyName = "[Name]",
+            PersistentPropertyName = "Name",
             Name = nameof(NameProperty),
             Validation = new EmptyStringValidation(Resources.EmptyClientNameError)
         };
@@ -129,9 +157,9 @@ namespace WireGuardServerForWindows.Models
 
     public static class ConfigurationBaseExtensions
     {
-        public static TConfig Load<TConfig>(this TConfig configuration, string configurationFilePath) where TConfig : ConfigurationBase
+        public static TConfig Load<TConfig>(this TConfig @this, Configuration configuration) where TConfig : ConfigurationBase
         {
-            return configuration.Load(configurationFilePath) as TConfig;
+            return @this.Load(configuration) as TConfig;
         }
     }
 }

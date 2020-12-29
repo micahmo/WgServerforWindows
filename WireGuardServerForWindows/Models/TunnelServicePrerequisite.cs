@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Linq;
 using System.Net.NetworkInformation;
 using System.Threading.Tasks;
@@ -24,13 +23,13 @@ namespace WireGuardServerForWindows.Models
         }
 
         public override bool Fulfilled => NetworkInterface.GetAllNetworkInterfaces()
-            .Any(nic => nic.Name == _interfaceName);
+            .Any(nic => nic.Name == Path.GetFileNameWithoutExtension(ServerConfigurationPrerequisite.ServerWGPath));
 
         public override void Resolve()
         {
             Mouse.OverrideCursor = Cursors.Wait;
             
-            new WireGuardExe().ExecuteCommand(new InstallTunnelServiceCommand(_configurationPath));
+            new WireGuardExe().ExecuteCommand(new InstallTunnelServiceCommand(ServerConfigurationPrerequisite.ServerWGPath));
             Task.Run(WaitForFulfilled);
             
             Mouse.OverrideCursor = null;
@@ -40,18 +39,10 @@ namespace WireGuardServerForWindows.Models
         {
             Mouse.OverrideCursor = Cursors.Wait;
             
-            new WireGuardExe().ExecuteCommand(new UninstallTunnelServiceCommand(_interfaceName));
+            new WireGuardExe().ExecuteCommand(new UninstallTunnelServiceCommand(Path.GetFileNameWithoutExtension(ServerConfigurationPrerequisite.ServerWGPath)));
             Refresh();
             
             Mouse.OverrideCursor = null;
         }
-
-        #region Private properties
-
-        private string _interfaceName => Path.GetFileNameWithoutExtension(_configurationPath);
-
-        private string _configurationPath => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "WS4W", "wg_server.conf");
-
-        #endregion
     }
 }

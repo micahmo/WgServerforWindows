@@ -1,9 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Windows.Input;
+using SharpConfig;
 using WireGuardServerForWindows.Controls;
+using WireGuardServerForWindows.Extensions;
 using WireGuardServerForWindows.Properties;
 
 namespace WireGuardServerForWindows.Models
@@ -25,7 +26,7 @@ namespace WireGuardServerForWindows.Models
             {
                 bool result = true;
 
-                if (Directory.Exists(ClientConfigurationDirectory) == false || Directory.GetFiles(ClientConfigurationDirectory).Any() == false)
+                if (Directory.Exists(ClientWGDirectory) == false || Directory.GetFiles(ClientWGDirectory).Any() == false)
                 {
                     result = false;
                     ErrorMessage = Resources.ClientConfigurationsMissingErrorMessage;
@@ -33,9 +34,9 @@ namespace WireGuardServerForWindows.Models
                 else
                 {
                     // Validate all of the client(s)
-                    foreach (string clientConfigurationFile in Directory.GetFiles(ClientConfigurationDirectory, "*.conf"))
+                    foreach (string clientConfigurationFile in Directory.GetFiles(ClientDataDirectory, "*.conf"))
                     {
-                        var clientConfiguration = new ClientConfiguration(null).Load(clientConfigurationFile);
+                        var clientConfiguration = new ClientConfiguration(null).Load<ClientConfiguration>(Configuration.LoadFromFile(clientConfigurationFile));
 
                         foreach (ConfigurationProperty property in clientConfiguration.Properties)
                         {
@@ -56,9 +57,14 @@ namespace WireGuardServerForWindows.Models
 
         public override void Resolve()
         {
-            if (Directory.Exists(ClientConfigurationDirectory) == false)
+            if (Directory.Exists(ClientDataDirectory) == false)
             {
-                Directory.CreateDirectory(ClientConfigurationDirectory);
+                Directory.CreateDirectory(ClientDataDirectory);
+            }
+
+            if (Directory.Exists(ClientWGDirectory) == false)
+            {
+                Directory.CreateDirectory(ClientWGDirectory);
             }
 
             Configure();
@@ -68,9 +74,9 @@ namespace WireGuardServerForWindows.Models
         {
             ClientConfigurationList clientConfigurations = new ClientConfigurationList();
 
-            foreach (string clientConfigurationFile in Directory.GetFiles(ClientConfigurationDirectory, "*.conf"))
+            foreach (string clientConfigurationFile in Directory.GetFiles(ClientDataDirectory, "*.conf"))
             {
-                clientConfigurations.List.Add(new ClientConfiguration(clientConfigurations).Load<ClientConfiguration>(clientConfigurationFile));
+                clientConfigurations.List.Add(new ClientConfiguration(clientConfigurations).Load<ClientConfiguration>(Configuration.LoadFromFile(clientConfigurationFile)));
             }
 
             ClientConfigurationEditorWindow clientConfigurationEditorWindow = new ClientConfigurationEditorWindow {DataContext = clientConfigurations};
@@ -79,19 +85,45 @@ namespace WireGuardServerForWindows.Models
             if (clientConfigurationEditorWindow.ShowDialog() == true)
             {
                 Mouse.OverrideCursor = Cursors.Wait;
+
+                // Save to Data
                 foreach (ClientConfiguration clientConfiguration in clientConfigurations.List)
                 {
-                    clientConfiguration.Save(Path.Combine(ClientConfigurationDirectory, $"{clientConfiguration.NameProperty.Value}.conf"));
+                    var configuration = clientConfiguration.ToConfiguration();
+                    configuration.SaveToFile(Path.Combine(ClientDataDirectory, $"{clientConfiguration.NameProperty.Value}.conf"));
                 }
+
+                // Save to WG
+                foreach (ClientConfiguration clientConfiguration in clientConfigurations.List)
+                {
+                    Configuration configuration = clientConfiguration.ToConfiguration<ClientConfiguration>();
+
+                    Configuration serverConfiguration = default;
+                    if (File.Exists(ServerConfigurationPrerequisite.ServerDataPath))
+                    {
+                        serverConfiguration = new ServerConfiguration()
+                            .Load<ServerConfiguration>(Configuration.LoadFromFile(ServerConfigurationPrerequisite.ServerDataPath))
+                            .ToConfiguration<ClientConfiguration>();
+                    }
+
+                    configuration.Merge(serverConfiguration).SaveToFile(Path.Combine(ClientWGDirectory, $"{clientConfiguration.NameProperty.Value}.conf"));
+                }
+
                 Mouse.OverrideCursor = null;
             }
 
             Refresh();
         }
 
-        #region Public properties
+        #region Public static properties
 
-        public string ClientConfigurationDirectory => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "WS4W", "clients");
+        public static string ClientDataDirectory { get; } = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "WS4W", "clients_data");
+
+        #endregion
+
+        #region Private static properties
+
+        private static string ClientWGDirectory { get; } = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "WS4W", "clients_wg");
 
         #endregion
     }
