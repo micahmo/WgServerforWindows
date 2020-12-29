@@ -82,6 +82,15 @@ namespace WireGuardServerForWindows.Models
 
         #endregion
 
+        #region Protected methods
+
+        protected void SortProperties()
+        {
+            Properties.Sort((a, b) => a.Index - b.Index);
+        }
+
+        #endregion
+
         #region Public properties
 
         public ConfigurationProperty NameProperty => _nameProperty ??= new ConfigurationProperty(this)

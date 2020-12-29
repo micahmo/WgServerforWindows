@@ -26,7 +26,7 @@
                             <ColumnDefinition Width="1*"/>
                         </Grid.ColumnDefinitions>
 
-                        <TextBlock Grid.Column="0" TextTrimming="CharacterEllipsis"
+                        <TextBlock Grid.Column="0" TextWrapping="Wrap"
                                        Text="{Binding Name, Converter={StaticResource ResourceStringConverter}, StringFormat={x:Static properties:Resources.PropertyNameFormat}}"
                                        ToolTip="{Binding Name, Converter={StaticResource ResourceStringConverter}}"
                                        VerticalAlignment="Center"/>

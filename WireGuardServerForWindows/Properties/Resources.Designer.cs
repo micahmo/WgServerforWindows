@@ -178,11 +178,48 @@ namespace WireGuardServerForWindows.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to DNS.
+        /// </summary>
+        public static string DnsProperty {
+            get {
+                return ResourceManager.GetString("DnsProperty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Client must have a name.
         /// </summary>
         public static string EmptyClientNameError {
             get {
                 return ResourceManager.GetString("EmptyClientNameError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enter public IP:Port as endpoint..
+        /// </summary>
+        public static string EmptyEndpointValidation {
+            get {
+                return ResourceManager.GetString("EmptyEndpointValidation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Endpoint port should match Listen Port property..
+        /// </summary>
+        public static string EndpointPortMismatch {
+            get {
+                return ResourceManager.GetString("EndpointPortMismatch", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Endpoint
+        ///(Public IP:Port).
+        /// </summary>
+        public static string EndpointProperty {
+            get {
+                return ResourceManager.GetString("EndpointProperty", resourceCulture);
             }
         }
         

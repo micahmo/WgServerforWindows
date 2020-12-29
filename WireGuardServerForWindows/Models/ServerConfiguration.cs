@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Net;
+﻿using System;
+using System.Collections.Generic;
 using WireGuardServerForWindows.Properties;
 
 namespace WireGuardServerForWindows.Models
@@ -19,13 +19,30 @@ namespace WireGuardServerForWindows.Models
             PresharedKeyProperty.TargetTypes.Add(typeof(ClientConfiguration));
             PublicKeyProperty.TargetTypes.Add(typeof(ClientConfiguration));
             AllowedIpsProperty.TargetTypes.Add(typeof(ClientConfiguration));
+            EndpointProperty.TargetTypes.Add(typeof(ClientConfiguration));
 
             // Set some properties that are unique to server
             AddressProperty.DefaultValue = "10.253.0.0/24";
             AddressProperty.Index = 3;
 
             // Resort after changing the index of AddressProperty
-            Properties.Sort((a, b) => a.Index - b.Index);
+            SortProperties();
+
+            ListenPortProperty.PropertyChanged += (_, __) =>
+            {
+                if (string.IsNullOrEmpty(EndpointProperty.Value) == false)
+                {
+                    var parts = EndpointProperty.Value.Split(new[] {':'}, StringSplitOptions.RemoveEmptyEntries);
+                    if (parts.Length == 2)
+                    {
+                        EndpointProperty.Value = $"{parts[0]}:{ListenPortProperty.Value}";
+                    }
+                    else if (EndpointProperty.Value.StartsWith(':'))
+                    {
+                        EndpointProperty.Value = $":{ListenPortProperty.Value}";
+                    }
+                }
+            };
         }
 
         #endregion
@@ -73,6 +90,44 @@ namespace WireGuardServerForWindows.Models
             }
         };
         private ConfigurationProperty _allowedIpsProperty;
+
+        public ConfigurationProperty EndpointProperty => _endpointProperty ??= new ConfigurationProperty(this)
+        {
+            Index = 3,
+            PersistentPropertyName = "Endpoint",
+            Name = nameof(EndpointProperty),
+            DefaultValue = $":{ListenPortProperty.DefaultValue}",
+            Validation = new ConfigurationPropertyValidation
+            {
+                Validate = obj =>
+                {
+                    string result = default;
+
+                    if (string.IsNullOrEmpty(obj.Value))
+                    {
+                        result = Resources.EmptyEndpointValidation;
+                    }
+                    else
+                    {
+                        var endpointParts = obj.Value.Split(new[] {':'}, StringSplitOptions.RemoveEmptyEntries);
+                        if (endpointParts.Length == 2)
+                        {
+                            if (endpointParts[1] != ListenPortProperty.Value)
+                            {
+                                result = Resources.EndpointPortMismatch;
+                            }
+                        }
+                        else
+                        {
+                            result = Resources.EmptyEndpointValidation;
+                        }
+                    }
+
+                    return result;
+                }
+            }
+        };
+        private ConfigurationProperty _endpointProperty;
 
         // The list of client peers accepted by this server
         public List<ClientConfiguration> ClientConfigurations { get; } = new List<ClientConfiguration>();

@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using SharpConfig;
 using WireGuardServerForWindows.Models;
 
 namespace WireGuardServerForWindows
@@ -12,15 +13,16 @@ namespace WireGuardServerForWindows
         {
             InitializeComponent();
 
+            // Never put quotes around config file values
+            Configuration.OutputRawStringValues = true;
+
             MainWindowModel mainWindowModel = new MainWindowModel();
             mainWindowModel.PrerequisiteItems.Add(new WireGuardExePrerequisite());
             mainWindowModel.PrerequisiteItems.Add(new ServerConfigurationPrerequisite());
             mainWindowModel.PrerequisiteItems.Add(new ClientConfigurationsPrerequisite());
             mainWindowModel.PrerequisiteItems.Add(new TunnelServicePrerequisite());
 
-            DataContext = Model = mainWindowModel;
+            DataContext = mainWindowModel;
         }
-
-        private MainWindowModel Model { get; }
     }
 }

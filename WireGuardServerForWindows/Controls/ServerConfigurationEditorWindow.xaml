@@ -8,7 +8,7 @@
         xmlns:controls="clr-namespace:WireGuardServerForWindows.Controls"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance Type=models:ServerConfiguration}"
-        Width="600" Height="400"
+        Width="600" Height="450"
         Title="{x:Static properties:Resources.ServerConfiguration}">
 
     <Grid>

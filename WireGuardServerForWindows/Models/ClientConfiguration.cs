@@ -20,6 +20,7 @@ namespace WireGuardServerForWindows.Models
 
             // Client properties
             PrivateKeyProperty.TargetTypes.Add(GetType());
+            DnsProperty.TargetTypes.Add(GetType());
 
             // Server properties
             PresharedKeyProperty.TargetTypes.Add(typeof(ServerConfiguration));
@@ -87,6 +88,11 @@ namespace WireGuardServerForWindows.Models
                 }
             };
             Properties.Add(allowedIpsProperty);
+
+            // Adjust index of properties and resort
+            AddressProperty.Index = 1;
+            DnsProperty.Index = 2;
+            SortProperties();
         }
 
         #endregion
@@ -95,6 +101,39 @@ namespace WireGuardServerForWindows.Models
 
         public string Name => string.IsNullOrEmpty(NameProperty.Value) ? _guidName ??= Guid.NewGuid().ToString() : NameProperty.Value;
         private string _guidName;
+
+        public ConfigurationProperty DnsProperty => _dnsProperty ??= new ConfigurationProperty(this)
+        {
+            PersistentPropertyName = "DNS",
+            Name = nameof(DnsProperty),
+            DefaultValue = "1.1.1.1, 8.8.8.8",
+            Validation = new ConfigurationPropertyValidation
+            {
+                Validate = obj =>
+                {
+                    string result = default;
+
+                    if (string.IsNullOrEmpty(obj.Value))
+                    {
+                        result = Resources.NetworkAddressValidationError;
+                    }
+                    else
+                    {
+                        foreach (string address in obj.Value.Split(new[] {','}, StringSplitOptions.RemoveEmptyEntries))
+                        {
+                            if (IPNetwork.TryParse(address, out _) == false)
+                            {
+                                result = Resources.NetworkAddressValidationError;
+                                break;
+                            }
+                        }
+                    }
+
+                    return result;
+                }
+            }
+        };
+        private ConfigurationProperty _dnsProperty;
 
         public ICommand RemoveClientCommand => _removeClientCommand ??= new RelayCommand(() =>
         {

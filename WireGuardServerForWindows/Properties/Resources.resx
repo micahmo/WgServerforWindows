@@ -266,4 +266,17 @@
     <value>Generate an IP in the range defined by the server address (currently: {0})</value>
     <comment>{0} is the IP of the server</comment>
   </data>
+  <data name="DnsProperty" xml:space="preserve">
+    <value>DNS</value>
+  </data>
+  <data name="EndpointProperty" xml:space="preserve">
+    <value>Endpoint
+(Public IP:Port)</value>
+  </data>
+  <data name="EmptyEndpointValidation" xml:space="preserve">
+    <value>Enter public IP:Port as endpoint.</value>
+  </data>
+  <data name="EndpointPortMismatch" xml:space="preserve">
+    <value>Endpoint port should match Listen Port property.</value>
+  </data>
 </root>
