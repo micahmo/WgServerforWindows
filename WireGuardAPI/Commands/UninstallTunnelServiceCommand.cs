@@ -9,7 +9,6 @@
             serviceName
         )
         {
-            RunAsAdministrator = true;
         }
     }
 }

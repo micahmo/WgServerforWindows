@@ -15,8 +15,6 @@
 
         public WhichExe WhichExe { get; protected set; }
 
-        public bool RunAsAdministrator { get; protected set; }
-
         public string StandardInput { get; protected set; } = string.Empty;
     }
 

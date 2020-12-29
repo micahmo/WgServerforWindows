@@ -16,6 +16,7 @@
 
         <Image Grid.Column="0" Height="40" Margin="5" Source="/Images/checked.png" Visibility="{c:Binding Fulfilled, FalseToVisibility=Collapsed}"/>
         <Image Grid.Column="0" Height="40" Margin="5" Source="/Images/cancel.png" Visibility="{c:Binding '!Fulfilled', FalseToVisibility=Collapsed}"/>
+        <Image Grid.Column="0" Height="40" Margin="5" Source="/Images/info.png" Visibility="{c:Binding IsInformational, FalseToVisibility=Collapsed}"/>
 
         <Grid Grid.Column="1" Margin="5">
             <Grid.RowDefinitions>

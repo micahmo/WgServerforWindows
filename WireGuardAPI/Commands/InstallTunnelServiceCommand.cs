@@ -9,7 +9,6 @@
             configurationFile
         )
         {
-            RunAsAdministrator = true;
         }
     }
 }

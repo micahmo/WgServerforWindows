@@ -467,6 +467,15 @@ namespace WireGuardServerForWindows.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Server Status.
+        /// </summary>
+        public static string ServerStatus {
+            get {
+                return ResourceManager.GetString("ServerStatus", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Tunnel Service.
         /// </summary>
         public static string TunnelService {
@@ -517,6 +526,15 @@ namespace WireGuardServerForWindows.Properties {
         public static string UninstallWireGuard {
             get {
                 return ResourceManager.GetString("UninstallWireGuard", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Update Live.
+        /// </summary>
+        public static string UpdateLive {
+            get {
+                return ResourceManager.GetString("UpdateLive", resourceCulture);
             }
         }
         

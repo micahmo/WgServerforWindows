@@ -21,6 +21,7 @@ namespace WireGuardServerForWindows
             mainWindowModel.PrerequisiteItems.Add(new ServerConfigurationPrerequisite());
             mainWindowModel.PrerequisiteItems.Add(new ClientConfigurationsPrerequisite());
             mainWindowModel.PrerequisiteItems.Add(new TunnelServicePrerequisite());
+            mainWindowModel.PrerequisiteItems.Add(new ServerStatusPrerequisite());
 
             DataContext = mainWindowModel;
         }

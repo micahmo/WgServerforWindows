@@ -65,6 +65,8 @@ namespace WireGuardServerForWindows.Models
         }
         private string _configureText;
 
+        public virtual bool IsInformational => false;
+
         #endregion
 
         #region Public methods

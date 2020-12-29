@@ -289,4 +289,10 @@
     <value>'{0}' Client Configuration</value>
     <comment>{0} is the client configuration name</comment>
   </data>
+  <data name="ServerStatus" xml:space="preserve">
+    <value>Server Status</value>
+  </data>
+  <data name="UpdateLive" xml:space="preserve">
+    <value>Update Live</value>
+  </data>
 </root>

@@ -1,4 +1,9 @@
-﻿using WireGuardServerForWindows.Controls;
+﻿using System;
+using System.IO;
+using System.Windows.Threading;
+using WireGuardAPI;
+using WireGuardAPI.Commands;
+using WireGuardServerForWindows.Controls;
 
 namespace WireGuardServerForWindows.Models
 {
@@ -15,6 +20,14 @@ namespace WireGuardServerForWindows.Models
             configureText: "View"
         )
         {
+            _updateTimer = new DispatcherTimer {Interval = TimeSpan.FromSeconds(1)};
+            _updateTimer.Tick += (_, __) =>
+            {
+                if (UpdateLive)
+                {
+                    RaisePropertyChanged(nameof(ServerStatus));
+                }
+            };
         }
 
         public override bool Fulfilled => true;
@@ -26,8 +39,27 @@ namespace WireGuardServerForWindows.Models
 
         public override void Configure()
         {
-            new ServerStatusWindow().ShowDialog();
+            _updateTimer.IsEnabled = true;
+            new ServerStatusWindow { DataContext = this }.ShowDialog();
+            _updateTimer.IsEnabled = false;
         }
+
+        public override bool IsInformational => true;
+
+        #endregion
+
+        public string ServerStatus => new WireGuardExe().ExecuteCommand(new ShowCommand(Path.GetFileNameWithoutExtension(ServerConfigurationPrerequisite.ServerWGPath)));
+
+        public bool UpdateLive
+        {
+            get => _updateLive;
+            set => Set(nameof(UpdateLive), ref _updateLive, value);
+        }
+        private bool _updateLive = true;
+
+        #region Private fields
+
+        private readonly DispatcherTimer _updateTimer;
 
         #endregion
     }
