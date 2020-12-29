@@ -16,7 +16,7 @@
     </Grid.Resources>
 
     <ScrollViewer VerticalScrollBarVisibility="Auto">
-        <ItemsControl ItemsSource="{Binding Properties}">
+        <ItemsControl ItemsSource="{Binding UiProperties}">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
                     <Grid Margin="10">
@@ -28,9 +28,11 @@
 
                         <TextBlock Grid.Column="0" TextTrimming="CharacterEllipsis"
                                        Text="{Binding Name, Converter={StaticResource ResourceStringConverter}, StringFormat={x:Static properties:Resources.PropertyNameFormat}}"
-                                       ToolTip="{Binding Name, Converter={StaticResource ResourceStringConverter}}"/>
+                                       ToolTip="{Binding Name, Converter={StaticResource ResourceStringConverter}}"
+                                       VerticalAlignment="Center"/>
                         <TextBox x:Name="tb" Grid.Column="1" Grid.ColumnSpan="{c:Binding 'Action=null?2:1'}" IsReadOnly="{Binding IsReadOnly}"
-                                     Text="{Binding Value, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}">
+                                     Text="{Binding Value, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"
+                                     VerticalContentAlignment="Center">
                             <TextBox.Style>
                                 <Style TargetType="{x:Type TextBox}">
                                     <Style.Triggers>
@@ -74,10 +76,11 @@
 
                         <Button Grid.Column="2" Margin="10,0,0,0" Command="{Binding ExecuteActionCommand}"
                                     Visibility="{c:Binding 'Action != null', FalseToVisibility=Collapsed}"
-                                    ToolTip="{Binding Action.Name, Converter={StaticResource ResourceStringConverter}}"
+                                    ToolTip="{Binding Action.Description}"
                                     IsEnabled="{Binding Action.DependencySatisfied}">
                             <Button.Content>
-                                <TextBlock Text="{Binding Action.Name, Converter={StaticResource ResourceStringConverter}}" TextTrimming="CharacterEllipsis"/>
+                                <TextBlock Text="{Binding Action.Name, Converter={StaticResource ResourceStringConverter}}"
+                                           TextWrapping="Wrap" TextAlignment="Center"/>
                             </Button.Content>
                         </Button>
                     </Grid>

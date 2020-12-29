@@ -5,41 +5,35 @@ namespace WireGuardServerForWindows.Models
 {
     public class ConfigurationPropertyAction : ObservableObject
     {
-        public ConfigurationPropertyAction(ConfigurationProperty dependentProperty = null)
-        {
-            _dependentProperty = dependentProperty;
-
-            if (_dependentProperty is { })
-            {
-                _dependentProperty.PropertyChanged += (_, __) =>
-                {
-                    RaisePropertyChanged(nameof(DependencySatisfied));
-                };
-            }
-        }
+        public ConfigurationPropertyAction() { }
 
         public string Name { get; set; }
 
-        public bool DependencySatisfied
+        public string Description { get; set; }
+
+        public ConfigurationProperty DependentProperty
         {
-            get
+            get => _dependentProperty;
+            set
             {
-                bool result = true;
+                _dependentProperty = value;
 
-                if (_dependentProperty is { } && DependencySatisfiedFunc is { })
+                if (_dependentProperty is { })
                 {
-                    result = DependencySatisfiedFunc(_dependentProperty);
+                    _dependentProperty.PropertyChanged += (_, __) =>
+                    {
+                        RaisePropertyChanged(nameof(DependencySatisfied));
+                    };
                 }
-
-                return result;
             }
         }
+        private ConfigurationProperty _dependentProperty;
+
+        public bool DependencySatisfied => DependencySatisfiedFunc?.Invoke(_dependentProperty) ?? true;
 
         public Func<ConfigurationProperty, bool> DependencySatisfiedFunc { get; set; }
 
         public Action<ConfigurationBase, ConfigurationProperty> Action { get; set; }
-
-        private readonly ConfigurationProperty _dependentProperty;
     }
 
     public class ConfigurationPropertyValidation

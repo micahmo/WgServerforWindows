@@ -36,6 +36,8 @@ namespace WireGuardServerForWindows.Models
 
         public bool IsReadOnly { get; set; }
 
+        public bool IsHidden { get; set; }
+
         public ConfigurationPropertyAction Action { get; set; }
 
         public ConfigurationPropertyValidation Validation { get; set; }

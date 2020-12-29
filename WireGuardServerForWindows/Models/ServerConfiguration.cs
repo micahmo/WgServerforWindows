@@ -18,6 +18,14 @@ namespace WireGuardServerForWindows.Models
             // Client properties
             PresharedKeyProperty.TargetTypes.Add(typeof(ClientConfiguration));
             PublicKeyProperty.TargetTypes.Add(typeof(ClientConfiguration));
+            AllowedIpsProperty.TargetTypes.Add(typeof(ClientConfiguration));
+
+            // Set some properties that are unique to server
+            AddressProperty.DefaultValue = "10.253.0.0/24";
+            AddressProperty.Index = 3;
+
+            // Resort after changing the index of AddressProperty
+            Properties.Sort((a, b) => a.Index - b.Index);
         }
 
         #endregion
@@ -52,26 +60,19 @@ namespace WireGuardServerForWindows.Models
         };
         private ConfigurationProperty _listenPortProperty;
 
-        public ConfigurationProperty AddressProperty => _addressProperty ??= new ConfigurationProperty(this)
+        public ConfigurationProperty AllowedIpsProperty => _allowedIpsProperty ??= new ConfigurationProperty(this)
         {
             Index = 2,
-            PersistentPropertyName = "Address", Name = nameof(AddressProperty), DefaultValue = "10.253.0.2/32",
+            PersistentPropertyName = "AllowedIPs",
+            Name = nameof(AllowedIpsProperty),
+            DefaultValue = "0.0.0.0/0",
             Validation = new ConfigurationPropertyValidation
             {
-                Validate = obj =>
-                {
-                    string result = default;
-
-                    if (IPNetwork.TryParse(obj.Value, out _) == false)
-                    {
-                        result = Resources.NetworkAddressValidationError;
-                    }
-
-                    return result;
-                }
+                // Reuse AddressProperty validation
+                Validate = obj => AddressProperty.Validation?.Validate?.Invoke(obj)
             }
         };
-        private ConfigurationProperty _addressProperty;
+        private ConfigurationProperty _allowedIpsProperty;
 
         // The list of client peers accepted by this server
         public List<ClientConfiguration> ClientConfigurations { get; } = new List<ClientConfiguration>();

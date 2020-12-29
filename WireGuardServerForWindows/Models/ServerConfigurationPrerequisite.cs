@@ -112,6 +112,8 @@ namespace WireGuardServerForWindows.Models
             {
                 SaveWG(new ServerConfiguration().Load<ServerConfiguration>(Configuration.LoadFromFile(ServerDataPath)));
             }
+
+            Refresh();
         }
 
         #endregion

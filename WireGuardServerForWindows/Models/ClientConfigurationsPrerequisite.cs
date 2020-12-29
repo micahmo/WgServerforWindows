@@ -98,6 +98,11 @@ namespace WireGuardServerForWindows.Models
                     File.Delete(clientConfigurationFile);
                 }
 
+                foreach (string clientConfigurationFile in Directory.GetFiles(ClientWGDirectory, "*.conf"))
+                {
+                    File.Delete(clientConfigurationFile);
+                }
+
                 // Save to Data
                 foreach (ClientConfiguration clientConfiguration in clientConfigurations.List)
                 {
@@ -128,6 +133,8 @@ namespace WireGuardServerForWindows.Models
                     SaveWG(new ClientConfiguration(null).Load<ClientConfiguration>(Configuration.LoadFromFile(clientConfigurationFile)));
                 }
             }
+
+            Refresh();
         }
 
         #endregion
@@ -137,7 +144,7 @@ namespace WireGuardServerForWindows.Models
         private void SaveData(ClientConfiguration clientConfiguration)
         {
             var configuration = clientConfiguration.ToConfiguration();
-            configuration.SaveToFile(Path.Combine(ClientDataDirectory, $"{clientConfiguration.NameProperty.Value}.conf"));
+            configuration.SaveToFile(Path.Combine(ClientDataDirectory, $"{clientConfiguration.Name}.conf"));
         }
 
         private void SaveWG(ClientConfiguration clientConfiguration)
@@ -152,7 +159,7 @@ namespace WireGuardServerForWindows.Models
                     .ToConfiguration<ClientConfiguration>();
             }
 
-            configuration.Merge(serverConfiguration).SaveToFile(Path.Combine(ClientWGDirectory, $"{clientConfiguration.NameProperty.Value}.conf"));
+            configuration.Merge(serverConfiguration).SaveToFile(Path.Combine(ClientWGDirectory, $"{clientConfiguration.Name}.conf"));
         }
 
         #endregion

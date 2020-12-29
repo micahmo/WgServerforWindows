@@ -79,6 +79,15 @@ namespace WireGuardServerForWindows.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Allowed IPs.
+        /// </summary>
+        public static string AllowedIpsProperty {
+            get {
+                return ResourceManager.GetString("AllowedIpsProperty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Cancel.
         /// </summary>
         public static string Cancel {
@@ -162,9 +171,9 @@ namespace WireGuardServerForWindows.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Delete.
         /// </summary>
-        public static string Delete {
+        public static string DeleteAction {
             get {
-                return ResourceManager.GetString("Delete", resourceCulture);
+                return ResourceManager.GetString("DeleteAction", resourceCulture);
             }
         }
         
@@ -174,6 +183,24 @@ namespace WireGuardServerForWindows.Properties {
         public static string EmptyClientNameError {
             get {
                 return ResourceManager.GetString("EmptyClientNameError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Generate an IP in the range defined by the server address (currently: {0}).
+        /// </summary>
+        public static string GenerateClientAddressActionDescription {
+            get {
+                return ResourceManager.GetString("GenerateClientAddressActionDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Generate from Server.
+        /// </summary>
+        public static string GenerateFromServerAction {
+            get {
+                return ResourceManager.GetString("GenerateFromServerAction", resourceCulture);
             }
         }
         
@@ -399,6 +426,15 @@ namespace WireGuardServerForWindows.Properties {
         public static string TunnelServiceNotInstalled {
             get {
                 return ResourceManager.GetString("TunnelServiceNotInstalled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to UNDEFINED.
+        /// </summary>
+        public static string Undefined {
+            get {
+                return ResourceManager.GetString("Undefined", resourceCulture);
             }
         }
         

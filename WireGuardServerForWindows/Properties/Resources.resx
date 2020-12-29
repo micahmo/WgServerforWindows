@@ -232,7 +232,7 @@
   <data name="AddClient" xml:space="preserve">
     <value>Add Client</value>
   </data>
-  <data name="Delete" xml:space="preserve">
+  <data name="DeleteAction" xml:space="preserve">
     <value>Delete</value>
   </data>
   <data name="ConfirmDeleteClient" xml:space="preserve">
@@ -252,5 +252,18 @@
   </data>
   <data name="PresharedKeyPropertyAction" xml:space="preserve">
     <value>Generate</value>
+  </data>
+  <data name="AllowedIpsProperty" xml:space="preserve">
+    <value>Allowed IPs</value>
+  </data>
+  <data name="GenerateFromServerAction" xml:space="preserve">
+    <value>Generate from Server</value>
+  </data>
+  <data name="Undefined" xml:space="preserve">
+    <value>UNDEFINED</value>
+  </data>
+  <data name="GenerateClientAddressActionDescription" xml:space="preserve">
+    <value>Generate an IP in the range defined by the server address (currently: {0})</value>
+    <comment>{0} is the IP of the server</comment>
   </data>
 </root>

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Reflection;
 using System.Windows.Input;
 using GalaSoft.MvvmLight;
@@ -53,10 +54,10 @@ namespace WireGuardServerForWindows.Models
             string sectionName = "Interface";
 
             var configuration = new Configuration();
-            configuration[sectionName].PreComment = NameProperty.Value;
+            configuration[sectionName].PreComment = NameProperty.Value ?? string.Empty;
             foreach (ConfigurationProperty property in Properties)
             {
-                configuration[sectionName][property.PersistentPropertyName].StringValue = property.Value;
+                configuration[sectionName][property.PersistentPropertyName].StringValue = property.Value ?? string.Empty;
             }
 
             return configuration;
@@ -71,7 +72,7 @@ namespace WireGuardServerForWindows.Models
 
             var configuration = new Configuration();
             configuration[sectionName].PreComment = NameProperty.Value;
-            foreach (ConfigurationProperty property in Properties.Where(p => p.TargetTypes.Contains(GetType())))
+            foreach (ConfigurationProperty property in Properties.Where(p => p.TargetTypes.Contains(typeof(TTarget))))
             {
                 configuration[sectionName][property.PersistentPropertyName].StringValue = property.Value;
             }
@@ -116,7 +117,7 @@ namespace WireGuardServerForWindows.Models
             PersistentPropertyName = "PublicKey",
             Name = nameof(PublicKeyProperty),
             IsReadOnly = true,
-            Action = new ConfigurationPropertyAction(dependentProperty: PrivateKeyProperty)
+            Action = new ConfigurationPropertyAction()
             {
                 Name = $"{nameof(PublicKeyProperty)}{nameof(ConfigurationProperty.Action)}",
                 Action = (conf, prop) =>
@@ -125,6 +126,7 @@ namespace WireGuardServerForWindows.Models
                     prop.Value = new WireGuardExe().ExecuteCommand(new GeneratePublicKeyCommand(conf.PrivateKeyProperty.Value));
                     Mouse.OverrideCursor = null;
                 },
+                DependentProperty = PrivateKeyProperty,
                 DependencySatisfiedFunc = prop => string.IsNullOrEmpty(prop.Value) == false
             },
             Validation = new EmptyStringValidation(Resources.KeyValidationError)
@@ -150,7 +152,31 @@ namespace WireGuardServerForWindows.Models
         };
         private ConfigurationProperty _presharedKeyProperty;
 
+        public ConfigurationProperty AddressProperty => _addressProperty ??= new ConfigurationProperty(this)
+        {
+            PersistentPropertyName = "Address",
+            Name = nameof(AddressProperty),
+            // DefaultValue should be set by child class
+            Validation = new ConfigurationPropertyValidation
+            {
+                Validate = obj =>
+                {
+                    string result = default;
+
+                    if (IPNetwork.TryParse(obj.Value, out _) == false)
+                    {
+                        result = Resources.NetworkAddressValidationError;
+                    }
+
+                    return result;
+                }
+            }
+        };
+        private ConfigurationProperty _addressProperty;
+
         public List<ConfigurationProperty> Properties { get; } = new List<ConfigurationProperty>();
+
+        public IEnumerable<ConfigurationProperty> UiProperties => Properties.Where(p => p.IsHidden == false);
 
         #endregion
     }
