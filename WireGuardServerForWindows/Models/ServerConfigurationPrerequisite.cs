@@ -106,7 +106,7 @@ namespace WireGuardServerForWindows.Models
                 // Update the tunnel service, if everyone is happy
                 if (Fulfilled && clientConfigurationsPrerequisite.Fulfilled && new TunnelServicePrerequisite().Fulfilled)
                 {
-                    new WireGuardExe().ExecuteCommand(new SyncConfigurationCommand(Path.GetFileNameWithoutExtension(ServerWGPath), ServerWGPath));
+                    new WireGuardExe().ExecuteCommand(new SyncConfigurationCommand(WireGuardServerInterfaceName, ServerWGPath));
                 }
 
                 Mouse.OverrideCursor = null;
@@ -158,6 +158,8 @@ namespace WireGuardServerForWindows.Models
         public static string ServerWGPath { get; } = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "WS4W", "server_wg", "wg_server.conf");
 
         public static string ServerDataPath { get; } = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "WS4W", "server_data", "wg_server.conf");
+
+        public static string WireGuardServerInterfaceName => Path.GetFileNameWithoutExtension(ServerWGPath);
 
         #endregion
     }

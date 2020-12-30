@@ -23,7 +23,7 @@ namespace WireGuardServerForWindows.Models
         }
 
         public override bool Fulfilled => NetworkInterface.GetAllNetworkInterfaces()
-            .Any(nic => nic.Name == Path.GetFileNameWithoutExtension(ServerConfigurationPrerequisite.ServerWGPath));
+            .Any(nic => nic.Name == ServerConfigurationPrerequisite.WireGuardServerInterfaceName);
 
         public override void Resolve()
         {
@@ -39,7 +39,7 @@ namespace WireGuardServerForWindows.Models
         {
             Mouse.OverrideCursor = Cursors.Wait;
             
-            new WireGuardExe().ExecuteCommand(new UninstallTunnelServiceCommand(Path.GetFileNameWithoutExtension(ServerConfigurationPrerequisite.ServerWGPath)));
+            new WireGuardExe().ExecuteCommand(new UninstallTunnelServiceCommand(ServerConfigurationPrerequisite.WireGuardServerInterfaceName));
             Refresh();
             
             Mouse.OverrideCursor = null;

@@ -1,8 +1,8 @@
-﻿using System.IO;
-using System.Windows;
+﻿using System;
+using System.Linq;
+using System.Net.NetworkInformation;
 using System.Windows.Input;
-using CliWrap;
-using CliWrap.Buffered;
+using Microsoft.WindowsAPICodePack.Net;
 using WireGuardServerForWindows.Properties;
 
 namespace WireGuardServerForWindows.Models
@@ -26,11 +26,12 @@ namespace WireGuardServerForWindows.Models
         {
             get
             {
-                bool result = default;
+                bool result = false;
 
-                var cmd = Cli.Wrap("powershell").WithArguments(
-                    $"(get-netconnectionprofile -interfacealias {Path.GetFileNameWithoutExtension(ServerConfigurationPrerequisite.ServerWGPath)}).NetworkCategory");
-                result = cmd.ExecuteBufferedAsync().Task.Result.StandardOutput.Trim() == "Private";
+                if (GetNetwork() is { } network)
+                {
+                    result = network.Category == NetworkCategory.Private;
+                }
 
                 return result;
             }
@@ -40,16 +41,9 @@ namespace WireGuardServerForWindows.Models
         {
             Mouse.OverrideCursor = Cursors.Wait;
 
-            var result = Cli.Wrap("powershell")
-                .WithArguments($"$profile = get-netconnectionprofile -interfacealias {Path.GetFileNameWithoutExtension(ServerConfigurationPrerequisite.ServerWGPath)}; " +
-                               "$profile.networkcategory = 'Private'; " +
-                               "set-netconnectionprofile -inputobject $profile")
-                .WithValidation(CommandResultValidation.None)
-                .ExecuteBufferedAsync().Task.Result;
-
-            if (string.IsNullOrEmpty(result.StandardError) == false)
+            if (GetNetwork() is { } network)
             {
-                MessageBox.Show(result.StandardError);
+                network.Category = NetworkCategory.Private;
             }
 
             Refresh();
@@ -61,21 +55,36 @@ namespace WireGuardServerForWindows.Models
         {
             Mouse.OverrideCursor = Cursors.Wait;
 
-            var result = Cli.Wrap("powershell")
-                .WithArguments($"$profile = get-netconnectionprofile -interfacealias {Path.GetFileNameWithoutExtension(ServerConfigurationPrerequisite.ServerWGPath)}; " +
-                               "$profile.networkcategory = 'Public'; " +
-                               "set-netconnectionprofile -inputobject $profile")
-                .WithValidation(CommandResultValidation.None)
-                .ExecuteBufferedAsync().Task.Result;
-
-            if (string.IsNullOrEmpty(result.StandardError) == false)
+            if (GetNetwork() is { } network)
             {
-                MessageBox.Show(result.StandardError);
+                network.Category = NetworkCategory.Public;
             }
 
             Refresh();
 
             Mouse.OverrideCursor = null;
+        }
+
+        #endregion
+
+        #region Private methods
+
+        private Network GetNetwork()
+        {
+            Network result = default;
+
+            // Windows API code pack can show stale adapters, and incorrect names.
+            // First, get the real interface here.
+            if (NetworkInterface.GetAllNetworkInterfaces().FirstOrDefault(i => i.Name == ServerConfigurationPrerequisite.WireGuardServerInterfaceName) is { } networkInterface)
+            {
+                // Now use the ID to get the network from API code pack
+                if (NetworkListManager.GetNetworks(NetworkConnectivityLevels.All).FirstOrDefault(n => n.Connections.Any(c => c.AdapterId == new Guid(networkInterface.Id))) is { } network)
+                {
+                    result = network;
+                }
+            }
+
+            return result;
         }
 
         #endregion

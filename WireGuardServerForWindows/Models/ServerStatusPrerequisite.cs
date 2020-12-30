@@ -48,7 +48,7 @@ namespace WireGuardServerForWindows.Models
 
         #endregion
 
-        public string ServerStatus => new WireGuardExe().ExecuteCommand(new ShowCommand(Path.GetFileNameWithoutExtension(ServerConfigurationPrerequisite.ServerWGPath)));
+        public string ServerStatus => new WireGuardExe().ExecuteCommand(new ShowCommand(ServerConfigurationPrerequisite.WireGuardServerInterfaceName));
 
         public bool UpdateLive
         {

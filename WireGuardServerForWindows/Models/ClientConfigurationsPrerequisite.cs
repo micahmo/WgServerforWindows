@@ -124,7 +124,7 @@ namespace WireGuardServerForWindows.Models
                 // Update the tunnel service, if everyone is happy
                 if (Fulfilled && serverConfigurationPrerequisite.Fulfilled && new TunnelServicePrerequisite().Fulfilled)
                 {
-                    new WireGuardExe().ExecuteCommand(new SyncConfigurationCommand(Path.GetFileNameWithoutExtension(ServerConfigurationPrerequisite.ServerWGPath), ServerConfigurationPrerequisite.ServerWGPath));
+                    new WireGuardExe().ExecuteCommand(new SyncConfigurationCommand(ServerConfigurationPrerequisite.WireGuardServerInterfaceName, ServerConfigurationPrerequisite.ServerWGPath));
                 }
 
                 Mouse.OverrideCursor = null;

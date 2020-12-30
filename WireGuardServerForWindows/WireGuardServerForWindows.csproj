@@ -17,6 +17,7 @@
   <ItemGroup>
     <PackageReference Include="CalcBinding" Version="2.5.2" />
     <PackageReference Include="IPNetwork2" Version="2.5.240" />
+    <PackageReference Include="Microsoft.WindowsAPICodePack-Core" Version="1.1.0.2" />
     <PackageReference Include="MvvmLightLibs" Version="5.3.0" />
     <PackageReference Include="QRCoder" Version="1.4.1" />
     <PackageReference Include="sharpconfig" Version="3.2.9.1" />

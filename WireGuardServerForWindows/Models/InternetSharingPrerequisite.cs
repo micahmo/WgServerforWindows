@@ -51,7 +51,7 @@ namespace WireGuardServerForWindows.Models
                     // Import the script
                     .Add("import-module").Add(ScriptPath).Add(";")
                     // Execute the function
-                    .Add("set-netconnectionsharing").Add(Path.GetFileNameWithoutExtension(ServerConfigurationPrerequisite.ServerWGPath)).Add($"${_state}"))
+                    .Add("set-netconnectionsharing").Add(ServerConfigurationPrerequisite.WireGuardServerInterfaceName).Add($"${_state}"))
                 .WithValidation(CommandResultValidation.None);
 
                 var a = _.ToString();
