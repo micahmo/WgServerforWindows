@@ -1,6 +1,9 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
+using System.Net.NetworkInformation;
 using System.Windows.Input;
+using Microsoft.WindowsAPICodePack.Net;
 using SharpConfig;
 using WireGuardAPI;
 using WireGuardAPI.Commands;
@@ -160,6 +163,32 @@ namespace WireGuardServerForWindows.Models
         public static string ServerDataPath { get; } = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "WS4W", "server_data", "wg_server.conf");
 
         public static string WireGuardServerInterfaceName => Path.GetFileNameWithoutExtension(ServerWGPath);
+
+        #endregion
+
+        #region Public static methods
+
+        #region Private methods
+
+        public static Network GetNetwork()
+        {
+            Network result = default;
+
+            // Windows API code pack can show stale adapters, and incorrect names.
+            // First, get the real interface here.
+            if (NetworkInterface.GetAllNetworkInterfaces().FirstOrDefault(i => i.Name == ServerConfigurationPrerequisite.WireGuardServerInterfaceName) is { } networkInterface)
+            {
+                // Now use the ID to get the network from API code pack
+                if (NetworkListManager.GetNetworks(NetworkConnectivityLevels.All).FirstOrDefault(n => n.Connections.Any(c => c.AdapterId == new Guid(networkInterface.Id))) is { } network)
+                {
+                    result = network;
+                }
+            }
+
+            return result;
+        }
+
+        #endregion
 
         #endregion
     }

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Net.NetworkInformation;
-using System.Windows.Input;
+﻿using System.Windows.Input;
 using Microsoft.WindowsAPICodePack.Net;
 using WireGuardServerForWindows.Properties;
 
@@ -28,7 +25,7 @@ namespace WireGuardServerForWindows.Models
             {
                 bool result = false;
 
-                if (GetNetwork() is { } network)
+                if (ServerConfigurationPrerequisite.GetNetwork() is { } network)
                 {
                     result = network.Category == NetworkCategory.Private;
                 }
@@ -41,7 +38,7 @@ namespace WireGuardServerForWindows.Models
         {
             Mouse.OverrideCursor = Cursors.Wait;
 
-            if (GetNetwork() is { } network)
+            if (ServerConfigurationPrerequisite.GetNetwork() is { } network)
             {
                 network.Category = NetworkCategory.Private;
             }
@@ -55,7 +52,7 @@ namespace WireGuardServerForWindows.Models
         {
             Mouse.OverrideCursor = Cursors.Wait;
 
-            if (GetNetwork() is { } network)
+            if (ServerConfigurationPrerequisite.GetNetwork() is { } network)
             {
                 network.Category = NetworkCategory.Public;
             }
@@ -63,28 +60,6 @@ namespace WireGuardServerForWindows.Models
             Refresh();
 
             Mouse.OverrideCursor = null;
-        }
-
-        #endregion
-
-        #region Private methods
-
-        private Network GetNetwork()
-        {
-            Network result = default;
-
-            // Windows API code pack can show stale adapters, and incorrect names.
-            // First, get the real interface here.
-            if (NetworkInterface.GetAllNetworkInterfaces().FirstOrDefault(i => i.Name == ServerConfigurationPrerequisite.WireGuardServerInterfaceName) is { } networkInterface)
-            {
-                // Now use the ID to get the network from API code pack
-                if (NetworkListManager.GetNetworks(NetworkConnectivityLevels.All).FirstOrDefault(n => n.Connections.Any(c => c.AdapterId == new Guid(networkInterface.Id))) is { } network)
-                {
-                    result = network;
-                }
-            }
-
-            return result;
         }
 
         #endregion
