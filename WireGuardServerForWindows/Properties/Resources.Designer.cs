@@ -287,6 +287,51 @@ namespace WireGuardServerForWindows.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Disable Internet Sharing.
+        /// </summary>
+        public static string InternetSharingConfigure {
+            get {
+                return ResourceManager.GetString("InternetSharingConfigure", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Internet Sharing is not enabled, connected peers will have no network access..
+        /// </summary>
+        public static string InternetSharingError {
+            get {
+                return ResourceManager.GetString("InternetSharingError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enable Internet Sharing.
+        /// </summary>
+        public static string InternetSharingResolve {
+            get {
+                return ResourceManager.GetString("InternetSharingResolve", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Internet Sharing is enabled..
+        /// </summary>
+        public static string InternetSharingSuccess {
+            get {
+                return ResourceManager.GetString("InternetSharingSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Internet Sharing.
+        /// </summary>
+        public static string InternetSharingTitle {
+            get {
+                return ResourceManager.GetString("InternetSharingTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Key must not be empty.
         /// </summary>
         public static string KeyValidationError {
@@ -373,6 +418,51 @@ namespace WireGuardServerForWindows.Properties {
         public static string PrivateKeyPropertyAction {
             get {
                 return ResourceManager.GetString("PrivateKeyPropertyAction", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Revert back to public.
+        /// </summary>
+        public static string PrivateNetworkConfigure {
+            get {
+                return ResourceManager.GetString("PrivateNetworkConfigure", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Network is currently public, meaning that some important protocols and ports will be blocked..
+        /// </summary>
+        public static string PrivateNetworkError {
+            get {
+                return ResourceManager.GetString("PrivateNetworkError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Make private.
+        /// </summary>
+        public static string PrivateNetworkResolve {
+            get {
+                return ResourceManager.GetString("PrivateNetworkResolve", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Network is private and will allow sharing..
+        /// </summary>
+        public static string PrivateNetworkSuccess {
+            get {
+                return ResourceManager.GetString("PrivateNetworkSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Private Network.
+        /// </summary>
+        public static string PrivateNetworkTitle {
+            get {
+                return ResourceManager.GetString("PrivateNetworkTitle", resourceCulture);
             }
         }
         

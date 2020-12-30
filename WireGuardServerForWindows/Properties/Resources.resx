@@ -295,4 +295,34 @@
   <data name="UpdateLive" xml:space="preserve">
     <value>Update Live</value>
   </data>
+  <data name="PrivateNetworkTitle" xml:space="preserve">
+    <value>Private Network</value>
+  </data>
+  <data name="PrivateNetworkSuccess" xml:space="preserve">
+    <value>Network is private and will allow sharing.</value>
+  </data>
+  <data name="PrivateNetworkError" xml:space="preserve">
+    <value>Network is currently public, meaning that some important protocols and ports will be blocked.</value>
+  </data>
+  <data name="PrivateNetworkResolve" xml:space="preserve">
+    <value>Make private</value>
+  </data>
+  <data name="PrivateNetworkConfigure" xml:space="preserve">
+    <value>Revert back to public</value>
+  </data>
+  <data name="InternetSharingTitle" xml:space="preserve">
+    <value>Internet Sharing</value>
+  </data>
+  <data name="InternetSharingSuccess" xml:space="preserve">
+    <value>Internet Sharing is enabled.</value>
+  </data>
+  <data name="InternetSharingError" xml:space="preserve">
+    <value>Internet Sharing is not enabled, connected peers will have no network access.</value>
+  </data>
+  <data name="InternetSharingResolve" xml:space="preserve">
+    <value>Enable Internet Sharing</value>
+  </data>
+  <data name="InternetSharingConfigure" xml:space="preserve">
+    <value>Disable Internet Sharing</value>
+  </data>
 </root>
