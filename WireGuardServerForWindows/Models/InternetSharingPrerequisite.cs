@@ -48,15 +48,21 @@ namespace WireGuardServerForWindows.Models
             Mouse.OverrideCursor = Cursors.Wait;
 
             NetSharingManagerClass netSharingManager = new NetSharingManagerClass();
+            
+            // Disable sharing wherever it may be enabled first
+            foreach (var oldConnection in netSharingManager.EnumEveryConnection
+                .OfType<INetConnection>()
+                .Where(n => netSharingManager.INetSharingConfigurationForINetConnection[n].SharingEnabled)
+                .Select(n => netSharingManager.INetSharingConfigurationForINetConnection[n]))
+            {
+                oldConnection.DisableSharing();
+            }
+            
             var internetConnection = netSharingManager.EnumEveryConnection.OfType<INetConnection>().FirstOrDefault(n => netSharingManager.NetConnectionProps[n].Name == "Ethernet");
             var wg_server = netSharingManager.EnumEveryConnection.OfType<INetConnection>().FirstOrDefault(n => netSharingManager.NetConnectionProps[n].Name == ServerConfigurationPrerequisite.WireGuardServerInterfaceName);
 
             if (internetConnection is { } && wg_server is { })
             {
-                // Disable before re-enabling
-                netSharingManager.INetSharingConfigurationForINetConnection[internetConnection].DisableSharing();
-                netSharingManager.INetSharingConfigurationForINetConnection[wg_server].DisableSharing();
-
                 netSharingManager.INetSharingConfigurationForINetConnection[internetConnection].EnableSharing(tagSHARINGCONNECTIONTYPE.ICSSHARINGTYPE_PUBLIC);
                 netSharingManager.INetSharingConfigurationForINetConnection[wg_server].EnableSharing(tagSHARINGCONNECTIONTYPE.ICSSHARINGTYPE_PRIVATE);
             }

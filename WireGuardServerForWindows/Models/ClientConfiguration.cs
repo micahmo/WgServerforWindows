@@ -65,6 +65,18 @@ namespace WireGuardServerForWindows.Models
                 }
             };
 
+            // The client only copies the PSK from the server
+            PresharedKeyProperty.Action = new ConfigurationPropertyAction(this)
+            {
+                Name = $"Client{nameof(PresharedKeyProperty)}{nameof(ConfigurationProperty.Action)}",
+                Action = (conf, prop) =>
+                {
+                    Mouse.OverrideCursor = Cursors.Wait;
+                    prop.Value = serverConfiguration.PresharedKeyProperty.Value;
+                    Mouse.OverrideCursor = null;
+                }
+            };
+
             // Allowed IPs is special, because for the server, it's the same as the Address property for the client
             var allowedIpsProperty = new ConfigurationProperty(this)
             {
@@ -92,6 +104,7 @@ namespace WireGuardServerForWindows.Models
                 if (args.PropertyName == nameof(p.Value))
                 {
                     GenerateQrCodeAction.RaisePropertyChanged(nameof(GenerateQrCodeAction.DependencySatisfied));
+                    ExportConfigurationFileAction.RaisePropertyChanged(nameof(ExportConfigurationFileAction.DependencySatisfied));
                 }
             });
         }
@@ -107,20 +120,16 @@ namespace WireGuardServerForWindows.Models
         {
             PersistentPropertyName = "DNS",
             Name = nameof(DnsProperty),
-            DefaultValue = "1.1.1.1, 8.8.8.8",
             Validation = new ConfigurationPropertyValidation
             {
                 Validate = obj =>
                 {
                     string result = default;
 
-                    if (string.IsNullOrEmpty(obj.Value))
+                    // Only validate if not empty. (No DNS is valid.)
+                    if (string.IsNullOrEmpty(obj.Value) == false)
                     {
-                        result = Resources.NetworkAddressValidationError;
-                    }
-                    else
-                    {
-                        foreach (string address in obj.Value.Split(new[] {','}, StringSplitOptions.RemoveEmptyEntries))
+                        foreach (string address in obj.Value.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
                         {
                             if (IPNetwork.TryParse(address, out _) == false)
                             {

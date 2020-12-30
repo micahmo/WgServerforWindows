@@ -82,5 +82,12 @@ namespace WireGuardServerForWindows.Models
         }
 
         #endregion
+
+        #region Overrides
+
+        // Override ToString for debugging
+        public override string ToString() => $"{PersistentPropertyName}: '{Value}'";
+
+        #endregion
     }
 }

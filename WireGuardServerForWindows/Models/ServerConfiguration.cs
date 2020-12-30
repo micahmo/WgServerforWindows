@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Windows.Input;
+using WireGuardAPI;
+using WireGuardAPI.Commands;
 using WireGuardServerForWindows.Properties;
 
 namespace WireGuardServerForWindows.Models
@@ -27,6 +30,18 @@ namespace WireGuardServerForWindows.Models
 
             // Resort after changing the index of AddressProperty
             SortProperties();
+
+            // The Server actually generates the pre-shared key
+            PresharedKeyProperty.Action = new ConfigurationPropertyAction(this)
+            {
+                Name = $"{nameof(PresharedKeyProperty)}{nameof(ConfigurationProperty.Action)}",
+                Action = (conf, prop) =>
+                {
+                    Mouse.OverrideCursor = Cursors.Wait;
+                    prop.Value = new WireGuardExe().ExecuteCommand(new GeneratePresharedKeyCommand());
+                    Mouse.OverrideCursor = null;
+                }
+            };
 
             ListenPortProperty.PropertyChanged += (_, __) =>
             {

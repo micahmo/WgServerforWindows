@@ -253,6 +253,9 @@
   <data name="PresharedKeyPropertyAction" xml:space="preserve">
     <value>Generate</value>
   </data>
+  <data name="ClientPresharedKeyPropertyAction" xml:space="preserve">
+    <value>Populate from Server</value>
+  </data>
   <data name="AllowedIpsProperty" xml:space="preserve">
     <value>Allowed IPs</value>
   </data>

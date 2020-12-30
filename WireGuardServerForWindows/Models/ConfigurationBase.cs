@@ -62,9 +62,9 @@ namespace WireGuardServerForWindows.Models
 
             var configuration = new Configuration();
             configuration[sectionName].PreComment = NameProperty.Value ?? string.Empty;
-            foreach (ConfigurationProperty property in Properties)
+            foreach (ConfigurationProperty property in Properties.Where(p => string.IsNullOrEmpty(p.Value) == false))
             {
-                configuration[sectionName][property.PersistentPropertyName].StringValue = property.Value ?? string.Empty;
+                configuration[sectionName][property.PersistentPropertyName].StringValue = property.Value;
             }
 
             return configuration;
@@ -79,7 +79,7 @@ namespace WireGuardServerForWindows.Models
 
             var configuration = new Configuration();
             configuration[sectionName].PreComment = NameProperty.Value;
-            foreach (ConfigurationProperty property in Properties.Where(p => p.TargetTypes.Contains(typeof(TTarget))))
+            foreach (ConfigurationProperty property in Properties.Where(p => p.TargetTypes.Contains(typeof(TTarget)) && string.IsNullOrEmpty(p.Value) == false))
             {
                 configuration[sectionName][property.PersistentPropertyName].StringValue = property.Value;
             }
@@ -154,16 +154,7 @@ namespace WireGuardServerForWindows.Models
             PersistentPropertyName = "PresharedKey",
             Name = nameof(PresharedKeyProperty),
             IsReadOnly = true,
-            Action = new ConfigurationPropertyAction(this)
-            {
-                Name = $"{nameof(PresharedKeyProperty)}{nameof(ConfigurationProperty.Action)}",
-                Action = (conf, prop) =>
-                {
-                    Mouse.OverrideCursor = Cursors.Wait;
-                    prop.Value = new WireGuardExe().ExecuteCommand(new GeneratePresharedKeyCommand());
-                    Mouse.OverrideCursor = null;
-                }
-            },
+            // Action is different on Server and Client, so it should be implemented there
             Validation = new EmptyStringValidation(Resources.KeyValidationError)
         };
         private ConfigurationProperty _presharedKeyProperty;

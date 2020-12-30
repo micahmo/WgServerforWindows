@@ -160,6 +160,15 @@ namespace WireGuardServerForWindows.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Populate from Server.
+        /// </summary>
+        public static string ClientPresharedKeyPropertyAction {
+            get {
+                return ResourceManager.GetString("ClientPresharedKeyPropertyAction", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Confirm.
         /// </summary>
         public static string Confirm {
