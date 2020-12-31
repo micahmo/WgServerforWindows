@@ -77,13 +77,13 @@ namespace WireGuardServerForWindows.Models
             Mouse.OverrideCursor = Cursors.Wait;
 
             NetSharingManagerClass netSharingManager = new NetSharingManagerClass();
-            var internetConnection = netSharingManager.EnumEveryConnection.OfType<INetConnection>().FirstOrDefault(n => netSharingManager.NetConnectionProps[n].Name == "Ethernet");
-            var wg_server = netSharingManager.EnumEveryConnection.OfType<INetConnection>().FirstOrDefault(n => netSharingManager.NetConnectionProps[n].Name == ServerConfigurationPrerequisite.WireGuardServerInterfaceName);
 
-            if (internetConnection is { } && wg_server is { })
+            foreach (var oldConnection in netSharingManager.EnumEveryConnection
+                .OfType<INetConnection>()
+                .Where(n => netSharingManager.INetSharingConfigurationForINetConnection[n].SharingEnabled)
+                .Select(n => netSharingManager.INetSharingConfigurationForINetConnection[n]))
             {
-                netSharingManager.INetSharingConfigurationForINetConnection[internetConnection].DisableSharing();
-                netSharingManager.INetSharingConfigurationForINetConnection[wg_server].DisableSharing();
+                oldConnection.DisableSharing();
             }
 
             Refresh();

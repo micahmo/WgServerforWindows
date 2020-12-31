@@ -377,6 +377,51 @@ namespace WireGuardServerForWindows.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Disable.
+        /// </summary>
+        public static string PersistentInternetSharingDisable {
+            get {
+                return ResourceManager.GetString("PersistentInternetSharingDisable", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Persistent internet sharing is not enabled. The WireGuard tunnel may lose network access after a reboot..
+        /// </summary>
+        public static string PersistentInternetSharingError {
+            get {
+                return ResourceManager.GetString("PersistentInternetSharingError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enable.
+        /// </summary>
+        public static string PersistentInternetSharingResolve {
+            get {
+                return ResourceManager.GetString("PersistentInternetSharingResolve", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Persistent internet sharing has been enabled.
+        /// </summary>
+        public static string PersistentInternetSharingSucecss {
+            get {
+                return ResourceManager.GetString("PersistentInternetSharingSucecss", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Persistent Internet Sharing.
+        /// </summary>
+        public static string PersistentInternetSharingTitle {
+            get {
+                return ResourceManager.GetString("PersistentInternetSharingTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Port must be between 0 and 65535..
         /// </summary>
         public static string PortRangeValidationError {

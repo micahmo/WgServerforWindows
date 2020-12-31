@@ -328,4 +328,19 @@
   <data name="InternetSharingConfigure" xml:space="preserve">
     <value>Disable Internet Sharing</value>
   </data>
+  <data name="PersistentInternetSharingTitle" xml:space="preserve">
+    <value>Persistent Internet Sharing</value>
+  </data>
+  <data name="PersistentInternetSharingSucecss" xml:space="preserve">
+    <value>Persistent internet sharing has been enabled</value>
+  </data>
+  <data name="PersistentInternetSharingError" xml:space="preserve">
+    <value>Persistent internet sharing is not enabled. The WireGuard tunnel may lose network access after a reboot.</value>
+  </data>
+  <data name="PersistentInternetSharingResolve" xml:space="preserve">
+    <value>Enable</value>
+  </data>
+  <data name="PersistentInternetSharingDisable" xml:space="preserve">
+    <value>Disable</value>
+  </data>
 </root>
