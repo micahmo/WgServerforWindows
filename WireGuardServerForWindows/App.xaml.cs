@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using System.Windows.Input;
 using System.Windows.Threading;
 using WireGuardServerForWindows.Controls;
 using WireGuardServerForWindows.Models;
@@ -17,6 +18,9 @@ namespace WireGuardServerForWindows
 
         private void Application_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
         {
+            // In case something was in progress when the error occurred
+            Mouse.OverrideCursor = null;
+
             new UnhandledErrorWindow {DataContext = new UnhandledErrorWindowModel
             {
                 Title = WireGuardServerForWindows.Properties.Resources.Error,
