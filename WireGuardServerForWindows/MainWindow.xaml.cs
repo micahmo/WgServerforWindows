@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Linq;
 using System.Windows;
+using System.Windows.Input;
 using SharpConfig;
 using WireGuardServerForWindows.Models;
 
@@ -65,22 +66,29 @@ namespace WireGuardServerForWindows
 
             void PrerequisiteItemFulfilledChanged(object sender, PropertyChangedEventArgs e)
             {
-                if (sender is PrerequisiteItem senderItem && e.PropertyName == nameof(PrerequisiteItem.Fulfilled))
+                Application.Current.Dispatcher.Invoke(() =>
                 {
                     // Unsubscribe before invoking on everyone
                     mainWindowModel.PrerequisiteItems.ForEach(i => i.PropertyChanged -= PrerequisiteItemFulfilledChanged);
 
-                    // Now invoke on all but the sender
-                    mainWindowModel.PrerequisiteItems.Where(i => i != senderItem).ToList().ForEach(i =>
+                    Mouse.OverrideCursor = Cursors.Wait;
+
+                    if (sender is PrerequisiteItem senderItem && e.PropertyName == nameof(PrerequisiteItem.Fulfilled))
                     {
-                        i.RaisePropertyChanged(nameof(i.Fulfilled));
-                        i.RaisePropertyChanged(nameof(i.CanConfigure));
-                        i.RaisePropertyChanged(nameof(i.CanResolve));
-                    });
+                        // Now invoke on all but the sender
+                        mainWindowModel.PrerequisiteItems.Where(i => i != senderItem).ToList().ForEach(i =>
+                        {
+                            i.RaisePropertyChanged(nameof(i.Fulfilled));
+                            i.RaisePropertyChanged(nameof(i.CanConfigure));
+                            i.RaisePropertyChanged(nameof(i.CanResolve));
+                        });
+                    }
+
+                    Mouse.OverrideCursor = null;
 
                     // Now we can resubscribe to all
                     mainWindowModel.PrerequisiteItems.ForEach(i => i.PropertyChanged += PrerequisiteItemFulfilledChanged);
-                }
+                });
             }
 
             DataContext = mainWindowModel;

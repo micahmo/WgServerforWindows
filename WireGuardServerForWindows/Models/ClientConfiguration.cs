@@ -32,6 +32,7 @@ namespace WireGuardServerForWindows.Models
             // Server properties
             PresharedKeyProperty.TargetTypes.Add(typeof(ServerConfiguration));
             PublicKeyProperty.TargetTypes.Add(typeof(ServerConfiguration));
+            ServerPersistentKeepaliveProperty.TargetTypes.Add(typeof(ServerConfiguration));
 
             var serverConfiguration = new ServerConfiguration().Load<ServerConfiguration>(Configuration.LoadFromFile(ServerConfigurationPrerequisite.ServerDataPath));
             string serverIp = serverConfiguration.AddressProperty.Value;
@@ -181,6 +182,16 @@ namespace WireGuardServerForWindows.Models
             }
         };
         private ConfigurationProperty _dnsProperty;
+
+        // Note: This is really a server property, but it goes in the in the (peer) client section of the server's config.
+        // So we'll trick the config generator by putting it in the client, targeting it to the server, and returning the server's value,
+        // which the server will set on the client while saving
+        public ConfigurationProperty ServerPersistentKeepaliveProperty => _persistentKeepaliveProperty ??= new ConfigurationProperty(this)
+        {
+            PersistentPropertyName = "PersistentKeepalive",
+            IsHidden = true
+        };
+        private ConfigurationProperty _persistentKeepaliveProperty;
 
         public ConfigurationPropertyAction DeleteAction => _deleteAction ??= new ConfigurationPropertyAction(this)
         {

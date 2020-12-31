@@ -360,4 +360,10 @@ Current value: {1}</value>
   <data name="DnsAddressValidationError" xml:space="preserve">
     <value>DNS address(es) must be valid IPs, such as 8.8.8.8</value>
   </data>
+  <data name="PersistentKeepaliveValidationError" xml:space="preserve">
+    <value>Persistent Keepalive must have a numerical value. Use 0 to disable the feature.</value>
+  </data>
+  <data name="PersistentKeepaliveProperty" xml:space="preserve">
+    <value>Persistent Keepalive</value>
+  </data>
 </root>

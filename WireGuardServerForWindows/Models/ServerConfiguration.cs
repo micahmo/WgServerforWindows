@@ -187,8 +187,30 @@ namespace WireGuardServerForWindows.Models
         };
         private ConfigurationProperty _endpointProperty;
 
-        // The list of client peers accepted by this server
-        public List<ClientConfiguration> ClientConfigurations { get; } = new List<ClientConfiguration>();
+        // Note: Although this property is configured on the server, it goes in the peer (client) section of the server's config,
+        // which means it also has to be defined on the client, targeted to the server's config.
+        // The client should return the server's value, and the server should not target this property to any config type.
+        public ConfigurationProperty PersistentKeepaliveProperty => _persistentKeepaliveProperty ??= new ConfigurationProperty(this)
+        {
+            PersistentPropertyName = "PersistentKeepalive", // Don't really need this since it isn't saved from here
+            Name = nameof(PersistentKeepaliveProperty),
+            DefaultValue = 0.ToString(),
+            Validation = new ConfigurationPropertyValidation
+            {
+                Validate = prop =>
+                {
+                    string result = default;
+
+                    if (string.IsNullOrEmpty(prop.Value) || int.TryParse(prop.Value, out _) == false)
+                    {
+                        result = Resources.PersistentKeepaliveValidationError;
+                    }
+
+                    return result;
+                }
+            }
+        };
+        private ConfigurationProperty _persistentKeepaliveProperty;
 
         #endregion
     }

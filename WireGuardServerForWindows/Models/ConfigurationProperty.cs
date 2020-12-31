@@ -29,10 +29,15 @@ namespace WireGuardServerForWindows.Models
 
         public string Value
         {
-            get => _value ?? DefaultValue;
+            get => _value ?? GetValueFunc?.Invoke() ?? DefaultValue;
             set => Set(nameof(Value), ref _value, value);
         }
         private string _value;
+
+        /// <summary>
+        /// Allows defining a method for evaluating the value, rather than setting it
+        /// </summary>
+        public Func<string> GetValueFunc { get; set; } = () => default;
 
         public string DefaultValue { get; set; }
 

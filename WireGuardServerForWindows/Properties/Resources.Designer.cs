@@ -440,6 +440,24 @@ namespace WireGuardServerForWindows.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Persistent Keepalive.
+        /// </summary>
+        public static string PersistentKeepaliveProperty {
+            get {
+                return ResourceManager.GetString("PersistentKeepaliveProperty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Persistent Keepalive must have a numerical value. Use 0 to disable the feature..
+        /// </summary>
+        public static string PersistentKeepaliveValidationError {
+            get {
+                return ResourceManager.GetString("PersistentKeepaliveValidationError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Port must be between 0 and 65535..
         /// </summary>
         public static string PortRangeValidationError {

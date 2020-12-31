@@ -164,9 +164,10 @@ namespace WireGuardServerForWindows.Models
             {
                 foreach (string clientConfigurationFile in Directory.GetFiles(ClientConfigurationsPrerequisite.ClientDataDirectory, "*.conf"))
                 {
-                    configuration = configuration.Merge(new ClientConfiguration(null)
-                        .Load<ClientConfiguration>(Configuration.LoadFromFile(clientConfigurationFile))
-                        .ToConfiguration<ServerConfiguration>());
+                    var clientConfiguration = new ClientConfiguration(null).Load<ClientConfiguration>(Configuration.LoadFromFile(clientConfigurationFile));
+                    clientConfiguration.ServerPersistentKeepaliveProperty.Value = serverConfiguration.PersistentKeepaliveProperty.Value;
+                    
+                    configuration = configuration.Merge(clientConfiguration.ToConfiguration<ServerConfiguration>());
                 }
             }
 
