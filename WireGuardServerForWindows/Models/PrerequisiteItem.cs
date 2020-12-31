@@ -67,6 +67,14 @@ namespace WireGuardServerForWindows.Models
 
         public virtual bool IsInformational => false;
 
+        public bool CanResolve => CanResolveFunc?.Invoke() ?? true;
+
+        public Func<bool> CanResolveFunc { get; set; }
+
+        public bool CanConfigure => CanConfigureFunc?.Invoke() ?? true;
+
+        public Func<bool> CanConfigureFunc { get; set; }
+
         #endregion
 
         #region Public methods

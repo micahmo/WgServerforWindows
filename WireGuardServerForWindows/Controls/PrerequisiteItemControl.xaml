@@ -39,10 +39,12 @@
         <Button Grid.Column="2" Padding="5" Margin="5" VerticalAlignment="Center"
                 Content="{Binding ResolveText}" 
                 Command="{Binding Commands.ResolveCommand}"
-                Visibility="{c:Binding '!Fulfilled', FalseToVisibility=Collapsed}"/>
+                Visibility="{c:Binding '!Fulfilled', FalseToVisibility=Collapsed}"
+                IsEnabled="{Binding CanResolve}"/>
         <Button Grid.Column="2" Padding="5" Margin="5" VerticalAlignment="Center"
                 Content="{Binding ConfigureText}" 
                 Command="{Binding Commands.ConfigureCommand}"
-                Visibility="{c:Binding 'Fulfilled', FalseToVisibility=Collapsed}"/>
+                Visibility="{c:Binding 'Fulfilled', FalseToVisibility=Collapsed}"
+                IsEnabled="{Binding CanConfigure}"/>
     </Grid>
 </UserControl>
