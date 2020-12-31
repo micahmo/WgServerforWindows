@@ -393,4 +393,7 @@ Current value: {1}</value>
   <data name="Continue" xml:space="preserve">
     <value>Continue</value>
   </data>
+  <data name="WireGuardNetworkOnDomain" xml:space="preserve">
+      <value>Shared network is on a domain, so there is no need to change the profile of the WireGuard network.</value>
+  </data>
 </root>

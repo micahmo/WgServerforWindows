@@ -44,8 +44,15 @@ namespace WireGuardServerForWindows
             // Can't uninstall the tunnel while internet sharing is enabled
             tunnelServicePrerequisite.CanConfigureFunc = () => internetSharingPrerequisite.Fulfilled == false;
             
-            // Can't enable private network or internet sharing unless tunnel is installed
-            privateNetworkPrerequisite.CanResolveFunc = internetSharingPrerequisite.CanResolveFunc = () => tunnelServicePrerequisite.Fulfilled;
+            // Can't enable private network unless tunnel is installed, and private network must not be informational
+            privateNetworkPrerequisite.CanResolveFunc = () => tunnelServicePrerequisite.Fulfilled &&
+                                                              privateNetworkPrerequisite.IsInformational == false;
+
+            // Can't configure private network if it's only information (e.g., on a domain)
+            privateNetworkPrerequisite.CanConfigureFunc = () => privateNetworkPrerequisite.IsInformational == false;
+
+            // Can't enable internet sharing unless tunnel is installed
+            internetSharingPrerequisite.CanResolveFunc = () => tunnelServicePrerequisite.Fulfilled;
 
             // Can't view server status unless tunnel is installed
             serverStatusPrerequisite.CanConfigureFunc = () => tunnelServicePrerequisite.Fulfilled;

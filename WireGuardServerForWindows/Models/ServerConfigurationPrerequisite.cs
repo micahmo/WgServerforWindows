@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -190,20 +191,28 @@ namespace WireGuardServerForWindows.Models
 
         #region Private methods
 
-        public static Network GetNetwork()
+        public static Network GetNetwork(TimeSpan? timeout = null)
         {
             Network result = default;
 
-            // Windows API code pack can show stale adapters, and incorrect names.
-            // First, get the real interface here.
-            if (NetworkInterface.GetAllNetworkInterfaces().FirstOrDefault(i => i.Name == ServerConfigurationPrerequisite.WireGuardServerInterfaceName) is { } networkInterface)
+            Stopwatch stopwatch = Stopwatch.StartNew();
+
+            do
             {
-                // Now use the ID to get the network from API code pack
-                if (NetworkListManager.GetNetworks(NetworkConnectivityLevels.All).FirstOrDefault(n => n.Connections.Any(c => c.AdapterId == new Guid(networkInterface.Id))) is { } network)
+                // Windows API code pack can show stale adapters, and incorrect names.
+                // First, get the real interface here.
+                if (NetworkInterface.GetAllNetworkInterfaces().FirstOrDefault(i => i.Name == WireGuardServerInterfaceName) is { } networkInterface)
                 {
-                    result = network;
+                    // Now use the ID to get the network from API code pack
+                    if (NetworkListManager.GetNetworks(NetworkConnectivityLevels.All).FirstOrDefault(n => n.Connections.Any(c => c.AdapterId == new Guid(networkInterface.Id))) is { } network)
+                    {
+                        result = network;
+                        break;
+                    }
                 }
-            }
+            } while (stopwatch.ElapsedMilliseconds < (timeout?.TotalMilliseconds ?? 0));
+
+            stopwatch.Stop();
 
             return result;
         }
