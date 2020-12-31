@@ -68,6 +68,7 @@
                                                     -->
                                                     <MultiBinding Converter="{StaticResource MultiValueStringFormatConverter}"
                                                                       ConverterParameter="{x:Static properties:Resources.ValidationErrorFormat}">
+                                                        <Binding Path="Description"/>
                                                         <Binding Path="Value"/>
 
                                                         <!--
@@ -88,7 +89,15 @@
                                             </Setter>
                                         </Trigger>
                                         <Trigger Property="Validation.HasError" Value="False">
-                                            <Setter Property="ToolTip" Value="{Binding Value}"/>
+                                            <Setter Property="ToolTip">
+                                                <Setter.Value>
+                                                    <MultiBinding Converter="{StaticResource MultiValueStringFormatConverter}"
+                                                                  ConverterParameter="{x:Static properties:Resources.PropertyFormat}">
+                                                        <Binding Path="Description"/>
+                                                        <Binding Path="Value"/>
+                                                    </MultiBinding>
+                                                </Setter.Value>
+                                            </Setter>
                                         </Trigger>
                                     </Style.Triggers>
                                 </Style>

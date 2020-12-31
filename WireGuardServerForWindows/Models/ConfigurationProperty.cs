@@ -25,6 +25,8 @@ namespace WireGuardServerForWindows.Models
         // Maps to the name in the .conf file
         public string PersistentPropertyName { get; set; }
 
+        public string Description { get; set; }
+
         public string Value
         {
             get => _value ?? DefaultValue;

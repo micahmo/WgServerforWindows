@@ -143,13 +143,21 @@
     <value>Port must be numerical.</value>
   </data>
   <data name="NetworkAddressValidationError" xml:space="preserve">
-    <value>Network must be in valid CIDR notation. For example: 192.168.1.1/24</value>
+    <value>Network must be in valid CIDR notation. For example: 192.168.1.0/24</value>
   </data>
   <data name="ValidationErrorFormat" xml:space="preserve">
     <value>{0}
+    
+Current value: {1}
 
-{1}</value>
-    <comment>{0} is the original value. {1} is the validation error, shown on a separate line.</comment>
+{2}</value>
+    <comment>{0} is the description. {1} is the current value. {2} is the validation error, shown on a separate line.</comment>
+  </data>
+  <data name="PropertyFormat" xml:space="preserve">
+    <value>{0}
+    
+Current value: {1}</value>
+    <comment>{0} is the description. {1} is the current value.</comment>
   </data>
   <data name="ServerConfiguration" xml:space="preserve">
     <value>Server Configuration</value>
@@ -342,5 +350,14 @@
   </data>
   <data name="PersistentInternetSharingDisable" xml:space="preserve">
     <value>Disable</value>
+  </data>
+  <data name="ServerAllowedIpsDescription" xml:space="preserve">
+    <value>Specify which IPs will be routed from the client to the server. Use 0.0.0.0/0 to route everything. Optionally specify multiple routes, separated by commas, like 10.0.0.0/8, 192.168.1.0/24</value>
+  </data>
+  <data name="ClientAddressValidationError" xml:space="preserve">
+    <value>Client address must be a single IP address, such as 10.232.0.2 or 10.232.0.2/32</value>
+  </data>
+  <data name="DnsAddressValidationError" xml:space="preserve">
+    <value>DNS address(es) must be valid IPs, such as 8.8.8.8</value>
   </data>
 </root>

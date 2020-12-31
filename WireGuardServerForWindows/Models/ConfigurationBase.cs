@@ -163,21 +163,7 @@ namespace WireGuardServerForWindows.Models
         {
             PersistentPropertyName = "Address",
             Name = nameof(AddressProperty),
-            // DefaultValue should be set by child class
-            Validation = new ConfigurationPropertyValidation
-            {
-                Validate = obj =>
-                {
-                    string result = default;
-
-                    if (IPNetwork.TryParse(obj.Value, out _) == false)
-                    {
-                        result = Resources.NetworkAddressValidationError;
-                    }
-
-                    return result;
-                }
-            }
+            // DefaultValue and Validation should be set by child class
         };
         private ConfigurationProperty _addressProperty;
 

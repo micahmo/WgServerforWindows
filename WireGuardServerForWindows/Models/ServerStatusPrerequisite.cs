@@ -34,7 +34,7 @@ namespace WireGuardServerForWindows.Models
 
         public override void Resolve()
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         public override void Configure()

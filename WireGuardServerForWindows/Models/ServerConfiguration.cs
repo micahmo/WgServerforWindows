@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Net;
 using System.Windows.Input;
 using WireGuardAPI;
 using WireGuardAPI.Commands;
@@ -25,11 +27,35 @@ namespace WireGuardServerForWindows.Models
             EndpointProperty.TargetTypes.Add(typeof(ClientConfiguration));
 
             // Set some properties that are unique to server
-            AddressProperty.DefaultValue = "10.253.0.1/24";
+            AddressProperty.DefaultValue = "10.253.0.0/24";
             AddressProperty.Index = 3;
 
-            // Resort after changing the index of AddressProperty
-            SortProperties();
+            // Do custom validation on the Address (we want a CIDR notation)
+            AddressProperty.Validation = new ConfigurationPropertyValidation
+            {
+                Validate = obj =>
+                {
+                    string result = default;
+
+                    if (IPNetwork.TryParse(obj.Value, out _) == false)
+                    {
+                        result = Resources.NetworkAddressValidationError;
+                    }
+                    else // TryParse succeeded
+                    {
+                        // IPNetwork.TryParse recognizes single IP addresses as CIDR (with 8 mask).
+                        // This is not good, because we want an explicit CIDR for the server.
+                        // Therefore, if IPNetwork.TryParse succeeds, and IPAddress.TryParse also succeeds, we have a problem.
+                        if (IPAddress.TryParse(obj.Value, out _))
+                        {
+                            // This is just a regular address. We want CIDR.
+                            result = Resources.NetworkAddressValidationError;
+                        }
+                    }
+
+                    return result;
+                }
+            };
 
             // The Server actually generates the pre-shared key
             PresharedKeyProperty.Action = new ConfigurationPropertyAction(this)
@@ -58,6 +84,9 @@ namespace WireGuardServerForWindows.Models
                     }
                 }
             };
+
+            // Resort after changing the index of AddressProperty
+            SortProperties();
         }
 
         #endregion
@@ -96,12 +125,26 @@ namespace WireGuardServerForWindows.Models
         {
             Index = 2,
             PersistentPropertyName = "AllowedIPs",
-            Name = nameof(AllowedIpsProperty),
+            Name = nameof(AllowedIpsProperty), Description = Resources.ServerAllowedIpsDescription,
             DefaultValue = "0.0.0.0/0",
             Validation = new ConfigurationPropertyValidation
             {
-                // Reuse AddressProperty validation
-                Validate = obj => AddressProperty.Validation?.Validate?.Invoke(obj)
+                Validate = obj =>
+                {
+                    string result = default;
+
+                    // Support CSV allowed IPs
+                    foreach (string address in obj.Value.Split(new[] {','}, StringSplitOptions.RemoveEmptyEntries).Select(a => a.Trim()))
+                    {
+                        if (IPNetwork.TryParse(address, out _) == false)
+                        {
+                            result = Resources.NetworkAddressValidationError;
+                            break;
+                        }
+                    }
+
+                    return result;
+                }
             }
         };
         private ConfigurationProperty _allowedIpsProperty;

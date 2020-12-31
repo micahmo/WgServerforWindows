@@ -65,6 +65,42 @@ namespace WireGuardServerForWindows.Models
                 }
             };
 
+            // Do custom validation on the Address (we want a specific IP or a CIDR with /32)
+            AddressProperty.Validation = new ConfigurationPropertyValidation
+            {
+                Validate = obj =>
+                {
+                    string result = default;
+
+                    // First, try parsing with IPNetwork to see if it's in CIDR format
+                    if (IPNetwork.TryParse(obj.Value, out var network))
+                    {
+                        // At this point, we know it's a valid network. Let's see how many addresses are in range
+                        if (network.Usable > 1)
+                        {
+                            // It's CIDR, but it defines more than one address.
+                            // However, IPNetwork has a quirk that parses single addresses (without mask) as a range.
+                            // So now let's see if it's a single address
+                            if (IPAddress.TryParse(obj.Value, out _) == false)
+                            {
+                                // If we get here, it passed CIDR parsing, but it defined more than one address (i.e., had a mask). It's bad!
+                                result = Resources.ClientAddressValidationError;
+                            }
+                            // Else, it's a single address as parsed by IPAddress, so we're good!
+                        }
+                        // Else
+                        // It's in CIDR notation and only defines a single address (/32) so we're good!
+                    }
+                    else
+                    {
+                        // Not even IPNetwork could parse it, so it's really bad!
+                        result = Resources.ClientAddressValidationError;
+                    }
+
+                    return result;
+                }
+            };
+
             // The client only copies the PSK from the server
             PresharedKeyProperty.Action = new ConfigurationPropertyAction(this)
             {
@@ -129,11 +165,12 @@ namespace WireGuardServerForWindows.Models
                     // Only validate if not empty. (No DNS is valid.)
                     if (string.IsNullOrEmpty(obj.Value) == false)
                     {
-                        foreach (string address in obj.Value.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                        foreach (string address in obj.Value.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(a => a.Trim()))
                         {
-                            if (IPNetwork.TryParse(address, out _) == false)
+                            // We don't want any CIDR here, so parse with IPAddress instead of IPNetwork
+                            if (IPAddress.TryParse(address, out _) == false)
                             {
-                                result = Resources.NetworkAddressValidationError;
+                                result = Resources.DnsAddressValidationError;
                                 break;
                             }
                         }

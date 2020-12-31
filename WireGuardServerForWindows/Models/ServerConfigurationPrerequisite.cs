@@ -1,8 +1,10 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Net.NetworkInformation;
 using System.Windows.Input;
+using Microsoft.Win32;
 using Microsoft.WindowsAPICodePack.Net;
 using SharpConfig;
 using WireGuardAPI;
@@ -22,7 +24,7 @@ namespace WireGuardServerForWindows.Models
             title: Resources.ServerConfiguration,
             successMessage: Resources.ServerConfigurationSuccessMessage,
             errorMessage: Resources.ServerConfigurationMissingErrorMessage,
-            resolveText: Resources.ServerConfigurationResolveText,
+            resolveText: Resources.ServerConfigurationConfigureText,
             configureText: Resources.ServerConfigurationConfigureText
         ) { }
 
@@ -106,9 +108,26 @@ namespace WireGuardServerForWindows.Models
                 var clientConfigurationsPrerequisite = new ClientConfigurationsPrerequisite();
                 clientConfigurationsPrerequisite.Update();
 
+                // Update Internet Sharing IP
+                if (Fulfilled)
+                {
+                    // Don't need TryParse since we're fulfilled
+                    var network = IPNetwork.Parse(serverConfiguration.AddressProperty.Value);
+                    SetScopeAddressRegistryValue(network.ListIPAddress().Skip(1).FirstOrDefault()?.ToString() ?? string.Empty);
+
+                    // If Internet Sharing is already enabled, and we just changed the server's network range, we should disable and re-enable ICS
+                    var ics = new InternetSharingPrerequisite();
+                    if (ics.Fulfilled)
+                    {
+                        ics.Configure();
+                        ics.Resolve();
+                    }
+                }
+
                 // Update the tunnel service, if everyone is happy
                 if (Fulfilled && clientConfigurationsPrerequisite.Fulfilled && new TunnelServicePrerequisite().Fulfilled)
                 {
+                    // Sync conf to tunnel
                     new WireGuardExe().ExecuteCommand(new SyncConfigurationCommand(WireGuardServerInterfaceName, ServerWGPath));
                 }
 
@@ -186,6 +205,12 @@ namespace WireGuardServerForWindows.Models
             }
 
             return result;
+        }
+
+        public static void SetScopeAddressRegistryValue(string value)
+        {
+            var key = Registry.LocalMachine.OpenSubKey(@"SYSTEM\CurrentControlSet\Services\SharedAccess\Parameters", writable: true);
+            key?.SetValue("ScopeAddress", value);
         }
 
         #endregion

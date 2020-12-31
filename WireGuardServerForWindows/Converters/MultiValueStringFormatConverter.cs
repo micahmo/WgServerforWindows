@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Globalization;
+using System.Linq;
+using System.Windows;
 using System.Windows.Data;
 
 namespace WireGuardServerForWindows.Converters
@@ -12,7 +14,7 @@ namespace WireGuardServerForWindows.Converters
 
             if (parameter is string format)
             {
-                result = string.Format(format, values);
+                result = string.Format(format, values.Select(v => v == DependencyProperty.UnsetValue ? string.Empty : v).ToArray());
             }
 
             return result?.Trim();

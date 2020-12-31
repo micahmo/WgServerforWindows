@@ -97,6 +97,15 @@ namespace WireGuardServerForWindows.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Client address must be a single IP address, such as 10.232.0.2 or 10.232.0.2/32.
+        /// </summary>
+        public static string ClientAddressValidationError {
+            get {
+                return ResourceManager.GetString("ClientAddressValidationError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Client Configuration.
         /// </summary>
         public static string ClientConfiguration {
@@ -192,6 +201,15 @@ namespace WireGuardServerForWindows.Properties {
         public static string DeleteAction {
             get {
                 return ResourceManager.GetString("DeleteAction", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to DNS address(es) must be valid IPs, such as 8.8.8.8.
+        /// </summary>
+        public static string DnsAddressValidationError {
+            get {
+                return ResourceManager.GetString("DnsAddressValidationError", resourceCulture);
             }
         }
         
@@ -368,7 +386,7 @@ namespace WireGuardServerForWindows.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Network must be in valid CIDR notation. For example: 192.168.1.1/24.
+        ///   Looks up a localized string similar to Network must be in valid CIDR notation. For example: 192.168.1.0/24.
         /// </summary>
         public static string NetworkAddressValidationError {
             get {
@@ -521,6 +539,17 @@ namespace WireGuardServerForWindows.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {0}
+        ///    
+        ///Current value: {1}.
+        /// </summary>
+        public static string PropertyFormat {
+            get {
+                return ResourceManager.GetString("PropertyFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to {0}:.
         /// </summary>
         public static string PropertyNameFormat {
@@ -553,6 +582,15 @@ namespace WireGuardServerForWindows.Properties {
         public static string Save {
             get {
                 return ResourceManager.GetString("Save", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Specify which IPs will be routed from the client to the server. Use 0.0.0.0/0 to route everything. Optionally specify multiple routes, separated by commas, like 10.0.0.0/8, 192.168.1.0/24.
+        /// </summary>
+        public static string ServerAllowedIpsDescription {
+            get {
+                return ResourceManager.GetString("ServerAllowedIpsDescription", resourceCulture);
             }
         }
         
@@ -684,8 +722,10 @@ namespace WireGuardServerForWindows.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to {0}
+        ///    
+        ///Current value: {1}
         ///
-        ///{1}.
+        ///{2}.
         /// </summary>
         public static string ValidationErrorFormat {
             get {
