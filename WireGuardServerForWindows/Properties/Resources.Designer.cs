@@ -395,6 +395,15 @@ namespace WireGuardServerForWindows.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to OK.
+        /// </summary>
+        public static string OK {
+            get {
+                return ResourceManager.GetString("OK", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Disable.
         /// </summary>
         public static string PersistentInternetSharingDisable {
@@ -600,6 +609,24 @@ namespace WireGuardServerForWindows.Properties {
         public static string Save {
             get {
                 return ResourceManager.GetString("Save", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Choose the public network interface whose internet connection should be shared with the WireGuard interface..
+        /// </summary>
+        public static string SelectInterfaceText {
+            get {
+                return ResourceManager.GetString("SelectInterfaceText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select Interface.
+        /// </summary>
+        public static string SelectInterfaceTitle {
+            get {
+                return ResourceManager.GetString("SelectInterfaceTitle", resourceCulture);
             }
         }
         

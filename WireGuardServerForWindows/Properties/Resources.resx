@@ -366,4 +366,13 @@ Current value: {1}</value>
   <data name="PersistentKeepaliveProperty" xml:space="preserve">
     <value>Persistent Keepalive</value>
   </data>
+  <data name="OK" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="SelectInterfaceTitle" xml:space="preserve">
+    <value>Select Interface</value>
+  </data>
+  <data name="SelectInterfaceText" xml:space="preserve">
+    <value>Choose the public network interface whose internet connection should be shared with the WireGuard interface.</value>
+  </data>
 </root>
