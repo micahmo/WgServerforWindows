@@ -153,6 +153,15 @@ namespace WireGuardServerForWindows.Models
         public string Name => string.IsNullOrEmpty(NameProperty.Value) ? _guidName ??= Guid.NewGuid().ToString() : NameProperty.Value;
         private string _guidName;
 
+        // Do not target this to any WG config. We only want it in the data.
+        public ConfigurationProperty IndexProperty => _index ??= new ConfigurationProperty(this)
+        {
+            PersistentPropertyName = "Index",
+            DefaultValue = 0.ToString(),
+            IsHidden = true
+        };
+        private ConfigurationProperty _index;
+
         public ConfigurationProperty DnsProperty => _dnsProperty ??= new ConfigurationProperty(this)
         {
             PersistentPropertyName = "DNS",

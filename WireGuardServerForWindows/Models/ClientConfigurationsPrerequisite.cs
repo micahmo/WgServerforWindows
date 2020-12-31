@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Windows.Input;
@@ -81,10 +82,18 @@ namespace WireGuardServerForWindows.Models
         public override void Configure()
         {
             ClientConfigurationList clientConfigurations = new ClientConfigurationList();
+            List<ClientConfiguration> clientConfigurationsFromFile = new List<ClientConfiguration>();
 
+            // Load the clients from the conf files into a temporary list
             foreach (string clientConfigurationFile in Directory.GetFiles(ClientDataDirectory, "*.conf"))
             {
-                clientConfigurations.List.Add(new ClientConfiguration(clientConfigurations).Load<ClientConfiguration>(Configuration.LoadFromFile(clientConfigurationFile)));
+                clientConfigurationsFromFile.Add(new ClientConfiguration(clientConfigurations).Load<ClientConfiguration>(Configuration.LoadFromFile(clientConfigurationFile)));
+            }
+
+            // Now add them to the ObservableCollection, after sorting the temporary list
+            foreach (ClientConfiguration clientConfiguration in clientConfigurationsFromFile.OrderBy(c => c.IndexProperty.Value))
+            {
+                clientConfigurations.List.Add(clientConfiguration);
             }
 
             ClientConfigurationEditorWindow clientConfigurationEditorWindow = new ClientConfigurationEditorWindow {DataContext = clientConfigurations};
@@ -108,6 +117,7 @@ namespace WireGuardServerForWindows.Models
                 // Save to Data
                 foreach (ClientConfiguration clientConfiguration in clientConfigurations.List)
                 {
+                    clientConfiguration.IndexProperty.Value = clientConfigurations.List.IndexOf(clientConfiguration).ToString();
                     SaveData(clientConfiguration);
                 }
 
