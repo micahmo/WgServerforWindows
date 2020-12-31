@@ -467,7 +467,7 @@ namespace WireGuardServerForWindows.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Persistent internet sharing has been enabled.
+        ///   Looks up a localized string similar to Persistent internet sharing has been enabled. Note that this is not a perfect solution, and occasionally internet sharing must be re-enabled after reboot..
         /// </summary>
         public static string PersistentInternetSharingSucecss {
             get {
