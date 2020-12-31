@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+<xs:element name="AppUpdate">
+    <xs:complexType>
+        <xs:all>
+            <xs:element name="Version" type="xs:string"/>
+            <xs:element name="DownloadLink" type="xs:string" minOccurs="0"/>
+            <xs:element name="DownloadFileName" type="xs:string" minOccurs="0"/>
+            <xs:element name="Downloads" type="ArrayOfDownloadEntry" minOccurs="0"/>
+            <xs:element name="VersionNotes" type="xs:string" minOccurs="0"/>
+            <xs:element name="ReleaseNotes" type="ArrayOfReleaseNote" minOccurs="0"/>
+            <xs:element name="ReleaseDate" type="xs:date"/>
+        </xs:all>
+    </xs:complexType>
+</xs:element>
+
+<xs:complexType name="ArrayOfDownloadEntry">
+    <xs:sequence>
+        <xs:element name="Download" type="DownloadEntry" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="DownloadEntry">
+    <xs:sequence>
+        <xs:element name="Link" type="xs:string"/>
+        <xs:element name="FileName" type="xs:string" minOccurs="0"/>
+        <xs:element name="FileHash" type="FileHash" minOccurs="0"/>
+    </xs:sequence>
+    <xs:attribute name="key" type="xs:string" use="required"/>
+</xs:complexType>
+
+<xs:complexType name="FileHash">
+    <xs:simpleContent>
+        <xs:extension base="xs:string">
+            <xs:attribute name="algorithm" type="xs:string"/>
+        </xs:extension>
+    </xs:simpleContent>
+</xs:complexType>
+
+<xs:complexType name="ArrayOfReleaseNote">
+    <xs:sequence>
+        <xs:element name="ReleaseNote" type="ReleaseNote" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="ReleaseNote">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute name="lang" type="xs:language" use="required"/>
+      </xs:extension>
+    </xs:simpleContent>
+</xs:complexType>
+
+</xs:schema>

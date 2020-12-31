@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<AppUpdate xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/micahmo/WireGuardServerForWindows/master/WireGuardServerForWindows/AppUpdate.xsd">
+  <Version>1.1</Version>
+  <ReleaseDate>2020-12-31</ReleaseDate>
+  <!-- Default download -->
+  <DownloadLink>https://github.com/micahmo/WireGuardServerForWindows/releases/download/v1.1/Portable.zip</DownloadLink>
+  <DownloadFileName>Portable.zip</DownloadFileName>
+  <!-- All download options -->
+  <Downloads>
+    <Download key="portable">
+      <Link>https://github.com/micahmo/WireGuardServerForWindows/releases/download/v1.1/Portable.zip</Link>
+      <FileName>Portable.zip</FileName>
+      <FileHash></FileHash>
+    </Download>
+  </Downloads>
+  <!-- Release notes -->
+  <VersionNotes>Initial release</VersionNotes>
+  <ReleaseNotes></ReleaseNotes>
+</AppUpdate>
