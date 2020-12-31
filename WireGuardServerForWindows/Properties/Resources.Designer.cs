@@ -851,5 +851,14 @@ namespace WireGuardServerForWindows.Properties {
                 return ResourceManager.GetString("WireGuardExeNotFound", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Shared network is on a domain, so there is no need to change the profile of the WireGuard network..
+        /// </summary>
+        public static string WireGuardNetworkOnDomain {
+            get {
+                return ResourceManager.GetString("WireGuardNetworkOnDomain", resourceCulture);
+            }
+        }
     }
 }

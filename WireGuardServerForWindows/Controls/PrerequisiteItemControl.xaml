@@ -30,10 +30,10 @@
 
             <TextBlock Grid.Row="1" Text="{Binding SuccessMessage}"
                        ToolTip="{Binding SuccessMessage}" TextWrapping="WrapWithOverflow"
-                       Visibility="{c:Binding Fulfilled, FalseToVisibility=Collapsed}" VerticalAlignment="Center"/>
+                       Visibility="{c:Binding 'Fulfilled or IsInformational', FalseToVisibility=Collapsed}" VerticalAlignment="Center"/>
             <TextBlock Grid.Row="1" Text="{Binding ErrorMessage}"
                        ToolTip="{Binding ErrorMessage}" TextWrapping="WrapWithOverflow"
-                       Visibility="{c:Binding '!Fulfilled', FalseToVisibility=Collapsed}" VerticalAlignment="Center"/>
+                       Visibility="{c:Binding '!Fulfilled and !IsInformational', FalseToVisibility=Collapsed}" VerticalAlignment="Center"/>
         </Grid>
 
         <Button Grid.Column="2" Padding="5" Margin="5" VerticalAlignment="Center"
