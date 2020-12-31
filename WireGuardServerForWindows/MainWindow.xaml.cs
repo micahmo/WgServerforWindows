@@ -2,6 +2,8 @@
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
+using Bluegrams.Application;
+using Bluegrams.Application.WPF;
 using SharpConfig;
 using WireGuardServerForWindows.Models;
 
@@ -99,6 +101,37 @@ namespace WireGuardServerForWindows
             }
 
             DataContext = mainWindowModel;
+
+            // Check for updates
+            _updateChecker = new MyUpdateChecker("https://raw.githubusercontent.com/micahmo/WireGuardServerForWindows/master/WireGuardServerForWindows/VersionInfo.xml")
+            {
+                Owner = this,
+                DownloadIdentifier = "portable"
+            };
+        }
+
+        #region Private fields
+
+        private readonly WpfUpdateChecker _updateChecker;
+
+        #endregion
+
+        #region Event handlers
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            _updateChecker.CheckForUpdates();
+        }
+
+        #endregion
+
+        private void AboutBoxCommand_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            new AboutBox(Icon, showLanguageSelection: false)
+            {
+                Owner = this,
+                UpdateChecker = _updateChecker,
+            }.ShowDialog();
         }
     }
 }

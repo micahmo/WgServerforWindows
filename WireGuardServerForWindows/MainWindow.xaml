@@ -5,9 +5,17 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:controls="clr-namespace:WireGuardServerForWindows.Controls"
         xmlns:models="clr-namespace:WireGuardServerForWindows.Models"
+        xmlns:local="clr-namespace:WireGuardServerForWindows"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance Type={x:Type models:MainWindowModel}}"
-        Title="WS4W" Height="650" Width="800">
+        Title="WS4W" Height="650" Width="800"
+        Icon="/Images/logo.ico"
+        Loaded="Window_Loaded">
+
+    <Window.CommandBindings>
+        <CommandBinding Command="{x:Static local:ShortcutCommands.AboutBoxCommand}" Executed="AboutBoxCommand_Executed"/>
+    </Window.CommandBindings>
+
     <Grid>
         <ScrollViewer VerticalScrollBarVisibility="Auto">
             <ItemsControl ItemsSource="{Binding PrerequisiteItems}">
