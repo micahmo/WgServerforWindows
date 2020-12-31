@@ -375,4 +375,22 @@ Current value: {1}</value>
   <data name="SelectInterfaceText" xml:space="preserve">
     <value>Choose the public network interface whose internet connection should be shared with the WireGuard interface.</value>
   </data>
+  <data name="Close" xml:space="preserve">
+    <value>Close</value>
+  </data>
+  <data name="Error" xml:space="preserve">
+    <value>Error</value>
+  </data>
+  <data name="CopyDetails" xml:space="preserve">
+    <value>Copy Details</value>
+  </data>
+  <data name="UnexpectedErrorMessage" xml:space="preserve">
+    <value>The application has encountered an unexpected error.
+
+'{0}'</value>
+    <comment>{0} is the exception message</comment>
+  </data>
+  <data name="Continue" xml:space="preserve">
+    <value>Continue</value>
+  </data>
 </root>

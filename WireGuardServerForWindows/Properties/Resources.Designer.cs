@@ -178,6 +178,15 @@ namespace WireGuardServerForWindows.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Close.
+        /// </summary>
+        public static string Close {
+            get {
+                return ResourceManager.GetString("Close", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Confirm.
         /// </summary>
         public static string Confirm {
@@ -192,6 +201,24 @@ namespace WireGuardServerForWindows.Properties {
         public static string ConfirmDeleteClient {
             get {
                 return ResourceManager.GetString("ConfirmDeleteClient", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Continue.
+        /// </summary>
+        public static string Continue {
+            get {
+                return ResourceManager.GetString("Continue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Copy Details.
+        /// </summary>
+        public static string CopyDetails {
+            get {
+                return ResourceManager.GetString("CopyDetails", resourceCulture);
             }
         }
         
@@ -256,6 +283,15 @@ namespace WireGuardServerForWindows.Properties {
         public static string EndpointProperty {
             get {
                 return ResourceManager.GetString("EndpointProperty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error.
+        /// </summary>
+        public static string Error {
+            get {
+                return ResourceManager.GetString("Error", resourceCulture);
             }
         }
         
@@ -735,6 +771,17 @@ namespace WireGuardServerForWindows.Properties {
         public static string Undefined {
             get {
                 return ResourceManager.GetString("Undefined", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The application has encountered an unexpected error.
+        ///
+        ///&apos;{0}&apos;.
+        /// </summary>
+        public static string UnexpectedErrorMessage {
+            get {
+                return ResourceManager.GetString("UnexpectedErrorMessage", resourceCulture);
             }
         }
         
