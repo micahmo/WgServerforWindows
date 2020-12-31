@@ -114,6 +114,26 @@ namespace WireGuardServerForWindows.Models
                     File.Delete(clientConfigurationFile);
                 }
 
+                // Check for duplicate names
+                HashSet<string> discoveredDuplicateNames = new HashSet<string>();
+                foreach (ClientConfiguration clientConfiguration in clientConfigurations.List)
+                {
+                    int i = 1;
+                    string originalName = clientConfiguration.NameProperty.Value;
+                    while (clientConfigurations.List.Any(c => c != clientConfiguration && c.NameProperty.Value == clientConfiguration.NameProperty.Value))
+                    {
+                        if (discoveredDuplicateNames.Contains(originalName) == false)
+                        {
+                            // This is a duplicate name, but we haven't discovered it yet, meaning it's the first of its kind.
+                            // We want to rename the SECOND one, so we'll skip this one.
+                            discoveredDuplicateNames.Add(originalName);
+                            break;
+                        }
+
+                        clientConfiguration.NameProperty.Value = $"{originalName} ({i++})";
+                    }
+                }
+
                 // Save to Data
                 foreach (ClientConfiguration clientConfiguration in clientConfigurations.List)
                 {
