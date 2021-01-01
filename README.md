@@ -26,7 +26,7 @@ Here you can configure the server endpoint. See the WireGuard documentation for 
 
 Here you can configure the client(s). The Address can be entered manually or calculated based on the server's network range. For example, if the server's network is `10.253.0.0/24`, the client config can determine that `10.253.0.2` is a valid address. Note that the first address in the range (in this case, `10.253.0.1`) is reserved for the server. DNS is optional, but recommended. Lastly, the Private Key and Public Keys are again generated using `wg genkey` and `wg pubkey [private key]`. However, the Preshared Key must match the server's. If it has already been generated in the server config, it can be automatically copied to the client config.
 
-> **Note**: The server and client configurations may be changed after the tunnel is already installed. If the configurations are valid, the tunnel will be updated via the `wg syncconf` command.
+> **Note**: The server and client configurations may be changed after the tunnel is already installed. If the configurations are valid, the tunnel will be updated via the `wg syncconf` command. However, if Internet Sharing is enabled, it must be disabled and re-enabled, in order to ensure that the interface is shared on the correct IP address for the server. The application will automatically prompt to re-share.
 
 Once configured, it's easy to import the configuration into your client app of choice via QR code or by exporting the `.conf` file.
 
