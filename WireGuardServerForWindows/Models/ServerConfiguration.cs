@@ -76,12 +76,24 @@ namespace WireGuardServerForWindows.Models
                     var parts = EndpointProperty.Value.Split(new[] {':'}, StringSplitOptions.RemoveEmptyEntries);
                     if (parts.Length == 2)
                     {
+                        // It already has IP:Port, so just replace the Port part
                         EndpointProperty.Value = $"{parts[0]}:{ListenPortProperty.Value}";
                     }
                     else if (EndpointProperty.Value.StartsWith(':'))
                     {
+                        // It has no IP, just :PORT, so replace the port
                         EndpointProperty.Value = $":{ListenPortProperty.Value}";
                     }
+                    else if (EndpointProperty.Value.EndsWith(':'))
+                    {
+                        // It only has IP: and no port, so add the port
+                        EndpointProperty.Value = $"{EndpointProperty.Value}{ListenPortProperty.Value}";
+                    }
+                }
+                else
+                {
+                    // It's an empty string. We can at least populate the port.
+                    EndpointProperty.Value = $":{ListenPortProperty.Value}";
                 }
             };
 
