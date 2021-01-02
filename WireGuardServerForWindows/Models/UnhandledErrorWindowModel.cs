@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 using System.Windows;
 using System.Windows.Input;
 using GalaSoft.MvvmLight;
@@ -31,7 +32,17 @@ namespace WireGuardServerForWindows.Models
 
         public ICommand CopyErrorCommand => _copyErrorCommand ??= new RelayCommand(() =>
         {
-            Clipboard.SetText(Exception.ToString()); // ToString contains the most information, like stack trace (more than Message)
+            var exception = Exception;
+            StringBuilder exceptionText = new StringBuilder();
+            while (exception is { })
+            {
+                exceptionText.Append(exception);
+                exceptionText.Append(Environment.NewLine);
+                exceptionText.Append(Environment.NewLine);
+                exception = exception.InnerException;
+            }
+
+            Clipboard.SetText(exceptionText.ToString());
         });
         private RelayCommand _copyErrorCommand;
     }

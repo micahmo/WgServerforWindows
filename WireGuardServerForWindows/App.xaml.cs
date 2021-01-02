@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using System.Windows.Input;
 using System.Windows.Threading;
 using WireGuardServerForWindows.Controls;
@@ -21,10 +22,16 @@ namespace WireGuardServerForWindows
             // In case something was in progress when the error occurred
             Mouse.OverrideCursor = null;
 
+            Exception realException = e.Exception;
+            while (realException.InnerException is { } innerException)
+            {
+                realException = innerException;
+            }
+
             new UnhandledErrorWindow {DataContext = new UnhandledErrorWindowModel
             {
                 Title = WireGuardServerForWindows.Properties.Resources.Error,
-                Text = string.Format(WireGuardServerForWindows.Properties.Resources.UnexpectedErrorMessage, e.Exception.Message),
+                Text = string.Format(WireGuardServerForWindows.Properties.Resources.UnexpectedErrorMessage, realException.Message),
                 Exception = e.Exception
             }}.ShowDialog();
 
