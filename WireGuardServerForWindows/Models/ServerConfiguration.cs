@@ -166,7 +166,7 @@ namespace WireGuardServerForWindows.Models
             Index = 3,
             PersistentPropertyName = "Endpoint",
             Name = nameof(EndpointProperty),
-            DefaultValue = $":{ListenPortProperty.DefaultValue}",
+            DefaultValue = $":{ListenPortProperty.Value}",
             Validation = new ConfigurationPropertyValidation
             {
                 Validate = obj =>

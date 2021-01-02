@@ -62,9 +62,9 @@ namespace WireGuardServerForWindows.Models
 
             var configuration = new Configuration();
             configuration[sectionName].PreComment = NameProperty.Value ?? string.Empty;
-            foreach (ConfigurationProperty property in Properties.Where(p => string.IsNullOrEmpty(p.Value) == false))
+            foreach (ConfigurationProperty property in Properties)
             {
-                configuration[sectionName][property.PersistentPropertyName].StringValue = property.Value;
+                configuration[sectionName][property.PersistentPropertyName].RawValue = property.Value;
             }
 
             return configuration;

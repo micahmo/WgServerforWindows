@@ -166,6 +166,7 @@ namespace WireGuardServerForWindows.Models
         {
             PersistentPropertyName = "DNS",
             Name = nameof(DnsProperty),
+            DefaultValue = "8.8.8.8, 1.1.1.1",
             Validation = new ConfigurationPropertyValidation
             {
                 Validate = obj =>

@@ -29,7 +29,7 @@ namespace WireGuardServerForWindows.Models
 
         public string Value
         {
-            get => _value ?? GetValueFunc?.Invoke() ?? DefaultValue;
+            get => _value ?? GetValueFunc?.Invoke();
             set => Set(nameof(Value), ref _value, value);
         }
         private string _value;
@@ -37,9 +37,20 @@ namespace WireGuardServerForWindows.Models
         /// <summary>
         /// Allows defining a method for evaluating the value, rather than setting it
         /// </summary>
-        public Func<string> GetValueFunc { get; set; } = () => default;
+        public Func<string> GetValueFunc { get; set; }
 
-        public string DefaultValue { get; set; }
+        public string DefaultValue
+        {
+            // Without explicitly using init-only setter, only apply the default value if the value is empty.
+            // This allows for real empty values to be saved later.
+            set
+            {
+                if (string.IsNullOrEmpty(Value))
+                {
+                    Value = value;
+                }
+            }
+        }
 
         public bool IsReadOnly { get; set; }
 
