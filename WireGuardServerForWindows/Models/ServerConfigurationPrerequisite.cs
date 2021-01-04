@@ -92,6 +92,8 @@ namespace WireGuardServerForWindows.Models
         public override void Configure()
         {
             var serverConfiguration = new ServerConfiguration().Load<ServerConfiguration>(Configuration.LoadFromFile(ServerDataPath));
+            string originalServerIp = serverConfiguration.AddressProperty.Value;
+            
             ServerConfigurationEditorWindow serverConfigurationEditor = new ServerConfigurationEditorWindow {DataContext = serverConfiguration};
 
             Mouse.OverrideCursor = Cursors.Wait;
@@ -109,10 +111,13 @@ namespace WireGuardServerForWindows.Models
                 var clientConfigurationsPrerequisite = new ClientConfigurationsPrerequisite();
                 clientConfigurationsPrerequisite.Update();
 
-                // Update Internet Sharing IP
-                if (Fulfilled)
+                // Update Internet Sharing to use new server IP only if
+                // - the value was changed
+                // - the new value passes validation
+                if (originalServerIp != serverConfiguration.AddressProperty.Value && 
+                    string.IsNullOrEmpty(serverConfiguration.AddressProperty.Validation?.Validate?.Invoke(serverConfiguration.AddressProperty)))
                 {
-                    // Don't need TryParse since we're fulfilled
+                    // Don't need TryParse since we passed validation
                     var network = IPNetwork.Parse(serverConfiguration.AddressProperty.Value);
                     SetScopeAddressRegistryValue(network.ListIPAddress().Skip(1).FirstOrDefault()?.ToString() ?? string.Empty);
 
