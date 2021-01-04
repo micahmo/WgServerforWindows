@@ -21,12 +21,12 @@ Here you can configure the server endpoint. See the WireGuard documentation for 
 
 > **Note**: It is important that the server's network range not conflict with the host system's IP address or LAN network range.
 
+In addition to creating/udpating the configuration file for the server endpoint, editing the server configuration will also update the `ScopeAddress` registry value (under `HKLM\SYSTEM\CurrentControlSet\Services\SharedAccess\Parameters`). This is the IP address that is used for the WireGuard adapter when using the Internet Sharing feature (explained [here](#internet-sharing)). Thus, the Address property of the server configuration serves to determine the allowable addresses for clients, as well as the IP that Windows will assign to the WireGuard adapter when performing Internet Sharing. Note the IP address is grabbed from the `ScopeAddress` at the time when Internet Sharing is first performed. That means that if the server's IP address is changed in the configuration (and thus the `ScopeAddress` registry value is updated), the WireGuard interface will no longer accurately reflect the desired server IP. Therefore, WS4W will prompt to re-share internet. If canceled, Internet Sharing will be disabled and will have to be re-enabled manually.
+
 ### Client Configuration
 ![ClientConfiguration](https://i.imgur.com/frxdJ7S.png)
 
 Here you can configure the client(s). The Address can be entered manually or calculated based on the server's network range. For example, if the server's network is `10.253.0.0/24`, the client config can determine that `10.253.0.2` is a valid address. Note that the first address in the range (in this case, `10.253.0.1`) is reserved for the server. DNS is optional, but recommended. Lastly, the Private Key and Public Keys are again generated using `wg genkey` and `wg pubkey [private key]`. However, the Preshared Key must match the server's. If it has already been generated in the server config, it can be automatically copied to the client config.
-
-> **Note**: The server and client configurations may be changed after the tunnel is already installed. If the configurations are valid, the tunnel will be updated via the `wg syncconf` command. However, if Internet Sharing is enabled, it must be disabled and re-enabled, in order to ensure that the interface is shared on the correct IP address for the server. The application will automatically prompt to re-share.
 
 Once configured, it's easy to import the configuration into your client app of choice via QR code or by exporting the `.conf` file.
 
@@ -36,6 +36,8 @@ Once configured, it's easy to import the configuration into your client app of c
 Once the server and client(s) are configured, you may install the tunnel service, which creates a new network interface for WireGuard using the `wireguard /installtunnelservice` command. After installation, the tunnel may be also removed directly within WS4W. This uses the `wireguard /uninstalltunnelservice` command.
 
 Installing the tunnel service should be sufficient to perform a WireGuard handshake.
+
+> **Note:** If the server configuration is edited after the tunnel service is installed, the tunnel service will automatically be updated via the `wg syncconf` command (if the newly saved server configuration is valid). This is also true of the client configurations, updates to which often cause the server configuration to be updated (e.g., if a new client is added, the server configuration must be aware of this new peer).
 
 ### Private Network
 Even after the tunnel service is installed, some protocols may be blocked. It is recommended to change the network profile to `Private`, which eases Windows restrictions on the network.
@@ -49,6 +51,7 @@ Perhaps most importantly, internet sharing must be enabled in order to provide a
 
 When configuring this option, you may select any of your network adapters to share. Note that it will likely only work for adapters whose status is `Connected`, and it will only be useful for adapters which provide internet or LAN access.
 
+> **Note:** When performing internet sharing, the WireGuard adapter is assigned an IP from the `ScopeAddress` registry value (under `HKLM\SYSTEM\CurrentControlSet\Services\SharedAccess\Parameters`). This value is automatically set when updating the Address property of the server configuration. See more [here](#server-configuration).
 
 ### Persistent Internet Sharing
 There is a known bug in Windows that causes Internet Sharing to become disabled after a reboot. If the WireGuard server is intended to be left unattended, it is recommended to enable Persistent Internet Sharing so that no interaction is required after rebooting.
