@@ -29,40 +29,38 @@ namespace WireGuardServerForWindows.Models
 
         #region PrerequisiteItem members
 
-        public override bool Fulfilled
+        public override BooleanTimeCachedProperty Fulfilled => _fulfilled ??= new BooleanTimeCachedProperty(TimeSpan.FromSeconds(1), () =>
         {
-            get
+            bool result = true;
+
+            if (Directory.Exists(ClientWGDirectory) == false || Directory.GetFiles(ClientWGDirectory).Any() == false)
             {
-                bool result = true;
+                result = false;
+                ErrorMessage = Resources.ClientConfigurationsMissingErrorMessage;
+            }
+            else
+            {
+                // Validate all of the client(s)
+                foreach (string clientConfigurationFile in Directory.GetFiles(ClientDataDirectory, "*.conf"))
+                {
+                    var clientConfiguration = new ClientConfiguration(null).Load<ClientConfiguration>(Configuration.LoadFromFile(clientConfigurationFile));
 
-                if (Directory.Exists(ClientWGDirectory) == false || Directory.GetFiles(ClientWGDirectory).Any() == false)
-                {
-                    result = false;
-                    ErrorMessage = Resources.ClientConfigurationsMissingErrorMessage;
-                }
-                else
-                {
-                    // Validate all of the client(s)
-                    foreach (string clientConfigurationFile in Directory.GetFiles(ClientDataDirectory, "*.conf"))
+                    foreach (ConfigurationProperty property in clientConfiguration.Properties)
                     {
-                        var clientConfiguration = new ClientConfiguration(null).Load<ClientConfiguration>(Configuration.LoadFromFile(clientConfigurationFile));
-
-                        foreach (ConfigurationProperty property in clientConfiguration.Properties)
+                        if (string.IsNullOrEmpty(property.Validation?.Validate?.Invoke(property)) == false)
                         {
-                            if (string.IsNullOrEmpty(property.Validation?.Validate?.Invoke(property)) == false)
-                            {
-                                result = false;
-                                ErrorMessage = Resources.ClientConfigurationsIncompleteErrorMessage;
-                                goto finish;
-                            }
+                            result = false;
+                            ErrorMessage = Resources.ClientConfigurationsIncompleteErrorMessage;
+                            goto finish;
                         }
                     }
                 }
-
-                finish:
-                return result;
             }
-        }
+
+            finish:
+            return result;
+        });
+        private BooleanTimeCachedProperty _fulfilled;
 
         public override void Resolve()
         {

@@ -20,41 +20,38 @@ namespace WireGuardServerForWindows.Models
         {
         }
 
-        public override bool Fulfilled
+        public override BooleanTimeCachedProperty Fulfilled => _fulfilled ??= new BooleanTimeCachedProperty(TimeSpan.FromSeconds(1), () =>
         {
-            get
+            bool result = false;
+
+            // Check whether the Tunnel service is installed. This will inform whether we should wait a long time to find the network or not
+            var tun = new TunnelServicePrerequisite().Fulfilled;
+            TimeSpan timeout = TimeSpan.FromSeconds(tun ? 10 : 0);
+
+            if (ServerConfigurationPrerequisite.GetNetwork(timeout: timeout) is { } network)
             {
-                bool result = false;
-
-                // Check whether the Tunnel service is installed. This will inform whether we should wait a long time to find the network or not
-                var tun = new TunnelServicePrerequisite().Fulfilled;
-                TimeSpan timeout = TimeSpan.FromSeconds(tun ? 10 : 0);
-
-                if (ServerConfigurationPrerequisite.GetNetwork(timeout: timeout) is { } network)
+                // Special case: computer is on a domain, so Authenticated is sufficient and shouldn't be changed
+                if (network.Category == NetworkCategory.Authenticated)
                 {
-                    // Special case: computer is on a domain, so Authenticated is sufficient and shouldn't be changed
-                    if (network.Category == NetworkCategory.Authenticated)
-                    {
-                        SuccessMessage = Resources.WireGuardNetworkOnDomain;
-                        _isInformational = true;
-                    }
-                    else
-                    {
-                        SuccessMessage = Resources.PrivateNetworkSuccess;
-                        _isInformational = false;
-                    }
-
-                    RaisePropertyChanged(nameof(IsInformational));
-                    RaisePropertyChanged(nameof(CanConfigure));
-                    RaisePropertyChanged(nameof(CanResolve));
-
-                    // Normal case: We want the network to be private
-                    result = network.Category == NetworkCategory.Private;
+                    SuccessMessage = Resources.WireGuardNetworkOnDomain;
+                    _isInformational = true;
+                }
+                else
+                {
+                    SuccessMessage = Resources.PrivateNetworkSuccess;
+                    _isInformational = false;
                 }
 
-                return result;
+                RaisePropertyChanged(nameof(CanConfigure));
+                RaisePropertyChanged(nameof(CanResolve));
+
+                // Normal case: We want the network to be private
+                result = network.Category == NetworkCategory.Private;
             }
-        }
+
+            return result;
+        });
+        private BooleanTimeCachedProperty _fulfilled;
 
         public override void Resolve()
         {
@@ -100,7 +97,8 @@ namespace WireGuardServerForWindows.Models
             Mouse.OverrideCursor = null;
         }
 
-        public override bool IsInformational => _isInformational;
+        public override BooleanTimeCachedProperty IsInformational => _isInformationalProperty ??= new BooleanTimeCachedProperty(TimeSpan.Zero, () => _isInformational);
+        private BooleanTimeCachedProperty _isInformationalProperty;
         private bool _isInformational;
 
         #endregion

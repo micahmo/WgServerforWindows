@@ -30,7 +30,7 @@ namespace WireGuardServerForWindows.Models
             };
         }
 
-        public override bool Fulfilled => true;
+        public override BooleanTimeCachedProperty Fulfilled { get; } = new BooleanTimeCachedProperty(TimeSpan.FromSeconds(1), () => true);
 
         public override void Resolve()
         {
@@ -44,7 +44,7 @@ namespace WireGuardServerForWindows.Models
             _updateTimer.IsEnabled = false;
         }
 
-        public override bool IsInformational => true;
+        public override BooleanTimeCachedProperty IsInformational { get; } = new BooleanTimeCachedProperty(TimeSpan.Zero, () => true);
 
         #endregion
 

@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Linq;
 using System.Net.NetworkInformation;
 using System.Threading.Tasks;
@@ -22,25 +23,29 @@ namespace WireGuardServerForWindows.Models
         {
         }
 
-        public override bool Fulfilled => NetworkInterface.GetAllNetworkInterfaces()
-            .Any(nic => nic.Name == ServerConfigurationPrerequisite.WireGuardServerInterfaceName);
+        public override BooleanTimeCachedProperty Fulfilled => _fulfilled ??= new BooleanTimeCachedProperty(TimeSpan.FromSeconds(1), () =>
+        {
+            return NetworkInterface.GetAllNetworkInterfaces()
+                .Any(nic => nic.Name == ServerConfigurationPrerequisite.WireGuardServerInterfaceName);
+        });
+        private BooleanTimeCachedProperty _fulfilled;
 
-        public override void Resolve()
+        public override async void Resolve()
         {
             Mouse.OverrideCursor = Cursors.Wait;
             
             new WireGuardExe().ExecuteCommand(new InstallTunnelServiceCommand(ServerConfigurationPrerequisite.ServerWGPath));
-            Task.Run(WaitForFulfilled);
+            await WaitForFulfilled();
             
             Mouse.OverrideCursor = null;
         }
 
-        public override void Configure()
+        public override async void Configure()
         {
             Mouse.OverrideCursor = Cursors.Wait;
             
             new WireGuardExe().ExecuteCommand(new UninstallTunnelServiceCommand(ServerConfigurationPrerequisite.WireGuardServerInterfaceName));
-            Refresh();
+            await WaitForFulfilled(false);
             
             Mouse.OverrideCursor = null;
         }

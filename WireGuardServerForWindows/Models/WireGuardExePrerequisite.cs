@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Threading.Tasks;
@@ -21,14 +22,12 @@ namespace WireGuardServerForWindows.Models
         {
         }
 
-        public override bool Fulfilled
+        public override BooleanTimeCachedProperty Fulfilled => _fulfilled ??= new BooleanTimeCachedProperty(TimeSpan.FromSeconds(1), () =>
         {
-            get
-            {
-                _wireGuardExe ??= new WireGuardExe();
-                return _wireGuardExe.Exists;
-            }
-        }
+            _wireGuardExe ??= new WireGuardExe();
+            return _wireGuardExe.Exists;
+        });
+        private BooleanTimeCachedProperty _fulfilled;
 
         public override void Resolve()
         {

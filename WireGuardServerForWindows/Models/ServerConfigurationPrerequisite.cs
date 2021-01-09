@@ -33,36 +33,34 @@ namespace WireGuardServerForWindows.Models
 
         #region PrerequisiteItem members
 
-        public override bool Fulfilled
+        public override BooleanTimeCachedProperty Fulfilled => _fulfilled ??= new BooleanTimeCachedProperty(TimeSpan.FromSeconds(1), () =>
         {
-            get
+            bool result = true;
+
+            if (File.Exists(ServerWGPath) == false)
             {
-                bool result = true;
+                result = false;
+                ErrorMessage = Resources.ServerConfigurationMissingErrorMessage;
+            }
+            else
+            {
+                // The file exists, make sure it has all the fields
+                var serverConfiguration = new ServerConfiguration().Load<ServerConfiguration>(Configuration.LoadFromFile(ServerDataPath));
 
-                if (File.Exists(ServerWGPath) == false)
+                foreach (ConfigurationProperty property in serverConfiguration.Properties)
                 {
-                    result = false;
-                    ErrorMessage = Resources.ServerConfigurationMissingErrorMessage;
-                }
-                else
-                {
-                    // The file exists, make sure it has all the fields
-                    var serverConfiguration = new ServerConfiguration().Load<ServerConfiguration>(Configuration.LoadFromFile(ServerDataPath));
-
-                    foreach (ConfigurationProperty property in serverConfiguration.Properties)
+                    if (string.IsNullOrEmpty(property.Validation?.Validate?.Invoke(property)) == false)
                     {
-                        if (string.IsNullOrEmpty(property.Validation?.Validate?.Invoke(property)) == false)
-                        {
-                            result = false;
-                            ErrorMessage = Resources.ServerConfigurationIncompleteErrorMessage;
-                            break;
-                        }
+                        result = false;
+                        ErrorMessage = Resources.ServerConfigurationIncompleteErrorMessage;
+                        break;
                     }
                 }
-
-                return result;
             }
-        }
+
+            return result;
+        });
+        private BooleanTimeCachedProperty _fulfilled;
 
         public override void Resolve()
         {

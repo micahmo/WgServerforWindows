@@ -35,7 +35,7 @@ namespace WireGuardServerForWindows.Models
         }
         private string _title;
 
-        public abstract bool Fulfilled { get; }
+        public abstract BooleanTimeCachedProperty Fulfilled { get; }
 
         public string SuccessMessage
         {
@@ -65,7 +65,7 @@ namespace WireGuardServerForWindows.Models
         }
         private string _configureText;
 
-        public virtual bool IsInformational => false;
+        public virtual BooleanTimeCachedProperty IsInformational { get; } = new BooleanTimeCachedProperty(TimeSpan.Zero, () => false);
 
         public bool CanResolve => CanResolveFunc?.Invoke() ?? true;
 
@@ -86,9 +86,10 @@ namespace WireGuardServerForWindows.Models
         public void Refresh()
         {
             RaisePropertyChanged(nameof(Fulfilled));
+            RaisePropertyChanged(nameof(IsInformational));
         }
 
-        public async void WaitForFulfilled()
+        public async Task WaitForFulfilled()
         {
             await WaitForFulfilled(true);
         }

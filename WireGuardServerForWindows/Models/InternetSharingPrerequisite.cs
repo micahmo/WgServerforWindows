@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Windows.Input;
 using Humanizer;
 using NETCONLib;
@@ -22,27 +23,25 @@ namespace WireGuardServerForWindows.Models
         {
         }
 
-        public override bool Fulfilled
+        public override BooleanTimeCachedProperty Fulfilled => _fulfilled ??= new BooleanTimeCachedProperty(TimeSpan.FromSeconds(1), () =>
         {
-            get
+            bool result = false;
+
+            NetSharingManagerClass netSharingManager = new NetSharingManagerClass();
+            
+            // Find the WireGuard interface
+            var wg_server = netSharingManager.EnumEveryConnection.OfType<INetConnection>()
+                .FirstOrDefault(n => netSharingManager.NetConnectionProps[n].Name == ServerConfigurationPrerequisite.WireGuardServerInterfaceName);
+
+            if (wg_server is { })
             {
-                bool result = false;
-
-                NetSharingManagerClass netSharingManager = new NetSharingManagerClass();
-                
-                // Find the WireGuard interface
-                var wg_server = netSharingManager.EnumEveryConnection.OfType<INetConnection>()
-                    .FirstOrDefault(n => netSharingManager.NetConnectionProps[n].Name == ServerConfigurationPrerequisite.WireGuardServerInterfaceName);
-
-                if (wg_server is { })
-                {
-                    result = netSharingManager.INetSharingConfigurationForINetConnection[wg_server].SharingEnabled &&
-                             netSharingManager.INetSharingConfigurationForINetConnection[wg_server].SharingConnectionType == tagSHARINGCONNECTIONTYPE.ICSSHARINGTYPE_PRIVATE;
-                }
-
-                return result;
+                result = netSharingManager.INetSharingConfigurationForINetConnection[wg_server].SharingEnabled &&
+                         netSharingManager.INetSharingConfigurationForINetConnection[wg_server].SharingConnectionType == tagSHARINGCONNECTIONTYPE.ICSSHARINGTYPE_PRIVATE;
             }
-        }
+
+            return result;
+        });
+        private BooleanTimeCachedProperty _fulfilled;
 
         public override void Resolve()
         {

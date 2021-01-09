@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Management;
 using System.Windows.Input;
 using Microsoft.Win32;
@@ -21,32 +22,30 @@ namespace WireGuardServerForWindows.Models
         {
         }
 
-        public override bool Fulfilled
+        public override BooleanTimeCachedProperty Fulfilled => _fulfilled ??= new BooleanTimeCachedProperty(TimeSpan.FromSeconds(1), () =>
         {
-            get
+            bool result = false;
+
+            // First, check whether the service is set to start automatically
+            if (GetICSService() is { } service)
             {
-                bool result = false;
+                bool isAutomatic = service.Properties["StartMode"].Value as string == "Automatic" ||
+                                   service.Properties["StartMode"].Value as string == "Auto";
 
-                // First, check whether the service is set to start automatically
-                if (GetICSService() is { } service)
+                if (isAutomatic)
                 {
-                    bool isAutomatic = service.Properties["StartMode"].Value as string == "Automatic" ||
-                                       service.Properties["StartMode"].Value as string == "Auto";
-
-                    if (isAutomatic)
+                    // Now check whether the special registry entry exists
+                    // If good, result is true
+                    if (GetRegistryKeyValue() is {} value && value == 1)
                     {
-                        // Now check whether the special registry entry exists
-                        // If good, result is true
-                        if (GetRegistryKeyValue() is {} value && value == 1)
-                        {
-                            result = true;
-                        }
+                        result = true;
                     }
                 }
-
-                return result;
             }
-        }
+
+            return result;
+        });
+        private BooleanTimeCachedProperty _fulfilled;
 
         public override void Resolve()
         {
