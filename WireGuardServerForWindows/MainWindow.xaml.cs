@@ -88,6 +88,7 @@ namespace WireGuardServerForWindows
                         mainWindowModel.PrerequisiteItems.Where(i => i != senderItem).ToList().ForEach(i =>
                         {
                             i.RaisePropertyChanged(nameof(i.Fulfilled));
+                            i.RaisePropertyChanged(nameof(i.IsInformational));
                             i.RaisePropertyChanged(nameof(i.CanConfigure));
                             i.RaisePropertyChanged(nameof(i.CanResolve));
                         });
