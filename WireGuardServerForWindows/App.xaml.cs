@@ -1,7 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Threading;
+using CommandLine;
+using WireGuardServerForWindows.Cli.Options;
 using WireGuardServerForWindows.Controls;
 using WireGuardServerForWindows.Models;
 
@@ -15,6 +19,59 @@ namespace WireGuardServerForWindows
         public App()
         {
             DispatcherUnhandledException += Application_DispatcherUnhandledException;
+        }
+
+        protected override void OnStartup(StartupEventArgs e)
+        {
+            base.OnStartup(e);
+
+            if (e.Args.Any())
+            {
+                Parser.Default.ParseArguments<RestartInternetSharingCommand, object>(e.Args)
+                    .WithParsed<RestartInternetSharingCommand>(RestartInternetSharing);
+
+                // Don't proceed to GUI if started with command-line args
+                Environment.Exit(0);
+            }
+        }
+
+        private static void RestartInternetSharing(RestartInternetSharingCommand o)
+        {
+            var internetSharingPrerequisite = new InternetSharingPrerequisite();
+            string networkToShare = o.NetworkToShare;
+
+            if (string.IsNullOrEmpty(networkToShare))
+            {
+                // No network specified for re-sharing, retrieve the one already shared.
+                List<string> sharedNetworks = internetSharingPrerequisite.GetSharedNetworks();
+                networkToShare = sharedNetworks.FirstOrDefault();
+
+                if (string.IsNullOrEmpty(networkToShare))
+                {
+                    Console.WriteLine(WireGuardServerForWindows.Properties.Resources.CannotRestartInternetSharingNoNetwork);
+                    Environment.Exit(1);
+                }
+                else if (sharedNetworks.Skip(1).Any())
+                {
+                    Console.WriteLine(WireGuardServerForWindows.Properties.Resources.CannotRestartInternetSharingMultipleNetworks);
+                    Environment.Exit(1);
+                }
+            }
+
+            if (internetSharingPrerequisite.Fulfilled)
+            {
+                // Internet sharing is already enabled. Disable it, first.
+                Console.WriteLine(WireGuardServerForWindows.Properties.Resources.DisablingInternetSharing);
+                internetSharingPrerequisite.Configure();
+            }
+
+            // Now enable it.
+            Console.WriteLine(WireGuardServerForWindows.Properties.Resources.EnablingInternetSharing, networkToShare);
+            internetSharingPrerequisite.Resolve(networkToShare);
+
+            int result = internetSharingPrerequisite.Fulfilled ? 0 : 1;
+
+            Environment.Exit(result);
         }
 
         private void Application_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)

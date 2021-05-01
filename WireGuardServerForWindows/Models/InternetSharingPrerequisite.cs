@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Input;
 using Humanizer;
@@ -45,6 +46,11 @@ namespace WireGuardServerForWindows.Models
 
         public override void Resolve()
         {
+            Resolve(default);
+        }
+
+        public void Resolve(string networkToShare)
+        {
             Mouse.OverrideCursor = Cursors.Wait;
 
             NetSharingManagerClass netSharingManager = new NetSharingManagerClass();
@@ -86,8 +92,20 @@ namespace WireGuardServerForWindows.Models
                 });
             }
 
-            new SelectionWindow {DataContext = selectionWindowModel}.ShowDialog();
-            if (selectionWindowModel.DialogResult == true && selectionWindowModel.SelectedItem?.BackingObject is { } internetConnection)
+            INetConnection internetConnection;
+            if (string.IsNullOrEmpty(networkToShare))
+            {
+                // No network given, prompt for selection.
+                new SelectionWindow { DataContext = selectionWindowModel }.ShowDialog();
+                internetConnection = selectionWindowModel.DialogResult == true ? selectionWindowModel.SelectedItem?.BackingObject : default;
+            }
+            else
+            {
+                // Find the network matching the given name.
+                internetConnection = netSharingManager.EnumEveryConnection.OfType<INetConnection>().FirstOrDefault(n => netSharingManager.NetConnectionProps[n].Name.Equals(networkToShare, StringComparison.OrdinalIgnoreCase));
+            }
+            
+            if (internetConnection is { })
             {
                 Mouse.OverrideCursor = Cursors.Wait;
 
@@ -124,6 +142,27 @@ namespace WireGuardServerForWindows.Models
             Refresh();
 
             Mouse.OverrideCursor = null;
+        }
+
+        /// <summary>
+        /// Returns the network(s) (if any) that is/are currently being shared.
+        /// </summary>
+        public List<string> GetSharedNetworks()
+        {
+            List<string> result = new List<string>();
+            
+            NetSharingManagerClass netSharingManager = new NetSharingManagerClass();
+
+            foreach (var connection in netSharingManager.EnumEveryConnection.OfType<INetConnection>().Where(c => netSharingManager.NetConnectionProps[c].Name != ServerConfigurationPrerequisite.WireGuardServerInterfaceName))
+            {
+                if (netSharingManager.INetSharingConfigurationForINetConnection[connection].SharingEnabled &&
+                    netSharingManager.INetSharingConfigurationForINetConnection[connection].SharingConnectionType == tagSHARINGCONNECTIONTYPE.ICSSHARINGTYPE_PUBLIC)
+                {
+                    result.Add(netSharingManager.NetConnectionProps[connection].Name);
+                }
+            }
+
+            return result;
         }
 
         #endregion

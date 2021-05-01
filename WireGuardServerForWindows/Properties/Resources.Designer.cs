@@ -97,6 +97,24 @@ namespace WireGuardServerForWindows.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Cannot restart internet sharing since multiple networks are currently shared. Specify a network to share with --network..
+        /// </summary>
+        public static string CannotRestartInternetSharingMultipleNetworks {
+            get {
+                return ResourceManager.GetString("CannotRestartInternetSharingMultipleNetworks", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cannot restart internet sharing since no network is currently shared. Specify a network to share with --network..
+        /// </summary>
+        public static string CannotRestartInternetSharingNoNetwork {
+            get {
+                return ResourceManager.GetString("CannotRestartInternetSharingNoNetwork", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Client address must be a single IP address, such as 10.232.0.2 or 10.232.0.2/32.
         /// </summary>
         public static string ClientAddressValidationError {
@@ -232,6 +250,15 @@ namespace WireGuardServerForWindows.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Internet sharing is already enabled. Disabling....
+        /// </summary>
+        public static string DisablingInternetSharing {
+            get {
+                return ResourceManager.GetString("DisablingInternetSharing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to DNS address(es) must be valid IPs, such as 8.8.8.8.
         /// </summary>
         public static string DnsAddressValidationError {
@@ -264,6 +291,15 @@ namespace WireGuardServerForWindows.Properties {
         public static string EmptyEndpointValidation {
             get {
                 return ResourceManager.GetString("EmptyEndpointValidation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enabling internet sharing with network &apos;{0}&apos;..
+        /// </summary>
+        public static string EnablingInternetSharing {
+            get {
+                return ResourceManager.GetString("EnablingInternetSharing", resourceCulture);
             }
         }
         

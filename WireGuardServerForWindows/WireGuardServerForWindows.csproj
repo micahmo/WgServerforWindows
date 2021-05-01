@@ -6,6 +6,7 @@
     <UseWPF>true</UseWPF>
     <ApplicationIcon>logo.ico</ApplicationIcon>
     <ApplicationManifest>Properties\app.manifest</ApplicationManifest>
+    <!-- Keep this synced with CLI project -->
     <AssemblyVersion>1.4.0.0</AssemblyVersion>
     <FileVersion>1.4.0.0</FileVersion>
     <PackageId>WS4W</PackageId>
@@ -34,6 +35,7 @@
   <ItemGroup>
     <PackageReference Include="AppHelpers.WPF" Version="0.1.0-rc3" />
     <PackageReference Include="CalcBinding" Version="2.5.2" />
+    <PackageReference Include="CommandLineParser" Version="2.8.0" />
     <PackageReference Include="Humanizer.Core" Version="2.8.26" />
     <PackageReference Include="IPNetwork2" Version="2.5.240" />
     <PackageReference Include="Microsoft.WindowsAPICodePack-Core" Version="1.1.0.2" />
@@ -47,6 +49,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\WireGuardAPI\WireGuardAPI.csproj" />
+    <ProjectReference Include="..\WireGuardServerForWindows.Cli.Options\WireGuardServerForWindows.Cli.Options.csproj" />
   </ItemGroup>
 
   <ItemGroup>
