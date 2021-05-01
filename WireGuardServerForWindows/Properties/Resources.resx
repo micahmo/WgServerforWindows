@@ -394,6 +394,18 @@ Current value: {1}</value>
     <value>Continue</value>
   </data>
   <data name="WireGuardNetworkOnDomain" xml:space="preserve">
-      <value>Shared network is on a domain, so there is no need to change the profile of the WireGuard network.</value>
+    <value>Shared network is on a domain, so there is no need to change the profile of the WireGuard network.</value>
+  </data>
+  <data name="CannotRestartInternetSharingNoNetwork" xml:space="preserve">
+    <value>Cannot restart internet sharing since no network is currently shared. Specify a network to share with --network.</value>
+  </data>
+  <data name="CannotRestartInternetSharingMultipleNetworks" xml:space="preserve">
+    <value>Cannot restart internet sharing since multiple networks are currently shared. Specify a network to share with --network.</value>
+  </data>
+  <data name="DisablingInternetSharing" xml:space="preserve">
+    <value>Internet sharing is already enabled. Disabling...</value>
+  </data>
+  <data name="EnablingInternetSharing" xml:space="preserve">
+    <value>Enabling internet sharing with network '{0}'.</value>
   </data>
 </root>

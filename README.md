@@ -1,3 +1,4 @@
+
 <img src="https://i.imgur.com/6XRP3gB.png" width="100" height="100" />
 
 # WireGuard Server for Windows
@@ -60,7 +61,7 @@ When enabling this feature, two steps are performed.
 1. The `Internet Connection Sharing` service startup mode is changed from `Manual` to `Automatic`.
 2. The value of the `EnableRebootPersistConnection` regstry value in `HKLM\Software\Microsoft\Windows\CurrentVersion\SharedAccess` is set to `1` (it is created if not found).
 
-> **Warning**: This feature is currently unreliable due to Windows bugs, and may not consistently preserve internet sharing through reboots.
+**Warning**: This feature is currently unreliable due to Windows bugs, and may not consistently preserve internet sharing through reboots. To ensure that Internet Sharing is enabled after a reboot, see [Internet Sharing Workaround](#internet-sharing-workaround).
 
 ### View Server Status
 ![ServerStatus](https://i.imgur.com/dcSJXKU.png)
@@ -71,12 +72,43 @@ Once the tunnel is installed, the status of the WireGuard interface may be viewe
 ![AfterScreenshot](https://i.imgur.com/Ck5yfvj.png)
 
 # How to Use
-The latest release is available [here](https://github.com/micahmo/WireGuardServerForWindows/releases/latest). At this time, there is no installer. Download `Portable.zip`, extract, and run `WireGuardServerForWindows.exe`.
+The latest release is available [here](https://github.com/micahmo/WireGuardServerForWindows/releases/latest). At this time, there is no installer. Download `Portable.zip`, and extract all.
+
+## GUI
+After extracing the zip, run `WireGuardServerForWindows.exe`. Feel free to make a shortcut in `%programdata%\Microsoft\Windows\Start Menu\Programs` to add the application to your Start Menu.
 
 > **Note**: The application will request to run as Administrator. Due to all the finagling of the registry, Windows services, wg.exe calls, etc., it is easier to run the whole application elevated.
 
+## CLI
+There is also a CLI bundled in the portable download called `ws4w.exe` which can be invoked from a terminal or included in a script. In addition to messages written to standard out, the CLI will also set the exit code based on the success of executing the given command. In PowerShell, for example, the exit code can be printed with `echo $lastexitcode`.
+
+> **Note**: The CLI must also be run as an Administrator for the same reasons as above.
+
+### Usage
+The CLI uses verbs, or top-level commands, each of which has its own set of options. You can run `ws4w.exe --help` for a list of all verbs or `ws4w.exe verb --help` to see the list of options for a particular verb.
+
+#### List of Supported Verbs
+* ```ws4w.exe restartinternetsharing [--network <NETWORK_TO_SHARE>]```
+	* This will tell WS4W to attempt to restart the Internet Sharing feature.
+	* The `--network` option may be passed to specify which network WS4W should share.
+	* If Internet Sharing is already enabled, WS4W will attempt to reshare the same network (unless `--network` is passed).
+	* If multiple networks are already shared, it is not possible to tell which one is shared with the WireGuard network, so the `--network` option must be passed to specify.
+	* If Internet Sharing is not already enabled, the `--network` option must be passed, otherwise there is no way to know which network to share.
+	* The exit code will be 0 if the requested or previously shared network was successfully reshared.
+
 # Known Issues
 Even following the steps in Henry's guide, the Persistent Internet Sharing feature is unreliable. A reboot may still cause the the internet sharing to fail, even though the `Internet Connection Sharing` service is running, and the network interface indicates that it is sharing in Control Panel. Only unsharing and resharing can fix this.
+
+### Internet Sharing Workaround
+Fortunately, the CLI makes the process of unsharing and resharing easy to automate. Following is an example using the Windows Task Scheduler.
+
+1. Create a task which runs whether or not the user is logged in.
+![image](https://user-images.githubusercontent.com/7417301/116771243-c457f300-aa17-11eb-9373-1b26dedfb52b.png)
+2. Set the task to be triggered by system startup.
+![image](https://user-images.githubusercontent.com/7417301/116771266-f0737400-aa17-11eb-99ec-7aa2ef9116a4.png)
+3. Add an action that starts `ws4w.exe` with the `restartinternetsharing` verb.
+![image](https://user-images.githubusercontent.com/7417301/116771293-23b60300-aa18-11eb-9070-1f2c2c0bb21d.png)
+![image](https://user-images.githubusercontent.com/7417301/116771300-36c8d300-aa18-11eb-825d-28f8a74078f7.png)
 
 # Goals
 One of the more lofty goals of this project was to run a VPN behind NAT without port forwarding. I am interested by Jordan Whited's post, [WireGuard Endpoint Discovery and NAT Traversal using DNS-SD](https://www.jordanwhited.com/posts/wireguard-endpoint-discovery-nat-traversal/) and hope to investigate the possibility of integrating it into this application at some point.

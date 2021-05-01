@@ -12,6 +12,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		README.md = README.md
 	EndProjectSection
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WireGuardServerForWindows.Cli", "WireGuardServerForWindowsCli\WireGuardServerForWindows.Cli.csproj", "{94DDF147-2EA8-45F4-B843-9470EA3C38F5}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WireGuardServerForWindows.Cli.Options", "WireGuardServerForWindows.Cli.Options\WireGuardServerForWindows.Cli.Options.csproj", "{841E987C-04F2-4EC8-A66B-DEE8344D3211}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -26,6 +30,14 @@ Global
 		{16FC6541-F37F-492B-88AB-ABF73AA7BB1E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{16FC6541-F37F-492B-88AB-ABF73AA7BB1E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{16FC6541-F37F-492B-88AB-ABF73AA7BB1E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{94DDF147-2EA8-45F4-B843-9470EA3C38F5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{94DDF147-2EA8-45F4-B843-9470EA3C38F5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{94DDF147-2EA8-45F4-B843-9470EA3C38F5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{94DDF147-2EA8-45F4-B843-9470EA3C38F5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{841E987C-04F2-4EC8-A66B-DEE8344D3211}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{841E987C-04F2-4EC8-A66B-DEE8344D3211}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{841E987C-04F2-4EC8-A66B-DEE8344D3211}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{841E987C-04F2-4EC8-A66B-DEE8344D3211}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
