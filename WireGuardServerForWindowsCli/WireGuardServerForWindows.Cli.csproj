@@ -4,9 +4,9 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <AssemblyName>ws4w</AssemblyName>
-    <AssemblyVersion>1.4.0.0</AssemblyVersion>
-    <FileVersion>1.4.0.0</FileVersion>
-    <InformationalVersion>1.4.0.0</InformationalVersion>
+    <AssemblyVersion>1.5.0.0</AssemblyVersion>
+    <FileVersion>1.5.0.0</FileVersion>
+    <InformationalVersion>1.5.0.0</InformationalVersion>
     <Authors>Micah Morrison</Authors>
     <AssemblyTitle>WireGuardServerForWindows CLI</AssemblyTitle>
   </PropertyGroup>
