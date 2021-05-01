@@ -71,9 +71,29 @@ Once the tunnel is installed, the status of the WireGuard interface may be viewe
 ![AfterScreenshot](https://i.imgur.com/Ck5yfvj.png)
 
 # How to Use
-The latest release is available [here](https://github.com/micahmo/WireGuardServerForWindows/releases/latest). At this time, there is no installer. Download `Portable.zip`, extract, and run `WireGuardServerForWindows.exe`.
+The latest release is available [here](https://github.com/micahmo/WireGuardServerForWindows/releases/latest). At this time, there is no installer. Download `Portable.zip`, and extract all.
+
+## GUI
+After extracing the zip, run `WireGuardServerForWindows.exe`. Feel free to make a shortcut in `%programdata%\Microsoft\Windows\Start Menu\Programs` to add the application to your Start Menu.
 
 > **Note**: The application will request to run as Administrator. Due to all the finagling of the registry, Windows services, wg.exe calls, etc., it is easier to run the whole application elevated.
+
+## CLI
+There is also a CLI bundled in the portable download called `ws4w.exe` which can be invoked from a terminal or included in a script. In addition to messages written to standard out, the CLI will also set the exit code based on the success of executing the given command. In PowerShell, for example, the exit code can be printed with `echo $lastexitcode`.
+
+> **Note**: The CLI must also be run as an Administrator for the same reasons as above.
+
+### Usage
+The CLI uses verbs, or top-level commands, each of which has its own set of options. You can run `ws4w.exe --help` for a list of all verbs or `ws4w.exe verb --help` to see the list of options for a particular verb.
+
+#### List of Supported Verbs
+* ```ws4w.exe restartinternetsharing [--network <NETWORK_TO_SHARE>]```
+	* This will tell WS4W to attempt to restart the Internet Sharing feature.
+	* The `--network` option may be passed to specify which network WS4W should share.
+	* If Internet Sharing is already enabled, WS4W will attempt to reshare the same network (unless `--network` is passed).
+	* If multiple networks are already shared, it is not possible to tell which one is shared with the WireGuard network, so the `--network` option must be passed to specify.
+	* If Internet Sharing is not already enabled, the `--network` option must be passed, otherwise there is no way to know which network to share.
+	* The exit code will be 0 if the requested or previously shared network was successfully reshared.
 
 # Known Issues
 Even following the steps in Henry's guide, the Persistent Internet Sharing feature is unreliable. A reboot may still cause the the internet sharing to fail, even though the `Internet Connection Sharing` service is running, and the network interface indicates that it is sharing in Control Panel. Only unsharing and resharing can fix this.
