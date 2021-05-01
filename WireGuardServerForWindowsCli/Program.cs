@@ -33,6 +33,7 @@ namespace WireGuardServerForWindows.Cli
                 catch (Exception ex) when (ex is Win32Exception || ex.InnerException is Win32Exception)
                 {
                     Console.WriteLine(Resources.MustRunAsAdmin);
+                    Environment.Exit(1);
                 }
             });
 
