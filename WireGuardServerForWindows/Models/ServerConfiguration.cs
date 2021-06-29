@@ -73,11 +73,12 @@ namespace WireGuardServerForWindows.Models
             {
                 if (string.IsNullOrEmpty(EndpointProperty.Value) == false)
                 {
-                    var parts = EndpointProperty.Value.Split(new[] {':'}, StringSplitOptions.RemoveEmptyEntries);
-                    if (parts.Length == 2)
+                    string host = string.Join(':', EndpointProperty.Value.Split(':').SkipLast(1));
+                    string port = EndpointProperty.Value.Split(':').LastOrDefault();
+                    if (string.IsNullOrEmpty(host) == false && string.IsNullOrEmpty(port) == false && port.EndsWith(']') == false)
                     {
                         // It already has IP:Port, so just replace the Port part
-                        EndpointProperty.Value = $"{parts[0]}:{ListenPortProperty.Value}";
+                        EndpointProperty.Value = $"{host}:{ListenPortProperty.Value}";
                     }
                     else if (EndpointProperty.Value.StartsWith(':'))
                     {
@@ -179,18 +180,19 @@ namespace WireGuardServerForWindows.Models
                     }
                     else
                     {
-                        var endpointParts = obj.Value.Split(new[] {':'}, StringSplitOptions.RemoveEmptyEntries);
-                        if (endpointParts.Length == 2)
-                        {
-                            if (endpointParts[1] != ListenPortProperty.Value)
-                            {
-                                result = Resources.EndpointPortMismatch;
-                            }
-                        }
-                        else
+                        string host = string.Join(':', obj.Value.Split(':').SkipLast(1));
+                        string port = obj.Value.Split(':').LastOrDefault();
+
+                        if (string.IsNullOrEmpty(host) || string.IsNullOrEmpty(port))
                         {
                             result = Resources.EmptyEndpointValidation;
                         }
+                        else if (port != ListenPortProperty.Value)
+                        {
+                            result = Resources.EndpointPortMismatch;
+                        }
+                        
+                        // If we get here, we passed all validation.
                     }
 
                     return result;

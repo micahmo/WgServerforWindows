@@ -286,7 +286,7 @@ namespace WireGuardServerForWindows.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Enter public IP:Port as endpoint..
+        ///   Looks up a localized string similar to Enter public IP:Port or [IPv6]:Port as endpoint..
         /// </summary>
         public static string EmptyEndpointValidation {
             get {

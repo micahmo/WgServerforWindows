@@ -285,7 +285,7 @@ Current value: {1}</value>
 (Public IP:Port)</value>
   </data>
   <data name="EmptyEndpointValidation" xml:space="preserve">
-    <value>Enter public IP:Port as endpoint.</value>
+    <value>Enter public IP:Port or [IPv6]:Port as endpoint.</value>
   </data>
   <data name="EndpointPortMismatch" xml:space="preserve">
     <value>Endpoint port should match Listen Port property.</value>
