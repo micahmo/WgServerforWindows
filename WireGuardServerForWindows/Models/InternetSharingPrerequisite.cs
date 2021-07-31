@@ -36,8 +36,10 @@ namespace WireGuardServerForWindows.Models
 
             if (wg_server is { })
             {
-                result = netSharingManager.INetSharingConfigurationForINetConnection[wg_server].SharingEnabled &&
-                         netSharingManager.INetSharingConfigurationForINetConnection[wg_server].SharingConnectionType == tagSHARINGCONNECTIONTYPE.ICSSHARINGTYPE_PRIVATE;
+                var a = netSharingManager.INetSharingConfigurationForINetConnection[wg_server].SharingEnabled;
+                var b = netSharingManager.INetSharingConfigurationForINetConnection[wg_server].SharingConnectionType == tagSHARINGCONNECTIONTYPE.ICSSHARINGTYPE_PRIVATE;
+
+                result = a && b;
             }
 
             return result;
