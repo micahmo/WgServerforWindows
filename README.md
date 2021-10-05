@@ -90,7 +90,7 @@ When the .NET Core download page opens, choose the x64 download for "desktop app
 
 ![](https://user-images.githubusercontent.com/7417301/134985502-f5967b3d-3661-46a3-bfaa-02c447032f23.png)
 
-> An enhancement to create a proper installer, which would handle dependencies like these, is being tracked in #6.
+> An enhancement to create a proper installer, which would handle dependencies like these, is being tracked in [#6](https://github.com/micahmo/WireGuardServerForWindows/issues/6).
 
 > **Note**: The application will request to run as Administrator. Due to all the finagling of the registry, Windows services, wg.exe calls, etc., it is easier to run the whole application elevated.
 
