@@ -8,7 +8,7 @@ Inspired by Henry Chang's post, [How to Setup Wireguard VPN Server On Windows](h
 
 # What Does It Do?
 
-Below are the tasks that can be performed automatically using this application. [Jump to Usage.](#usage)
+Below are the tasks that can be performed automatically using this application. [Jump to How to Use.](#how-to-use)
 
 ## Before
 ![BeforeScreenshot](https://i.imgur.com/Mlyd0TS.png)
