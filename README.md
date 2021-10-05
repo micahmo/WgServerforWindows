@@ -6,7 +6,7 @@ WS4W is a desktop application that allows running and managing a WireGuard serve
 
 Inspired by Henry Chang's post, [How to Setup Wireguard VPN Server On Windows](https://www.henrychang.ca/how-to-setup-wireguard-vpn-server-on-windows/), my goal was to create an application that automated and simplified many of the complex steps. While still not quite a plug-and-play solution, the idea is to be able to perform each of the prerequisite steps, one-by-one, without running any scripts, modifying the Registry, or entering the Control Panel.
 
-# What does it Do?
+# What Does It Do?
 
 Below are the tasks that can be performed automatically using this application. [Jump to Usage.](#usage)
 
