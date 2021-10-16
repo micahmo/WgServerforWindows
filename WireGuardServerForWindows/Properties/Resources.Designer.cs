@@ -286,7 +286,7 @@ namespace WireGuardServerForWindows.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Enter public IP:Port or [IPv6]:Port as endpoint..
+        ///   Looks up a localized string similar to Enter public IP:Port or [IPv6]:Port or DomainName:Port as endpoint..
         /// </summary>
         public static string EmptyEndpointValidation {
             get {
@@ -323,6 +323,26 @@ namespace WireGuardServerForWindows.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Detect Public IP Address.
+        /// </summary>
+        public static string EndpointPropertyAction {
+            get {
+                return ResourceManager.GetString("EndpointPropertyAction", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Attempt to detect this machine&apos;s current public (WAN) IP address using ipify.org.
+        ///
+        ///Note: It is preferable to use a domain name with DDNS to avoid dynamic WAN IPs..
+        /// </summary>
+        public static string EndpointPropertyActionDescription {
+            get {
+                return ResourceManager.GetString("EndpointPropertyActionDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Error.
         /// </summary>
         public static string Error {
@@ -337,6 +357,15 @@ namespace WireGuardServerForWindows.Properties {
         public static string ExportConfigurationFileAction {
             get {
                 return ResourceManager.GetString("ExportConfigurationFileAction", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to identify....
+        /// </summary>
+        public static string FailedToIdentify {
+            get {
+                return ResourceManager.GetString("FailedToIdentify", resourceCulture);
             }
         }
         
@@ -836,6 +865,15 @@ namespace WireGuardServerForWindows.Properties {
         public static string UninstallWireGuard {
             get {
                 return ResourceManager.GetString("UninstallWireGuard", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Successfully identified!.
+        /// </summary>
+        public static string Updated {
+            get {
+                return ResourceManager.GetString("Updated", resourceCulture);
             }
         }
         
