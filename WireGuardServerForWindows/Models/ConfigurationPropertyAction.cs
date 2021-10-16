@@ -12,7 +12,12 @@ namespace WireGuardServerForWindows.Models
         public ConfigurationPropertyAction(ConfigurationBase parentConfiguration) =>
             _parentConfiguration = parentConfiguration;
 
-        public string Name { get; set; }
+        public string Name
+        {
+            get => _name;
+            set => Set(nameof(Name), ref _name, value);
+        }
+        private string _name;
 
         public string Description
         {
@@ -41,7 +46,16 @@ namespace WireGuardServerForWindows.Models
 
         public bool DependencySatisfied => DependencySatisfiedFunc?.Invoke(_dependentProperty) ?? true;
 
-        public Func<ConfigurationProperty, bool> DependencySatisfiedFunc { get; set; }
+        public Func<ConfigurationProperty, bool> DependencySatisfiedFunc
+        {
+            get => _dependencySatisfiedFunc;
+            set
+            {
+                _dependencySatisfiedFunc = value;
+                RaisePropertyChanged(nameof(DependencySatisfied));
+            }
+        }
+        private Func<ConfigurationProperty, bool> _dependencySatisfiedFunc;
 
         public Action<ConfigurationBase, ConfigurationProperty> Action { get; set; }
 

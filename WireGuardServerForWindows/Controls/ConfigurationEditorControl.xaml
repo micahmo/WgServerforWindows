@@ -53,6 +53,7 @@
                                        VerticalAlignment="Center"/>
                         <TextBox x:Name="tb" Grid.Column="1" IsReadOnly="{Binding IsReadOnly}"
                                      Text="{Binding Value, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"
+                                     ToolTipService.ShowDuration="60000"
                                      VerticalContentAlignment="Center">
                             <TextBox.Style>
                                 <Style TargetType="{x:Type TextBox}">
@@ -106,6 +107,7 @@
 
                         <Button Grid.Column="2" Margin="10,0,0,0" Command="{Binding ExecuteActionCommand}"
                                     Visibility="{c:Binding 'Action != null', FalseToVisibility=Collapsed}"
+                                    ToolTipService.ShowDuration="60000"
                                     ToolTip="{Binding Action.Description}"
                                     IsEnabled="{Binding Action.DependencySatisfied}">
                             <Button.Content>

@@ -285,7 +285,7 @@ Current value: {1}</value>
 (Public IP:Port)</value>
   </data>
   <data name="EmptyEndpointValidation" xml:space="preserve">
-    <value>Enter public IP:Port or [IPv6]:Port as endpoint.</value>
+    <value>Enter public IP:Port or [IPv6]:Port or DomainName:Port as endpoint.</value>
   </data>
   <data name="EndpointPortMismatch" xml:space="preserve">
     <value>Endpoint port should match Listen Port property.</value>
@@ -407,5 +407,19 @@ Current value: {1}</value>
   </data>
   <data name="EnablingInternetSharing" xml:space="preserve">
     <value>Enabling internet sharing with network '{0}'.</value>
+  </data>
+  <data name="EndpointPropertyAction" xml:space="preserve">
+    <value>Detect Public IP Address</value>
+  </data>
+  <data name="EndpointPropertyActionDescription" xml:space="preserve">
+    <value>Attempt to detect this machine's current public (WAN) IP address using ipify.org.
+
+Note: It is preferable to use a domain name with DDNS to avoid dynamic WAN IPs.</value>
+  </data>
+  <data name="FailedToIdentify" xml:space="preserve">
+    <value>Failed to identify...</value>
+  </data>
+  <data name="Updated" xml:space="preserve">
+    <value>Successfully identified!</value>
   </data>
 </root>

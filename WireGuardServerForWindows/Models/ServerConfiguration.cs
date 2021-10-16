@@ -1,7 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using WireGuardAPI;
 using WireGuardAPI.Commands;
@@ -69,33 +70,58 @@ namespace WireGuardServerForWindows.Models
                 }
             };
 
-            ListenPortProperty.PropertyChanged += (_, __) =>
+            EndpointProperty.Action = new ConfigurationPropertyAction(this)
             {
-                if (string.IsNullOrEmpty(EndpointProperty.Value) == false)
+                Name = $"{nameof(EndpointProperty)}{nameof(ConfigurationProperty.Action)}",
+                Description = Resources.EndpointPropertyActionDescription,
+                Action = async (conf, prop) =>
                 {
-                    string host = string.Join(':', EndpointProperty.Value.Split(':').SkipLast(1));
-                    string port = EndpointProperty.Value.Split(':').LastOrDefault();
-                    if (string.IsNullOrEmpty(host) == false && string.IsNullOrEmpty(port) == false && port.EndsWith(']') == false)
+                    // Immediately disable the action so the user can't invoke it again.
+                    EndpointProperty.Action.DependencySatisfiedFunc = _ => false;
+
+                    string ip = null;
+
+                    Mouse.OverrideCursor = Cursors.Wait;
+
+                    try
                     {
-                        // It already has IP:Port, so just replace the Port part
-                        EndpointProperty.Value = $"{host}:{ListenPortProperty.Value}";
+                        var httpClient = new HttpClient();
+                        ip = await httpClient.GetStringAsync("https://api.ipify.org");
                     }
-                    else if (EndpointProperty.Value.StartsWith(':'))
+                    catch
                     {
-                        // It has no IP, just :PORT, so replace the port
-                        EndpointProperty.Value = $":{ListenPortProperty.Value}";
+                        // Swallow
                     }
-                    else if (EndpointProperty.Value.EndsWith(':'))
+
+                    if (string.IsNullOrEmpty(ip))
                     {
-                        // It only has IP: and no port, so add the port
-                        EndpointProperty.Value = $"{EndpointProperty.Value}{ListenPortProperty.Value}";
+                        // Failed. Indicate such to the user for a period of time.
+                        EndpointProperty.Action.Name = nameof(Resources.FailedToIdentify);
                     }
+                    else
+                    {
+                        // We got it! Update the value and tell the user.
+                        EndpointProperty.Host = ip;
+                        EndpointProperty.Action.Name = nameof(Resources.Updated);
+                    }
+
+                    Mouse.OverrideCursor = null;
+
+                    // Wait a short time so the user can see the status message
+                    await Task.Delay(TimeSpan.FromSeconds(5));
+
+                    // Reset the state of the action
+                    EndpointProperty.Action.Name = $"{nameof(EndpointProperty)}{nameof(ConfigurationProperty.Action)}";
+                    EndpointProperty.Action.Description = Resources.EndpointPropertyActionDescription;
+
+                    // Lastly, re-enable the action.
+                    EndpointProperty.Action.DependencySatisfiedFunc = null;
                 }
-                else
-                {
-                    // It's an empty string. We can at least populate the port.
-                    EndpointProperty.Value = $":{ListenPortProperty.Value}";
-                }
+            };
+
+            ListenPortProperty.PropertyChanged += (_, args) =>
+            {
+                EndpointProperty.Port = ListenPortProperty.Value;
             };
 
             // Resort after changing the index of AddressProperty
@@ -162,7 +188,7 @@ namespace WireGuardServerForWindows.Models
         };
         private ConfigurationProperty _allowedIpsProperty;
 
-        public ConfigurationProperty EndpointProperty => _endpointProperty ??= new ConfigurationProperty(this)
+        public EndpointConfigurationProperty EndpointProperty => _endpointProperty ??= new EndpointConfigurationProperty(this)
         {
             Index = 3,
             PersistentPropertyName = "Endpoint",
@@ -180,14 +206,11 @@ namespace WireGuardServerForWindows.Models
                     }
                     else
                     {
-                        string host = string.Join(':', obj.Value.Split(':').SkipLast(1));
-                        string port = obj.Value.Split(':').LastOrDefault();
-
-                        if (string.IsNullOrEmpty(host) || string.IsNullOrEmpty(port))
+                        if (string.IsNullOrEmpty(EndpointProperty.Host) || string.IsNullOrEmpty(EndpointProperty.Port))
                         {
                             result = Resources.EmptyEndpointValidation;
                         }
-                        else if (port != ListenPortProperty.Value)
+                        else if (EndpointProperty.Port != ListenPortProperty.Value)
                         {
                             result = Resources.EndpointPortMismatch;
                         }
@@ -199,7 +222,7 @@ namespace WireGuardServerForWindows.Models
                 }
             }
         };
-        private ConfigurationProperty _endpointProperty;
+        private EndpointConfigurationProperty _endpointProperty;
 
         // Note: Although this property is configured on the server, it goes in the peer (client) section of the server's config,
         // which means it also has to be defined on the client, targeted to the server's config.
@@ -227,5 +250,85 @@ namespace WireGuardServerForWindows.Models
         private ConfigurationProperty _persistentKeepaliveProperty;
 
         #endregion
+    }
+
+    /// <summary>
+    /// An extension of <see cref="ConfigurationProperty"/> that is specific to <see cref="ServerConfiguration.EndpointProperty"/>,
+    /// containing additional methods for parsing and setting parts of the endpoint.
+    /// </summary>
+    public class EndpointConfigurationProperty : ConfigurationProperty
+    {
+        public EndpointConfigurationProperty(ConfigurationBase configuration, ConfigurationProperty dependentProperty = null)
+            : base(configuration, dependentProperty)
+        {
+        }
+
+        /// <summary>
+        /// Provides access to the host portion of the value. Will be empty string if not present. Can be set without affecting the port.
+        /// </summary>
+        public string Host
+        {
+            get => string.Join(':', (Value ?? string.Empty).Split(':').SkipLast(1));
+            set
+            {
+                if (string.IsNullOrEmpty(Value) == false)
+                {
+                    if (string.IsNullOrEmpty(Host) == false && string.IsNullOrEmpty(Port) == false && Port.EndsWith(']') == false)
+                    {
+                        // It already has IP:Port, so just replace the IP part
+                        Value = $"{value}:{Port}";
+                    }
+                    else if (Value.StartsWith(':'))
+                    {
+                        // It has no IP, just :PORT, so add the IP
+                        Value = $"{value}{Value}";
+                    }
+                    else if (Value.EndsWith(':'))
+                    {
+                        // It only has IP: and no port, so replace the IP
+                        Value = $"{value}:";
+                    }
+                }
+                else
+                {
+                    // It's an empty string. We can at least populate the IP.
+                    Value = $"{value}:";
+                }
+            }
+        }
+
+        /// <summary>
+        /// Provides access to the port portion of the value. Will be empty string if not present. Can be set without affecting the host.
+        /// </summary>
+        public string Port
+        {
+            get => (Value ?? string.Empty).Split(':').LastOrDefault();
+            set
+            {
+                if (string.IsNullOrEmpty(Value) == false)
+                {
+                    if (string.IsNullOrEmpty(Host) == false && string.IsNullOrEmpty(Port) == false && Port.EndsWith(']') == false)
+                    {
+                        // It already has IP:Port, so just replace the Port part
+                        Value = $"{Host}:{value}";
+                    }
+                    else if (Value.StartsWith(':'))
+                    {
+                        // It has no IP, just :PORT, so replace the port
+                        Value = $":{value}";
+                    }
+                    else if (Value.EndsWith(':'))
+                    {
+                        // It only has IP: and no port, so add the port
+                        Value = $"{Value}{value}";
+                    }
+                }
+                else
+                {
+                    // It's an empty string. We can at least populate the port.
+                    Value = $":{value}";
+                }
+            }
+        }
     }
 }
