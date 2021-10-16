@@ -71,7 +71,11 @@ namespace WireGuardServerForWindows.Models
 
             if (File.Exists(ServerDataPath) == false)
             {
+#pragma warning disable CS0642
+                // There is intentionally no code block after the using statement,
+                // because we want to create and then release the file without holding it open.
                 using (File.Create(ServerDataPath));
+#pragma warning restore CS0642
             }
 
             if (Directory.Exists(Path.GetDirectoryName(ServerWGPath)) == false)
@@ -81,7 +85,11 @@ namespace WireGuardServerForWindows.Models
 
             if (File.Exists(ServerWGPath) == false)
             {
+#pragma warning disable CS0642
+                // There is intentionally no code block after the using statement,
+                // because we want to create and then release the file without holding it open.
                 using (File.Create(ServerWGPath));
+#pragma warning restore CS0642
             }
 
             Configure();
