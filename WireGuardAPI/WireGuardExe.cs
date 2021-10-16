@@ -29,7 +29,9 @@ namespace WireGuardAPI
             string fileName = whichExe switch
             {
                 WhichExe.WireGuardExe => "wireguard.exe",
-                WhichExe.WGExe => "wg.exe"
+                WhichExe.WGExe => "wg.exe",
+                // This case should never be hit, since custom exes provide their own name via Args
+                _ => default
             };
 
             // Must use EnvironmentVariableTarget.Machine so that we always get the latest variables, even if they change after our process starts.
