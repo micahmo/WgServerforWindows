@@ -1,0 +1,29 @@
+name: Run Unit Tests
+
+on: [push, pull_request]
+
+jobs:
+  restore_build_test:
+
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      
+      # Setup: Need .NET Core for restore, MSBuild for build, and VSTest for test
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v1.7.2
+        with:
+          dotnet-version: 3.1.x
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v1.0.3
+      - name: Setup VSTest
+        uses: darenm/Setup-VSTest@v1
+      
+      # Restore, build, test
+      - name: Restore
+        run: dotnet restore
+      - name: Build
+        run: msbuild
+      - name: Test
+        run: vstest.console WireGuardServerForWindows.Tests\bin\Debug\netcoreapp3.1\WireGuardServerForWindows.Tests.dll
