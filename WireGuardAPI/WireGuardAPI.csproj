@@ -6,12 +6,7 @@
 
   <ItemGroup>
     <PackageReference Include="CliWrap" Version="3.3.2" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Reference Include="Microsoft.Win32.Registry">
-      <HintPath>..\..\..\..\..\..\Program Files\dotnet\packs\Microsoft.WindowsDesktop.App.Ref\3.1.0\ref\netcoreapp3.1\Microsoft.Win32.Registry.dll</HintPath>
-    </Reference>
+    <PackageReference Include="Microsoft.Win32.Registry" Version="5.0.0" />
   </ItemGroup>
 
 </Project>
