@@ -9,6 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WireGuardAPI", "WireGuardAP
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{42A258C8-5F33-4D0D-B0CF-0861EB334E97}"
 	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
 		README.md = README.md
 	EndProjectSection
 EndProject
@@ -16,7 +17,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WireGuardServerForWindows.C
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WireGuardServerForWindows.Cli.Options", "WireGuardServerForWindows.Cli.Options\WireGuardServerForWindows.Cli.Options.csproj", "{841E987C-04F2-4EC8-A66B-DEE8344D3211}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WireGuardServerForWindows.Tests", "WireGuardServerForWindows.Tests\WireGuardServerForWindows.Tests.csproj", "{BE244BB9-CE9D-44BE-9AF4-81705554908F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WireGuardServerForWindows.Tests", "WireGuardServerForWindows.Tests\WireGuardServerForWindows.Tests.csproj", "{BE244BB9-CE9D-44BE-9AF4-81705554908F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
