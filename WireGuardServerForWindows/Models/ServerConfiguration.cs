@@ -249,6 +249,31 @@ namespace WireGuardServerForWindows.Models
         };
         private ConfigurationProperty _persistentKeepaliveProperty;
 
+        /// <summary>
+        /// This is a calculated field that generates a Server IP address based on the current <see cref="ServerConfiguration.AddressProperty"/> property.
+        /// Returns an empty string if the IP address cannot be generated for any reason.
+        /// </summary>
+        public string IpAddress
+        {
+            get
+            {
+                string result = string.Empty;
+                
+                try
+                {
+                    IPNetwork network = IPNetwork.Parse(AddressProperty.Value);
+                    result = network.ListIPAddress().Skip(1).FirstOrDefault()?.ToString() ?? string.Empty;
+                }
+                catch
+                {
+                    // Should never come here, because we should only invoke this method if the AddressProperty has already passed validation.
+                    // But just to be safe...
+                }
+
+                return result;
+            }
+        }
+
         #endregion
     }
 
