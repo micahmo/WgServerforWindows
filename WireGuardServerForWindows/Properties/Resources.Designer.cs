@@ -714,6 +714,15 @@ namespace WireGuardServerForWindows.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The ScopeAddress registry key does not have the correct value..
+        /// </summary>
+        public static string ScopeAddressRegistryIncorrect {
+            get {
+                return ResourceManager.GetString("ScopeAddressRegistryIncorrect", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Choose the public network interface whose internet connection should be shared with the WireGuard interface..
         /// </summary>
         public static string SelectInterfaceText {

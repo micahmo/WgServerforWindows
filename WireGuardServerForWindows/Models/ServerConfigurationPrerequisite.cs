@@ -35,30 +35,34 @@ namespace WireGuardServerForWindows.Models
 
         public override BooleanTimeCachedProperty Fulfilled => _fulfilled ??= new BooleanTimeCachedProperty(TimeSpan.FromSeconds(1), () =>
         {
-            bool result = true;
-
             if (File.Exists(ServerWGPath) == false)
             {
-                result = false;
                 ErrorMessage = Resources.ServerConfigurationMissingErrorMessage;
+                return false;
             }
-            else
-            {
-                // The file exists, make sure it has all the fields
-                var serverConfiguration = new ServerConfiguration().Load<ServerConfiguration>(Configuration.LoadFromFile(ServerDataPath));
+            
+            
+            // The file exists, make sure it has all the fields
+            var serverConfiguration = new ServerConfiguration().Load<ServerConfiguration>(Configuration.LoadFromFile(ServerDataPath));
 
-                foreach (ConfigurationProperty property in serverConfiguration.Properties)
+            foreach (ConfigurationProperty property in serverConfiguration.Properties)
+            {
+                if (string.IsNullOrEmpty(property.Validation?.Validate?.Invoke(property)) == false)
                 {
-                    if (string.IsNullOrEmpty(property.Validation?.Validate?.Invoke(property)) == false)
-                    {
-                        result = false;
-                        ErrorMessage = Resources.ServerConfigurationIncompleteErrorMessage;
-                        break;
-                    }
+                    ErrorMessage = Resources.ServerConfigurationIncompleteErrorMessage;
+                    return false;
                 }
             }
 
-            return result;
+            // Check whether the registry got updated correctly.
+            if (!GetScopeAddressRegistryValue().Equals(serverConfiguration.IpAddress))
+            {
+                ErrorMessage = Resources.ScopeAddressRegistryIncorrect;
+                return false;
+            }
+
+            // If we get here, everything passed.
+            return true;
         });
         private BooleanTimeCachedProperty _fulfilled;
 
@@ -118,14 +122,12 @@ namespace WireGuardServerForWindows.Models
                 clientConfigurationsPrerequisite.Update();
 
                 // Update Internet Sharing to use new server IP only if
-                // - the value was changed
                 // - the new value passes validation
-                if (originalServerIp != serverConfiguration.AddressProperty.Value && 
-                    string.IsNullOrEmpty(serverConfiguration.AddressProperty.Validation?.Validate?.Invoke(serverConfiguration.AddressProperty)))
+                // - the new value is not already in the registry
+                if (string.IsNullOrEmpty(serverConfiguration.AddressProperty.Validation?.Validate?.Invoke(serverConfiguration.AddressProperty))
+                    && !GetScopeAddressRegistryValue().Equals(serverConfiguration.IpAddress))
                 {
-                    // Don't need TryParse since we passed validation
-                    var network = IPNetwork.Parse(serverConfiguration.AddressProperty.Value);
-                    SetScopeAddressRegistryValue(network.ListIPAddress().Skip(1).FirstOrDefault()?.ToString() ?? string.Empty);
+                    SetScopeAddressRegistryValue(serverConfiguration.IpAddress);
 
                     // If Internet Sharing is already enabled, and we just changed the server's network range, we should disable and re-enable ICS
                     var ics = new InternetSharingPrerequisite();
@@ -200,8 +202,6 @@ namespace WireGuardServerForWindows.Models
 
         #region Public static methods
 
-        #region Private methods
-
         public static Network GetNetwork(TimeSpan? timeout = null)
         {
             Network result = default;
@@ -228,13 +228,21 @@ namespace WireGuardServerForWindows.Models
             return result;
         }
 
-        public static void SetScopeAddressRegistryValue(string value)
+        #endregion
+
+        #region Private static methods
+
+        private static void SetScopeAddressRegistryValue(string value)
         {
             var key = Registry.LocalMachine.OpenSubKey(@"SYSTEM\CurrentControlSet\Services\SharedAccess\Parameters", writable: true);
             key?.SetValue("ScopeAddress", value);
         }
 
-        #endregion
+        private static string GetScopeAddressRegistryValue()
+        {
+            var key = Registry.LocalMachine.OpenSubKey(@"SYSTEM\CurrentControlSet\Services\SharedAccess\Parameters", writable: false);
+            return key?.GetValue("ScopeAddress")?.ToString();
+        }
 
         #endregion
     }
