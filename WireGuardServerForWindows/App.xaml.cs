@@ -27,8 +27,9 @@ namespace WireGuardServerForWindows
 
             if (e.Args.Any())
             {
-                Parser.Default.ParseArguments<RestartInternetSharingCommand, object>(e.Args)
-                    .WithParsed<RestartInternetSharingCommand>(RestartInternetSharing);
+                Parser.Default.ParseArguments<RestartInternetSharingCommand, SetPathCommand>(e.Args)
+                    .WithParsed<RestartInternetSharingCommand>(RestartInternetSharing)
+                    .WithParsed<SetPathCommand>(SetPath);
 
                 // Don't proceed to GUI if started with command-line args
                 Environment.Exit(0);
@@ -72,6 +73,36 @@ namespace WireGuardServerForWindows
             int result = internetSharingPrerequisite.Fulfilled ? 0 : 1;
 
             Environment.Exit(result);
+        }
+
+        private static void SetPath(SetPathCommand o)
+        {
+            string pathEnvVar = Environment.GetEnvironmentVariable("PATH", EnvironmentVariableTarget.Machine);
+
+            if (string.IsNullOrEmpty(pathEnvVar))
+            {
+                Console.WriteLine(Cli.Options.Properties.Resources.CantLoadPath);
+                Environment.Exit(1);
+            }
+
+            string pwd = AppContext.BaseDirectory;
+
+            if (string.IsNullOrEmpty(pwd))
+            {
+                Console.WriteLine(Cli.Options.Properties.Resources.CantLoadPwd);
+                Environment.Exit(1);
+            }
+
+            if (pathEnvVar.Contains(pwd) == false)
+            {
+                pathEnvVar = $"{pathEnvVar};{pwd}";
+                Environment.SetEnvironmentVariable("PATH", pathEnvVar, EnvironmentVariableTarget.Machine);
+                Console.WriteLine(Cli.Options.Properties.Resources.AddedPwdToPath, pwd);
+            }
+            else
+            {
+                Console.WriteLine(Cli.Options.Properties.Resources.FoundPwdInPath, pwd);
+            }
         }
 
         private void Application_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)

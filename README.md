@@ -112,6 +112,9 @@ The CLI uses verbs, or top-level commands, each of which has its own set of opti
 	* If multiple networks are already shared, it is not possible to tell which one is shared with the WireGuard network, so the `--network` option must be passed to specify.
 	* If Internet Sharing is not already enabled, the `--network` option must be passed, otherwise there is no way to know which network to share.
 	* The exit code will be 0 if the requested or previously shared network was successfully reshared.
+* ```ws4w.exe setpath```
+    * This will tell WS4W to add the current executing directory to the system's `PATH` environment variable. It is mainly intended to be invoked by the installer but may be called manually after the fact.
+    * This verb has no options.
 
 # Known Issues
 Even following the steps in Henry's guide, the Persistent Internet Sharing feature is unreliable. A reboot may still cause the the internet sharing to fail, even though the `Internet Connection Sharing` service is running, and the network interface indicates that it is sharing in Control Panel. Only unsharing and resharing can fix this.

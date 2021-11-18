@@ -3,6 +3,7 @@
 #define MyAppPublisher "Micah Morrison"
 #define MyAppURL "https://github.com/micahmo/WireGuardServerForWindows"
 #define MyAppExeName "WireGuardServerForWindows.exe"
+#define CliName "ws4w.exe"
 
 ; This is relative to SourceDir
 #define RepoRoot "..\..\..\.."
@@ -37,6 +38,7 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 
 [Tasks]
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
+Name: "setpath"; Description: "Add '{app}' to the PATH variable for CLI access."; GroupDescription: "{cm:AdditionalIcons}"
 
 [Files]
 Source: "*"; DestDir: "{app}"; Excludes: "de,es"; Flags: ignoreversion recursesubdirs;
@@ -46,6 +48,9 @@ Name: "{group}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
 Name: "{autodesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: desktopicon
 
 [Run]
+; CLI in Path
+Filename: "{app}\{#CliName}"; Parameters: "setpath"; Flags: runhidden nowait skipifsilent runascurrentuser; Tasks: setpath
+
 ; runascurrentuser is needed to launch as admin
 Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Flags: nowait postinstall skipifsilent runascurrentuser
 
