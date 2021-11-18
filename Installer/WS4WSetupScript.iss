@@ -4,6 +4,8 @@
 #define MyAppURL "https://github.com/micahmo/WireGuardServerForWindows"
 #define MyAppExeName "WireGuardServerForWindows.exe"
 #define CliName "ws4w.exe"
+#define NetCoreRuntimeVersion "3.1.21"
+#define NetCoreRuntime "windowsdesktop-runtime-" + NetCoreRuntimeVersion + "-win-x64.exe"
 
 ; This is relative to SourceDir
 #define RepoRoot "..\..\..\.."
@@ -32,6 +34,14 @@ OutputBaseFilename=WS4WSetup
 Compression=lzma
 SolidCompression=yes
 WizardStyle=modern
+; .NET Core Desktop Runtime install can trigger this, but it doesn't actually require a restart
+RestartIfNeededByRun=no
+
+[Code]
+function NetCoreRuntimeNotInstalled: Boolean;
+begin
+  Result := not RegValueExists(HKEY_LOCAL_MACHINE, 'SOFTWARE\WOW6432Node\dotnet\Setup\InstalledVersions\x64\sharedfx\Microsoft.NETCore.App', '{#NetCoreRuntimeVersion}');
+end;
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
@@ -41,13 +51,18 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 Name: "setpath"; Description: "Add '{app}' to the PATH variable for CLI access."; GroupDescription: "{cm:AdditionalIcons}"
 
 [Files]
+; These are relative to SourceDir
 Source: "*"; DestDir: "{app}"; Excludes: "de,es"; Flags: ignoreversion recursesubdirs;
+Source: "..\..\..\..\Installer\{#NetCoreRuntime}"; DestDir: "{tmp}"; Flags: deleteafterinstall ignoreversion; Check: NetCoreRuntimeNotInstalled
 
 [Icons]
 Name: "{group}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
 Name: "{autodesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: desktopicon
 
 [Run]
+; .NET Core Desktop Runtime
+Filename: "{tmp}\{#NetCoreRuntime}"; Flags: runascurrentuser; Check: NetCoreRuntimeNotInstalled
+
 ; CLI in Path
 Filename: "{app}\{#CliName}"; Parameters: "setpath"; Flags: runhidden nowait skipifsilent runascurrentuser; Tasks: setpath
 
