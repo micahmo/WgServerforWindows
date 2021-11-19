@@ -6,6 +6,7 @@
     <UseWPF>true</UseWPF>
     <ApplicationIcon>Images\logo.ico</ApplicationIcon>
     <ApplicationManifest>Properties\app.manifest</ApplicationManifest>
+    <PackageId>WS4W</PackageId>
   </PropertyGroup>
 
   <ItemGroup>
