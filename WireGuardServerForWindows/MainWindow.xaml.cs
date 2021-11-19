@@ -104,11 +104,7 @@ namespace WireGuardServerForWindows
             DataContext = mainWindowModel;
 
             // Check for updates
-            _updateChecker = new MyUpdateChecker("https://raw.githubusercontent.com/micahmo/WireGuardServerForWindows/master/WireGuardServerForWindows/VersionInfo2.xml")
-            {
-                Owner = this,
-                DownloadIdentifier = "portable"
-            };
+            _updateChecker = new MyUpdateChecker("https://raw.githubusercontent.com/micahmo/WireGuardServerForWindows/master/WireGuardServerForWindows/VersionInfo2.xml", this);
         }
 
         #region Private fields
@@ -121,7 +117,8 @@ namespace WireGuardServerForWindows
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            _updateChecker.CheckForUpdates();
+            // Auto allows the user to Skip (updates are still available via F1)
+            _updateChecker.CheckForUpdates(UpdateNotifyMode.Auto);
         }
 
         #endregion
