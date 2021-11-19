@@ -104,7 +104,7 @@ namespace WireGuardServerForWindows
             DataContext = mainWindowModel;
 
             // Check for updates
-            _updateChecker = new MyUpdateChecker("https://raw.githubusercontent.com/micahmo/WireGuardServerForWindows/master/WireGuardServerForWindows/VersionInfo.xml")
+            _updateChecker = new MyUpdateChecker("https://raw.githubusercontent.com/micahmo/WireGuardServerForWindows/master/WireGuardServerForWindows/VersionInfo2.xml")
             {
                 Owner = this,
                 DownloadIdentifier = "portable"
