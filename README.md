@@ -6,9 +6,17 @@ WS4W is a desktop application that allows running and managing a WireGuard serve
 
 Inspired by Henry Chang's post, [How to Setup Wireguard VPN Server On Windows](https://www.henrychang.ca/how-to-setup-wireguard-vpn-server-on-windows/), my goal was to create an application that automated and simplified many of the complex steps. While still not quite a plug-and-play solution, the idea is to be able to perform each of the prerequisite steps, one-by-one, without running any scripts, modifying the Registry, or entering the Control Panel.
 
+# Getting Started
+The latest release is available [here](https://github.com/micahmo/WireGuardServerForWindows/releases/latest). Download the installer and run.
+
+> **Note**: The application will request to run as Administrator. Due to all the finagling of the registry, Windows services, wg.exe calls, etc., it is easier to run the whole application elevated.
+
+#### Upgrade from 1.5.2
+Before introducing an installer, WS4W was distributed as a portable application. The portable versions (1.5.2 and earlier) have no automatic upgrade path to the installer version. To upgrade, simply delete the downloaded portable version and download the installer. No configuration settings will be lost.
+
 # What Does It Do?
 
-Below are the tasks that can be performed automatically using this application. [Jump to How to Use.](#how-to-use)
+Below are the tasks that can be performed automatically using this application.
 
 ## Before
 ![BeforeScreenshot](https://i.imgur.com/Mlyd0TS.png)
@@ -77,24 +85,6 @@ Once the tunnel is installed, the status of the WireGuard interface may be viewe
 
 ## After
 ![AfterScreenshot](https://i.imgur.com/Ck5yfvj.png)
-
-# How to Use
-The latest release is available [here](https://github.com/micahmo/WireGuardServerForWindows/releases/latest). Download `Portable.zip`, and extract all.
-
-## GUI
-After extracing the zip, run `WireGuardServerForWindows.exe`. Feel free to make a shortcut in `%programdata%\Microsoft\Windows\Start Menu\Programs` to add the application to your Start Menu.
-
-If you get the following prompt, say Yes.
-
-![](https://user-images.githubusercontent.com/7417301/134973729-00a5c7bb-f260-4587-8c47-900794a6bac9.png)
-
-When the .NET Core download page opens, choose the x64 download for "desktop apps".
-
-![](https://user-images.githubusercontent.com/7417301/134985502-f5967b3d-3661-46a3-bfaa-02c447032f23.png)
-
-> An enhancement to create a proper installer, which would handle dependencies like these, is being tracked in [#6](https://github.com/micahmo/WireGuardServerForWindows/issues/6).
-
-> **Note**: The application will request to run as Administrator. Due to all the finagling of the registry, Windows services, wg.exe calls, etc., it is easier to run the whole application elevated.
 
 ## CLI
 There is also a CLI bundled in the portable download called `ws4w.exe` which can be invoked from a terminal or included in a script. In addition to messages written to standard out, the CLI will also set the exit code based on the success of executing the given command. In PowerShell, for example, the exit code can be printed with `echo $lastexitcode`.
