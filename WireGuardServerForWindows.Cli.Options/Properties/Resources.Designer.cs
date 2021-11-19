@@ -61,6 +61,42 @@ namespace WireGuardServerForWindows.Cli.Options.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Successfully added &apos;{0}&apos; to the PATH..
+        /// </summary>
+        public static string AddedPwdToPath {
+            get {
+                return ResourceManager.GetString("AddedPwdToPath", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unable to load the system&apos;s PATH environment variable..
+        /// </summary>
+        public static string CantLoadPath {
+            get {
+                return ResourceManager.GetString("CantLoadPath", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unable to detect the current working directory..
+        /// </summary>
+        public static string CantLoadPwd {
+            get {
+                return ResourceManager.GetString("CantLoadPwd", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Found that &apos;{0}&apos; was already in the PATH..
+        /// </summary>
+        public static string FoundPwdInPath {
+            get {
+                return ResourceManager.GetString("FoundPwdInPath", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Attempts to Disable Internet Sharing and then Enable Internet Sharing..
         /// </summary>
         public static string RestartInternetSharingHelpText {
@@ -75,6 +111,15 @@ namespace WireGuardServerForWindows.Cli.Options.Properties {
         public static string RestartInternetSharingNetworkHelpText {
             get {
                 return ResourceManager.GetString("RestartInternetSharingNetworkHelpText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adds the directory containing the currently executing ws4w.exe to the system&apos;s PATH environment variable..
+        /// </summary>
+        public static string SetPathHelpText {
+            get {
+                return ResourceManager.GetString("SetPathHelpText", resourceCulture);
             }
         }
     }
