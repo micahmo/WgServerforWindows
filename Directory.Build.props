@@ -1,5 +1,6 @@
 <Project>
     <PropertyGroup>
+        <!-- Keep in sync with WS4WSetupScript.iss and VersionInfo.xml -->
         <AssemblyVersion>1.5.2.0</AssemblyVersion>
         <FileVersion>1.5.2.0</FileVersion>
         <InformationalVersion>1.5.2.0</InformationalVersion>

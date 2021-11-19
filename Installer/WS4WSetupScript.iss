@@ -31,7 +31,7 @@ OutputDir={#RepoRoot}\Installer
 SetupIconFile={#RepoRoot}\WireGuardServerForWindows\Images\logo.ico
 ; This is an install-time path, so it must refer to something on the installed machine, like the main exe
 UninstallDisplayIcon={app}\WireGuardServerForWindows.exe
-OutputBaseFilename=WS4WSetup
+OutputBaseFilename=WS4WSetup-{#MyAppVersion}
 Compression=lzma
 SolidCompression=yes
 WizardStyle=modern
@@ -75,8 +75,8 @@ Name: "setpath"; Description: "Add '{app}' to the PATH variable for CLI access."
 
 [Files]
 ; These are relative to SourceDir
-Source: "*"; DestDir: "{app}"; Excludes: "de,es"; Flags: ignoreversion recursesubdirs;
-Source: "..\..\..\..\Installer\{#NetCoreRuntime}"; DestDir: "{tmp}"; Flags: deleteafterinstall ignoreversion; Check: NetCoreRuntimeNotInstalled
+Source: "*"; DestDir: "{app}"; Excludes: "de,es"; Flags: recursesubdirs;
+Source: "..\..\..\..\Installer\{#NetCoreRuntime}"; DestDir: "{tmp}"; Flags: deleteafterinstall; Check: NetCoreRuntimeNotInstalled
 
 [Icons]
 Name: "{group}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
