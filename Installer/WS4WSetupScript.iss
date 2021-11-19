@@ -6,6 +6,7 @@
 #define CliName "ws4w.exe"
 #define NetCoreRuntimeVersion "3.1.21"
 #define NetCoreRuntime "windowsdesktop-runtime-" + NetCoreRuntimeVersion + "-win-x64.exe"
+#define UniversalCrtKb "KB3118401"
 
 ; This is relative to SourceDir
 #define RepoRoot "..\..\..\.."
@@ -37,10 +38,32 @@ WizardStyle=modern
 ; .NET Core Desktop Runtime install can trigger this, but it doesn't actually require a restart
 RestartIfNeededByRun=no
 
+[CustomMessages]
+UCrtError={#MyAppName} requires the Universal C Runtime. Please perform all outstanding Windows Updates or search for and install {#UniversalCrtKb} before installing WS4W.
+
 [Code]
 function NetCoreRuntimeNotInstalled: Boolean;
 begin
   Result := not RegValueExists(HKEY_LOCAL_MACHINE, 'SOFTWARE\WOW6432Node\dotnet\Setup\InstalledVersions\x64\sharedfx\Microsoft.NETCore.App', '{#NetCoreRuntimeVersion}');
+end;
+
+// More info: https://docs.microsoft.com/en-us/cpp/windows/universal-crt-deployment?view=msvc-170
+function UniversalCrtInstalled: Boolean;
+begin
+  Result := FileExists(ExpandConstant('{sys}') + '\ucrtbase.dll');
+end;
+
+// This is a buit-in function that's called during initialization.
+// We'll use it to determine whether we can proceed with the install on this system.
+function InitializeSetup(): Boolean;
+begin
+  if not UniversalCrtInstalled then
+    begin
+      MsgBox(ExpandConstant('{cm:UCrtError}'), mbCriticalError, MB_OK);
+      Result := False;
+    end
+  else
+    Result := True
 end;
 
 [Languages]
