@@ -84,7 +84,7 @@ Name: "{autodesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: de
 
 [Run]
 ; .NET Core Desktop Runtime
-Filename: "{tmp}\{#NetCoreRuntime}"; Flags: runascurrentuser; Check: NetCoreRuntimeNotInstalled
+Filename: "{tmp}\{#NetCoreRuntime}"; Flags: runascurrentuser; StatusMsg: "Installing .NET Core Desktop Runtime..."; Check: NetCoreRuntimeNotInstalled
 
 ; CLI in Path
 Filename: "{app}\{#CliName}"; Parameters: "setpath"; Flags: runhidden nowait skipifsilent runascurrentuser; Tasks: setpath
