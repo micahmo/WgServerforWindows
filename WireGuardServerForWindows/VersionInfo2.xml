@@ -8,6 +8,6 @@
   <DownloadLink>https://github.com/micahmo/WireGuardServerForWindows/releases/download/v1.6.1/WS4WSetup-1.6.1.exe</DownloadLink>
   <DownloadFileName>WS4WSetup-1.6.1.exe</DownloadFileName>
   <!-- Release notes -->
-  <VersionNotes>Add proper application installer</VersionNotes>
+  <VersionNotes>Fix and document inability to enable Internet Sharing (#16)</VersionNotes>
   <ReleaseNotes></ReleaseNotes>
 </AppUpdate>
