@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Management;
 using System.Windows.Input;
 using Humanizer;
 using NETCONLib;
@@ -62,6 +63,25 @@ namespace WireGuardServerForWindows.Models
                 .Select(n => netSharingManager.INetSharingConfigurationForINetConnection[n]))
             {
                 oldConnection.DisableSharing();
+            }
+
+            // Occasionally have to poke networks via WMI to really disable all ICS
+            // - https://github.com/micahmo/WireGuardServerForWindows/issues/16
+            // - https://github.com/utapyngo/icsmanager/issues/17
+            ManagementObjectSearcher managementObjectSearcher = new ManagementObjectSearcher(@"root\Microsoft\HomeNet", "select * from hnet_connectionproperties");
+            foreach (var netConnection in managementObjectSearcher.Get().OfType<ManagementObject>())
+            {
+                if (netConnection.GetPropertyValue("IsIcsPrivate") is bool isIcsPrivate && isIcsPrivate)
+                {
+                    netConnection.SetPropertyValue("IsIcsPrivate", false);
+                    netConnection.Put(new PutOptions {Type = PutType.UpdateOnly});
+                }
+
+                if (netConnection.GetPropertyValue("IsIcsPublic") is bool isIcsPublic && isIcsPublic)
+                {
+                    netConnection.SetPropertyValue("IsIcsPublic", false);
+                    netConnection.Put(new PutOptions {Type = PutType.UpdateOnly});
+                }
             }
 
             Mouse.OverrideCursor = null;
