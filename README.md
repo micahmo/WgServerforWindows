@@ -120,5 +120,19 @@ Fortunately, the CLI makes the process of unsharing and resharing easy to automa
 ![image](https://user-images.githubusercontent.com/7417301/116771293-23b60300-aa18-11eb-9070-1f2c2c0bb21d.png)
 ![image](https://user-images.githubusercontent.com/7417301/116771300-36c8d300-aa18-11eb-825d-28f8a74078f7.png)
 
+### Inability to Enable Internet Sharing
+If you experience the following error message when enabling Internet Sharing, please perform the following manual steps.
+
+![image](https://user-images.githubusercontent.com/7417301/145692723-f90e6e95-4628-4725-a44d-54377097f883.png)
+
+ - Open Network Connections in the Control Panel.
+ - Right-click > Properties on the network interface that you want to share.
+    - Go to the Sharing tab and check "Allow other network users to connect through this computer's Internet connection".
+	- From the "Home networking connection" dropdown, choose `wg_server`.
+	- Press OK.
+ - Close and reopen WS4W. It should now show Internet Sharing enabled, and subsequent attempts to disable/re-enable should be sucessful going forward.
+
+> Note: This issue is often triggered after creating a new virtual switch for a VM. The manual workaround should only be needed once after that and does not affect the virtual switch.
+
 # Goals
 One of the more lofty goals of this project was to run a VPN behind NAT without port forwarding. I am interested by Jordan Whited's post, [WireGuard Endpoint Discovery and NAT Traversal using DNS-SD](https://www.jordanwhited.com/posts/wireguard-endpoint-discovery-nat-traversal/) and hope to investigate the possibility of integrating it into this application at some point.
