@@ -21,7 +21,7 @@ Below are the tasks that can be performed automatically using this application.
 ## Before
 ![BeforeScreenshot](https://i.imgur.com/Mlyd0TS.png)
 
-### Download and Install WireGuard
+### WireGuard.exe
 This step downloads and runs the latest version of WireGuard for Windows from https://download.wireguard.com/windows-client/wireguard-installer.exe. Once installed, it can be uninstalled directly from WS4W, too.
 
 ### Server Configuration
@@ -42,7 +42,7 @@ You should set the Endpoint property to your public IPv4, IPv6, or domain addres
 ### Client Configuration
 ![ClientConfiguration](https://i.imgur.com/frxdJ7S.png)
 
-Here you can configure the client(s). The Address can be entered manually or calculated based on the server's network range. For example, if the server's network is `10.253.0.0/24`, the client config can determine that `10.253.0.2` is a valid address. Note that the first address in the range (in this case, `10.253.0.1`) is reserved for the server. DNS is optional, but recommended. Lastly, the Private Key and Public Keys are again generated using `wg genkey` and `wg pubkey [private key]`. However, the Preshared Key must match the server's. If it has already been generated in the server config, it can be automatically copied to the client config.
+Here you can configure the client(s). The Address can be entered manually or calculated based on the server's network range. For example, if the server's network is `10.253.0.0/24`, the client config can determine that `10.253.0.2` is a valid address. Note that the first address in the range (in this example, `10.253.0.1`) is reserved for the server. DNS is optional, but recommended. Lastly, the Private Key and Public Keys are again generated using `wg genkey` and `wg pubkey [private key]`. However, the Preshared Key must match the server's. If it has already been generated in the server config, it can be automatically copied to the client config.
 
 Once configured, it's easy to import the configuration into your client app of choice via QR code or by exporting the `.conf` file.
 
@@ -51,7 +51,7 @@ Once configured, it's easy to import the configuration into your client app of c
 ### Tunnnel Service
 Once the server and client(s) are configured, you may install the tunnel service, which creates a new network interface for WireGuard using the `wireguard /installtunnelservice` command. After installation, the tunnel may be also removed directly within WS4W. This uses the `wireguard /uninstalltunnelservice` command.
 
-Installing the tunnel service should be sufficient to perform a WireGuard handshake.
+After completing this step, WireGuard clients should be able to get as far as performing a successful handshake with the server.
 
 > **Note:** If the server configuration is edited after the tunnel service is installed, the tunnel service will automatically be updated via the `wg syncconf` command (if the newly saved server configuration is valid). This is also true of the client configurations, updates to which often cause the server configuration to be updated (e.g., if a new client is added, the server configuration must be aware of this new peer).
 
@@ -65,18 +65,18 @@ Even after the tunnel service is installed, some protocols may be blocked. It is
 
 Perhaps most importantly, internet sharing must be enabled in order to provide a real network connection to the WireGuard interface. In Windows, this is accomplished using Internet Connection Sharing, which serves as NAT router between the system's public network and the devices connected to the WireGuard interface.
 
-When configuring this option, you may select any of your network adapters to share. Note that it will likely only work for adapters whose status is `Connected`, and it will only be useful for adapters which provide internet or LAN access.
+When configuring this option, you may select any of your network adapters to share. Note that it will likely only work for adapters whose status is `Connected`, and it will only be useful for adapters which provide internet or LAN access. When choosing the adapter to share, hover over the menu item to get more details, including the adapter's assigned IP address, to determine if it's the one you want to share.
 
 > **Note:** When performing internet sharing, the WireGuard adapter is assigned an IP from the `ScopeAddress` registry value (under `HKLM\SYSTEM\CurrentControlSet\Services\SharedAccess\Parameters`). This value is automatically set when updating the Address property of the server configuration. See more [here](#server-configuration).
 
 ### Persistent Internet Sharing
-There is a known bug in Windows that causes Internet Sharing to become disabled after a reboot. If the WireGuard server is intended to be left unattended, it is recommended to enable Persistent Internet Sharing so that no interaction is required after rebooting.
+There are issues in Windows that cause Internet Sharing to become disabled after a reboot. If the WireGuard server is intended to be left unattended, it is recommended to enable Persistent Internet Sharing so that no interaction is required after rebooting.
 
-When enabling this feature, two steps are performed.
+When enabling this feature, two actions are performed in Windows:
 1. The `Internet Connection Sharing` service startup mode is changed from `Manual` to `Automatic`.
 2. The value of the `EnableRebootPersistConnection` regstry value in `HKLM\Software\Microsoft\Windows\CurrentVersion\SharedAccess` is set to `1` (it is created if not found).
 
-**Warning**: This feature is currently unreliable due to Windows bugs, and may not consistently preserve internet sharing through reboots. To ensure that Internet Sharing is enabled after a reboot, see [Internet Sharing Workaround](#internet-sharing-workaround).
+Note that even with these workarounds, Internet Sharing can become disabled after a reboot. Therefore, one more action is performed. A Scheduled Task is created that disables and re-enables Internet Sharing using the WS4W CLI upon system boot. This should be sufficient to guarantee that sharing stays persistent.
 
 ### View Server Status
 ![ServerStatus](https://i.imgur.com/dcSJXKU.png)
@@ -84,10 +84,10 @@ When enabling this feature, two steps are performed.
 Once the tunnel is installed, the status of the WireGuard interface may be viewed. This is accomplished via the `wg show` command. It will be continually updated as long as `Update Live` is checked.
 
 ## After
-![AfterScreenshot](https://i.imgur.com/Ck5yfvj.png)
+![AfterScreenshot](https://user-images.githubusercontent.com/7417301/152651829-e31d2c1d-666e-426b-be55-dd73a6f3c913.png)
 
 ## CLI
-There is also a CLI bundled in the portable download called `ws4w.exe` which can be invoked from a terminal or included in a script. In addition to messages written to standard out, the CLI will also set the exit code based on the success of executing the given command. In PowerShell, for example, the exit code can be printed with `echo $lastexitcode`.
+There is also a CLI bundled in the portable download called `ws4w.exe` which can be invoked from a terminal or called from a script. In addition to messages written to standard out, the CLI will also set the exit code based on the success of executing the given command. In PowerShell, for example, the exit code can be printed with `echo $lastexitcode`.
 
 > **Note**: The CLI must also be run as an Administrator for the same reasons as above.
 
@@ -102,23 +102,13 @@ The CLI uses verbs, or top-level commands, each of which has its own set of opti
 	* If multiple networks are already shared, it is not possible to tell which one is shared with the WireGuard network, so the `--network` option must be passed to specify.
 	* If Internet Sharing is not already enabled, the `--network` option must be passed, otherwise there is no way to know which network to share.
 	* The exit code will be 0 if the requested or previously shared network was successfully reshared.
+      > This command is used by the Scheduled Task that is created when Persistent Internet Sharing is enabled.
 * ```ws4w.exe setpath```
-    * This will tell WS4W to add the current executing directory to the system's `PATH` environment variable. It is mainly intended to be invoked by the installer but may be called manually after the fact.
+    * This will tell WS4W to add the current executing directory to the system's `PATH` environment variable.
     * This verb has no options.
+      > This command is used by the installer when the "Add CLI to PATH" option is selected.
 
 # Known Issues
-Even following the steps in Henry's guide, the Persistent Internet Sharing feature is unreliable. A reboot may still cause the the internet sharing to fail, even though the `Internet Connection Sharing` service is running, and the network interface indicates that it is sharing in Control Panel. Only unsharing and resharing can fix this.
-
-### Internet Sharing Workaround
-Fortunately, the CLI makes the process of unsharing and resharing easy to automate. Following is an example using the Windows Task Scheduler.
-
-1. Create a task which runs whether or not the user is logged in.
-![image](https://user-images.githubusercontent.com/7417301/116771243-c457f300-aa17-11eb-9373-1b26dedfb52b.png)
-2. Set the task to be triggered by system startup.
-![image](https://user-images.githubusercontent.com/7417301/116771266-f0737400-aa17-11eb-99ec-7aa2ef9116a4.png)
-3. Add an action that starts `ws4w.exe` with the `restartinternetsharing` verb.
-![image](https://user-images.githubusercontent.com/7417301/116771293-23b60300-aa18-11eb-9070-1f2c2c0bb21d.png)
-![image](https://user-images.githubusercontent.com/7417301/116771300-36c8d300-aa18-11eb-825d-28f8a74078f7.png)
 
 ### Inability to Enable Internet Sharing
 If you experience the following error message when enabling Internet Sharing, please perform the following manual steps.
@@ -133,6 +123,3 @@ If you experience the following error message when enabling Internet Sharing, pl
  - Close and reopen WS4W. It should now show Internet Sharing enabled, and subsequent attempts to disable/re-enable should be sucessful going forward.
 
 > Note: This issue is often triggered after creating a new virtual switch for a VM. The manual workaround should only be needed once after that and does not affect the virtual switch.
-
-# Goals
-One of the more lofty goals of this project was to run a VPN behind NAT without port forwarding. I am interested by Jordan Whited's post, [WireGuard Endpoint Discovery and NAT Traversal using DNS-SD](https://www.jordanwhited.com/posts/wireguard-endpoint-discovery-nat-traversal/) and hope to investigate the possibility of integrating it into this application at some point.
