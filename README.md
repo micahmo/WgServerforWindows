@@ -76,7 +76,7 @@ When enabling this feature, two actions are performed in Windows:
 1. The `Internet Connection Sharing` service startup mode is changed from `Manual` to `Automatic`.
 2. The value of the `EnableRebootPersistConnection` regstry value in `HKLM\Software\Microsoft\Windows\CurrentVersion\SharedAccess` is set to `1` (it is created if not found).
 
-Note that even with these workarounds, Internet Sharing can become disabled after a reboot. Therefore, one more action is performed. A Scheduled Task is created that disables and re-enables Internet Sharing using the WS4W CLI upon system boot. This should be sufficient to guarantee that sharing stays persistent.
+Even with these workarounds, Internet Sharing can become disabled after a reboot. Therefore, one more action is performed. A Scheduled Task is created that disables and re-enables Internet Sharing using the WS4W CLI upon system boot. This should be sufficient to guarantee that sharing remains enabled.
 
 ### View Server Status
 ![ServerStatus](https://i.imgur.com/dcSJXKU.png)
