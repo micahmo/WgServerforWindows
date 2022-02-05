@@ -40,6 +40,7 @@
     <PackageReference Include="sharpconfig" Version="3.2.9.1" />
     <PackageReference Include="System.Management" Version="5.0.0" />
     <PackageReference Include="System.ServiceProcess.ServiceController" Version="5.0.0" />
+    <PackageReference Include="TaskScheduler" Version="2.10.0" />
   </ItemGroup>
 
   <ItemGroup>

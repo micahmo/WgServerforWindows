@@ -343,7 +343,7 @@ Current value: {1}</value>
     <value>Persistent Internet Sharing</value>
   </data>
   <data name="PersistentInternetSharingSucecss" xml:space="preserve">
-    <value>Persistent internet sharing has been enabled. Note that this is not a perfect solution, and occasionally internet sharing must be re-enabled after reboot.</value>
+    <value>Persistent internet sharing has been enabled, and a Scheduled Task has been created to re-enable sharing upon boot.</value>
   </data>
   <data name="PersistentInternetSharingError" xml:space="preserve">
     <value>Persistent internet sharing is not enabled. The WireGuard tunnel may lose network access after a reboot.</value>
