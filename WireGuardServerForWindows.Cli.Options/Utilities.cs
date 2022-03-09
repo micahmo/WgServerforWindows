@@ -18,5 +18,14 @@ namespace WireGuardServerForWindows.Cli.Options
         {
             return verbType.GetCustomAttributes(inherit: true).OfType<VerbAttribute>().FirstOrDefault()?.Name;
         }
+
+        /// <summary>
+        /// If the given <paramref name="verbType"/> has a property with the <see cref="OptionAttribute"/>, returns the <see cref="OptionAttribute.LongName"/> value.
+        /// Otherwise, returns null.
+        /// </summary>
+        public static string GetOption(this Type verbType, string optionName)
+        {
+            return verbType.GetProperties().FirstOrDefault(p => p.Name == optionName)?.GetCustomAttributes(inherit: true).OfType<OptionAttribute>().FirstOrDefault()?.LongName;
+        }
     }
 }

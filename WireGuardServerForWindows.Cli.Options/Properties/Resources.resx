@@ -101,11 +101,17 @@
   <data name="RestartInternetSharingHelpText" xml:space="preserve">
     <value>Attempts to Disable Internet Sharing and then Enable Internet Sharing.</value>
   </data>
+  <data name="SetNetIpAddressHelpText" xml:space="preserve">
+    <value>Attempts to call New-NetIPAddress on the WireGuard network interface.</value>
+  </data>
     <data name="SetPathHelpText" xml:space="preserve">
     <value>Adds the directory containing the currently executing ws4w.exe to the system's PATH environment variable.</value>
   </data>
   <data name="RestartInternetSharingNetworkHelpText" xml:space="preserve">
     <value>Specify the network to share with WireGuard. Useful if internet sharing is not already enabled, or to differentiate when multiple networks are already shared.</value>
+  </data>
+  <data name="SetNetIpAddressCommandServerDataPathHelpText" xml:space="preserve">
+    <value>The path to the WireGuard server configuration file.</value>
   </data>
     <data name="CantLoadPath" xml:space="preserve">
         <value>Unable to load the system's PATH environment variable.</value>
