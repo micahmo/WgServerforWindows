@@ -194,6 +194,8 @@ namespace WireGuardServerForWindows.Models
             return result;
         }
 
+        public override string Category => Resources.InternetConnectionSharing;
+
         #endregion
     }
 }

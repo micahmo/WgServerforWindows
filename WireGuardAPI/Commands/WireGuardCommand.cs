@@ -1,8 +1,8 @@
 ﻿namespace WireGuardAPI
 {
-    public abstract class WireGuardCommand
+    public class WireGuardCommand
     {
-        protected WireGuardCommand(string @switch, WhichExe whichExe, params string[] args)
+        public WireGuardCommand(string @switch, WhichExe whichExe, params string[] args)
         {
             Switch = @switch;
             WhichExe = whichExe;

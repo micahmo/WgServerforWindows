@@ -5,46 +5,83 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:models="clr-namespace:WireGuardServerForWindows.Models"
              xmlns:c="clr-namespace:CalcBinding;assembly=CalcBinding"
+             xmlns:controls="clr-namespace:WireGuardServerForWindows.Controls"
              mc:Ignorable="d" 
-             d:DataContext="{d:DesignInstance Type={x:Type models:PrerequisiteItem}}" d:DesignWidth="800">
+             d:DataContext="{d:DesignInstance Type={x:Type models:PrerequisiteItem}}" d:DesignWidth="800"
+             x:Name="This">
     <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="Auto"/>
-        </Grid.ColumnDefinitions>
+        <Grid Visibility="{c:Binding !HasChildren, FalseToVisibility=Collapsed}">
+            <Grid.Style>
+                <Style TargetType="Grid">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding IsChild, ElementName=This}" Value="True">
+                            <Setter Property="Margin" Value="7,10,7,10"/>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding IsChild, ElementName=This}" Value="False">
+                            <Setter Property="Margin" Value="20,10,20,10"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Grid.Style>
 
-        <Image Grid.Column="0" Height="40" Margin="5" Source="/Images/checked.png" Visibility="{c:Binding Fulfilled, FalseToVisibility=Collapsed}"/>
-        <Image Grid.Column="0" Height="40" Margin="5" Source="/Images/cancel.png" Visibility="{c:Binding '!Fulfilled', FalseToVisibility=Collapsed}"/>
-        <Image Grid.Column="0" Height="40" Margin="5" Source="/Images/info.png" Visibility="{c:Binding IsInformational, FalseToVisibility=Collapsed}"/>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
 
-        <Grid Grid.Column="1" Margin="5">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-            </Grid.RowDefinitions>
+            <Image Grid.Column="0" Height="40" Margin="5" Source="/Images/checked.png" Visibility="{c:Binding Fulfilled, FalseToVisibility=Collapsed}"/>
+            <Image Grid.Column="0" Height="40" Margin="5" Source="/Images/cancel.png" Visibility="{c:Binding '!Fulfilled', FalseToVisibility=Collapsed}"/>
+            <Image Grid.Column="0" Height="40" Margin="5" Source="/Images/info.png" Visibility="{c:Binding IsInformational, FalseToVisibility=Collapsed}"/>
 
-            <TextBlock Grid.Row="0" Text="{Binding Title}" FontSize="20" FontWeight="Bold" Foreground="DimGray"
+            <Grid Grid.Column="1" Margin="5">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <TextBlock Grid.Row="0" Text="{Binding Title}" FontSize="20" FontWeight="Bold" Foreground="DimGray"
                        ToolTip="{Binding Title}" TextTrimming="CharacterEllipsis"
                        VerticalAlignment="Center"/>
 
-            <TextBlock Grid.Row="1" Text="{Binding SuccessMessage}"
+                <TextBlock Grid.Row="1" Text="{Binding SuccessMessage}"
                        ToolTip="{Binding SuccessMessage}" TextWrapping="WrapWithOverflow"
                        Visibility="{c:Binding 'Fulfilled or IsInformational', FalseToVisibility=Collapsed}" VerticalAlignment="Center"/>
-            <TextBlock Grid.Row="1" Text="{Binding ErrorMessage}"
+                <TextBlock Grid.Row="1" Text="{Binding ErrorMessage}"
                        ToolTip="{Binding ErrorMessage}" TextWrapping="WrapWithOverflow"
                        Visibility="{c:Binding '!Fulfilled and !IsInformational', FalseToVisibility=Collapsed}" VerticalAlignment="Center"/>
-        </Grid>
+            </Grid>
 
-        <Button Grid.Column="2" Padding="5" Margin="5" VerticalAlignment="Center"
+            <Button Grid.Column="2" Padding="5" Margin="5" VerticalAlignment="Center"
                 Content="{Binding ResolveText}" 
                 Command="{Binding Commands.ResolveCommand}"
                 Visibility="{c:Binding '!Fulfilled', FalseToVisibility=Collapsed}"
                 IsEnabled="{Binding CanResolve}"/>
-        <Button Grid.Column="2" Padding="5" Margin="5" VerticalAlignment="Center"
+            <Button Grid.Column="2" Padding="5" Margin="5" VerticalAlignment="Center"
                 Content="{Binding ConfigureText}" 
                 Command="{Binding Commands.ConfigureCommand}"
                 Visibility="{c:Binding 'Fulfilled', FalseToVisibility=Collapsed}"
                 IsEnabled="{Binding CanConfigure}"/>
+        </Grid>
+
+        <TabControl Visibility="{c:Binding HasChildren, FalseToVisibility=Collapsed}" ItemsSource="{Binding ChildrenByCategory}" SelectedIndex="{Binding SelectedChildIndex}" Margin="10,5,10,5">
+            <TabControl.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding Key}"/>
+                </DataTemplate>
+            </TabControl.ItemTemplate>
+
+            <TabControl.ContentTemplate>
+                <DataTemplate>
+                    <ItemsControl ItemsSource="{Binding}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <controls:PrerequisiteItemControl IsChild="true"/>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </DataTemplate>
+            </TabControl.ContentTemplate>
+        </TabControl>
     </Grid>
 </UserControl>

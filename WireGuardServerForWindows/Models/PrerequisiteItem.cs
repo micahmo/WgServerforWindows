@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using GalaSoft.MvvmLight;
@@ -19,6 +22,11 @@ namespace WireGuardServerForWindows.Models
             ConfigureText = configureText;
             Commands = new PrerequisiteItemCommands(this);
 
+            Children.CollectionChanged += (_, __) =>
+            {
+                RaisePropertyChanged(nameof(HasChildren));
+            };
+
             Refresh();
         }
 
@@ -35,7 +43,7 @@ namespace WireGuardServerForWindows.Models
         }
         private string _title;
 
-        public abstract BooleanTimeCachedProperty Fulfilled { get; }
+        public virtual BooleanTimeCachedProperty Fulfilled { get; } = new BooleanTimeCachedProperty(TimeSpan.Zero, () => true);
 
         public string SuccessMessage
         {
@@ -75,13 +83,23 @@ namespace WireGuardServerForWindows.Models
 
         public Func<bool> CanConfigureFunc { get; set; }
 
+        public ObservableCollection<PrerequisiteItem> Children { get; } = new ObservableCollection<PrerequisiteItem>();
+
+        public virtual string Category { get; }
+
+        public bool HasChildren => Children.Any();
+
+        public IEnumerable<IGrouping<string, PrerequisiteItem>> ChildrenByCategory => Children.GroupBy(c => c.Category);
+
+        public int SelectedChildIndex { get; set; }
+
         #endregion
 
         #region Public methods
 
-        public abstract void Resolve();
+        public virtual void Resolve() { }
 
-        public abstract void Configure();
+        public virtual void Configure() { }
 
         public void Refresh()
         {

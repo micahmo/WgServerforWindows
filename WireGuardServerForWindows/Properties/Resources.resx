@@ -425,4 +425,25 @@ Note: It is preferable to use a domain name with DDNS to avoid dynamic WAN IPs.<
   <data name="Updated" xml:space="preserve">
     <value>Successfully identified!</value>
   </data>
+  <data name="InternetConnectionSharing" xml:space="preserve">
+	  <value>Internet Connection Sharing</value>
+  </data>
+  <data name="NetworkAddressTranslation" xml:space="preserve">
+	  <value>Network Address Translation</value>
+  </data>
+  <data name="NewNatName" xml:space="preserve">
+	  <value>NAT Routing</value>
+  </data>
+  <data name="NewNetError" xml:space="preserve">
+	  <value>NAT is not enabled; connected peers will have no network access.</value>
+  </data>
+  <data name="NewNetSuccess" xml:space="preserve">
+	  <value>NAT is enabled.</value>
+  </data>
+  <data name="NewNatResolve" xml:space="preserve">
+	  <value>Enable NAT</value>
+  </data>
+  <data name="NewNatConfigure" xml:space="preserve">
+	  <value>Disable NAT</value>
+  </data>
 </root>

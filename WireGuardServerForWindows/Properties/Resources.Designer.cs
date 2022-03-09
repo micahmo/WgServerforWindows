@@ -415,6 +415,15 @@ namespace WireGuardServerForWindows.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Internet Connection Sharing.
+        /// </summary>
+        public static string InternetConnectionSharing {
+            get {
+                return ResourceManager.GetString("InternetConnectionSharing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Disable Internet Sharing.
         /// </summary>
         public static string InternetSharingConfigure {
@@ -487,11 +496,65 @@ namespace WireGuardServerForWindows.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Network Address Translation.
+        /// </summary>
+        public static string NetworkAddressTranslation {
+            get {
+                return ResourceManager.GetString("NetworkAddressTranslation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Network must be in valid CIDR notation. For example: 192.168.1.0/24.
         /// </summary>
         public static string NetworkAddressValidationError {
             get {
                 return ResourceManager.GetString("NetworkAddressValidationError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Disable NAT.
+        /// </summary>
+        public static string NewNatConfigure {
+            get {
+                return ResourceManager.GetString("NewNatConfigure", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to NAT Routing.
+        /// </summary>
+        public static string NewNatName {
+            get {
+                return ResourceManager.GetString("NewNatName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enable NAT.
+        /// </summary>
+        public static string NewNatResolve {
+            get {
+                return ResourceManager.GetString("NewNatResolve", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to NAT is not enabled; connected peers will have no network access..
+        /// </summary>
+        public static string NewNetError {
+            get {
+                return ResourceManager.GetString("NewNetError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to NAT is enabled..
+        /// </summary>
+        public static string NewNetSuccess {
+            get {
+                return ResourceManager.GetString("NewNetSuccess", resourceCulture);
             }
         }
         

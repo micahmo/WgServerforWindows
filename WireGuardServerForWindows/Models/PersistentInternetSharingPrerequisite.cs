@@ -102,6 +102,8 @@ namespace WireGuardServerForWindows.Models
             Mouse.OverrideCursor = null;
         }
 
+        public override string Category => Resources.InternetConnectionSharing;
+
         #endregion
 
         #region Private methods

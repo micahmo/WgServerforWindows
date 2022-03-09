@@ -26,6 +26,7 @@ namespace WireGuardServerForWindows
             var clientConfigurationsPrerequisite = new ClientConfigurationsPrerequisite();
             var tunnelServicePrerequisite = new TunnelServicePrerequisite();
             var privateNetworkPrerequisite = new PrivateNetworkPrerequisite();
+            var newNetNatPrerequisite = new NewNetNatPrerequisite();
             var internetSharingPrerequisite = new InternetSharingPrerequisite();
             var persistentInternetSharingPrerequisite = new PersistentInternetSharingPrerequisite();
             var serverStatusPrerequisite = new ServerStatusPrerequisite();
@@ -66,8 +67,30 @@ namespace WireGuardServerForWindows
             mainWindowModel.PrerequisiteItems.Add(clientConfigurationsPrerequisite);
             mainWindowModel.PrerequisiteItems.Add(tunnelServicePrerequisite);
             mainWindowModel.PrerequisiteItems.Add(privateNetworkPrerequisite);
-            mainWindowModel.PrerequisiteItems.Add(internetSharingPrerequisite);
-            mainWindowModel.PrerequisiteItems.Add(persistentInternetSharingPrerequisite);
+
+            if (newNetNatPrerequisite.IsSupported)
+            {
+                internetSharingPrerequisite.CanResolveFunc = () => tunnelServicePrerequisite.Fulfilled && !newNetNatPrerequisite.Fulfilled;
+                persistentInternetSharingPrerequisite.CanResolveFunc = () => !newNetNatPrerequisite.Fulfilled;
+                newNetNatPrerequisite.CanResolveFunc = () => serverConfigurationPrerequisite.Fulfilled
+                                                             && tunnelServicePrerequisite.Fulfilled
+                                                             && !internetSharingPrerequisite.Fulfilled
+                                                             && !persistentInternetSharingPrerequisite.Fulfilled;
+                var natPrerequisiteGroup = new NatPrerequisiteGroup(newNetNatPrerequisite, internetSharingPrerequisite, persistentInternetSharingPrerequisite);
+
+                if (internetSharingPrerequisite.Fulfilled || persistentInternetSharingPrerequisite.Fulfilled)
+                {
+                    natPrerequisiteGroup.SelectedChildIndex = 1;
+                }
+
+                mainWindowModel.PrerequisiteItems.Add(natPrerequisiteGroup);
+            }
+            else
+            {
+                mainWindowModel.PrerequisiteItems.Add(internetSharingPrerequisite);
+                mainWindowModel.PrerequisiteItems.Add(persistentInternetSharingPrerequisite);
+            }
+
             mainWindowModel.PrerequisiteItems.Add(serverStatusPrerequisite);
 
             // If one of the prereqs changes, check the validity of all of them
@@ -85,12 +108,19 @@ namespace WireGuardServerForWindows
                     if (sender is PrerequisiteItem senderItem && e.PropertyName == nameof(PrerequisiteItem.Fulfilled))
                     {
                         // Now invoke on all but the sender
-                        mainWindowModel.PrerequisiteItems.Where(i => i != senderItem).ToList().ForEach(i =>
+                        mainWindowModel.PrerequisiteItems.Where(i => i != senderItem).ToList().ForEach(prerequisiteItem =>
                         {
-                            i.RaisePropertyChanged(nameof(i.Fulfilled));
-                            i.RaisePropertyChanged(nameof(i.IsInformational));
-                            i.RaisePropertyChanged(nameof(i.CanConfigure));
-                            i.RaisePropertyChanged(nameof(i.CanResolve));
+                            void RaisePropertiesChanged(PrerequisiteItem i)
+                            {
+                                i.RaisePropertyChanged(nameof(i.Fulfilled));
+                                i.RaisePropertyChanged(nameof(i.IsInformational));
+                                i.RaisePropertyChanged(nameof(i.CanConfigure));
+                                i.RaisePropertyChanged(nameof(i.CanResolve));
+
+                                i.Children.Where(i2 => i2 != senderItem).ToList().ForEach(RaisePropertiesChanged);
+                            }
+
+                            RaisePropertiesChanged(prerequisiteItem);
                         });
                     }
 
