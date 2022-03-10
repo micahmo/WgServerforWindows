@@ -19,7 +19,7 @@ Before introducing an installer, WS4W was distributed as a portable application.
 Below are the tasks that can be performed automatically using this application.
 
 ## Before
-![BeforeScreenshot](https://i.imgur.com/Mlyd0TS.png)
+![BeforeScreenshot](https://user-images.githubusercontent.com/7417301/157667050-000989a6-67b0-4112-88e3-870c8c5b226f.png)
 
 ### WireGuard.exe
 This step downloads and runs the latest version of WireGuard for Windows from https://download.wireguard.com/windows-client/wireguard-installer.exe. Once installed, it can be uninstalled directly from WS4W, too.
@@ -60,16 +60,33 @@ Even after the tunnel service is installed, some protocols may be blocked. It is
 
 > **Note**: On a system where the shared internet connection originates from a domain network, this step is not necessary, as the WireGuard interfaces picks up the profile of the shared domain network.
 
-### Internet Sharing
+
+### Routing
+
+The last step is to allow requests made over the WireGuard interface to be routed to your private network or the Internet. To do so, the connection of the "real" network adapter on the Windows machine must be shared with the virtual WireGuard adapter. This can be done in one of two ways.
+* NAT Routing
+* Internet Sharing + Persistent Internet Sharing
+
+The first option is only available on some systems (requires Windows 10). The second options may be used as necessary, but have some caveats (such as, if the Internet Connection is shared with the WireGuard adapter, it cannot be shared with any other adapter, see #20). There have also been multiple issues reported with Internet Sharing, so NAT Routing should be used if available.
+
+These options are mutually exclusive.
+
+#### NAT Routing
+
+Here you can create a NAT routing rule on the WireGuard interface to allow it to interact with your private/public network. Specifically, the following commands are invoked.
+
+* `New-NetIPAddress` is called on the WireGuard adapter to assign a static IP in the range of the Server Configuration's Address property.
+* `New-NetNat` is called to create a new NAT rule on the WireGuard adapter.
+* A Windows Task is created to call `New-NetIPAddress` on boot.
+
+#### Internet Sharing
 ![InternetSharing](https://i.imgur.com/GCKoVIZ.png)
 
-Perhaps most importantly, internet sharing must be enabled in order to provide a real network connection to the WireGuard interface. In Windows, this is accomplished using Internet Connection Sharing, which serves as NAT router between the system's public network and the devices connected to the WireGuard interface.
-
-When configuring this option, you may select any of your network adapters to share. Note that it will likely only work for adapters whose status is `Connected`, and it will only be useful for adapters which provide internet or LAN access. When choosing the adapter to share, hover over the menu item to get more details, including the adapter's assigned IP address, to determine if it's the one you want to share.
+If NAT Routing is not available, you can use internet sharing to provide network connection to the WireGuard interface. When configuring this option, you may select any of your network adapters to share. Note that it will likely only work for adapters whose status is `Connected`, and it will only be useful for adapters which provide internet or LAN access. When choosing the adapter to share, hover over the menu item to get more details, including the adapter's assigned IP address, to determine if it's the one you want to share.
 
 > **Note:** When performing internet sharing, the WireGuard adapter is assigned an IP from the `ScopeAddress` registry value (under `HKLM\SYSTEM\CurrentControlSet\Services\SharedAccess\Parameters`). This value is automatically set when updating the Address property of the server configuration. See more [here](#server-configuration).
 
-### Persistent Internet Sharing
+#### Persistent Internet Sharing
 There are issues in Windows that cause Internet Sharing to become disabled after a reboot. If the WireGuard server is intended to be left unattended, it is recommended to enable Persistent Internet Sharing so that no interaction is required after rebooting.
 
 When enabling this feature, two actions are performed in Windows:
@@ -84,7 +101,7 @@ Even with these workarounds, Internet Sharing can become disabled after a reboot
 Once the tunnel is installed, the status of the WireGuard interface may be viewed. This is accomplished via the `wg show` command. It will be continually updated as long as `Update Live` is checked.
 
 ## After
-![AfterScreenshot](https://user-images.githubusercontent.com/7417301/152651829-e31d2c1d-666e-426b-be55-dd73a6f3c913.png)
+![AfterScreenshot](https://user-images.githubusercontent.com/7417301/157669203-7899d8e1-abc3-476c-998d-6e1daca4de5c.png)
 
 ## CLI
 There is also a CLI bundled in the portable download called `ws4w.exe` which can be invoked from a terminal or called from a script. In addition to messages written to standard out, the CLI will also set the exit code based on the success of executing the given command. In PowerShell, for example, the exit code can be printed with `echo $lastexitcode`.
@@ -107,11 +124,17 @@ The CLI uses verbs, or top-level commands, each of which has its own set of opti
     * This will tell WS4W to add the current executing directory to the system's `PATH` environment variable.
     * This verb has no options.
       > This command is used by the installer when the "Add CLI to PATH" option is selected.
+* ```ws4w.exe setnetipaddress --serverdatapath <PATH_TO_SERVER_CONFIG>```
+    * This will tell WS4W to call `Set-NetIPAddress` on the WireGuard interface, using the network Address as defined in the given WireGuard server configuration file.
+      > This command is used by the Scheduled Task that is created when NAT Routing is enabled.
 
 # Known Issues
 
 ### Inability to Enable Internet Sharing
-If you experience the following error message when enabling Internet Sharing, please perform the following manual steps.
+
+First, it is recommended to use NAT Routing if available.
+
+However, if you experience the following error message when enabling Internet Sharing, please perform the following manual steps.
 
 ![image](https://user-images.githubusercontent.com/7417301/145692723-f90e6e95-4628-4725-a44d-54377097f883.png)
 
