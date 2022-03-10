@@ -93,7 +93,7 @@ namespace WireGuardAPI
                         CreateNoWindow = true,
                         RedirectStandardOutput = true
                     });
-                    process?.WaitForExit();
+                    process?.WaitForExit((int)TimeSpan.FromSeconds(30).TotalMilliseconds);
                     result = process?.StandardOutput.ReadToEnd();
                     exitCode = process?.ExitCode ?? 1;
                     break;

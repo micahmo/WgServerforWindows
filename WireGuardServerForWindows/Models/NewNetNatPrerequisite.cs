@@ -155,7 +155,7 @@ namespace WireGuardServerForWindows.Models
             {
                 new WireGuardExe().ExecuteCommand(new WireGuardCommand(string.Empty, WhichExe.Custom,
                         "powershell.exe",
-                        "-NoProfile Get-Command New-NetNat"),
+                        "-NoProfile Get-Help New-NetNat -Parameter InternalIPInterfaceAddressPrefix"),
                     out int exitCode);
 
                 return exitCode == 0;
