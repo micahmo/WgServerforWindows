@@ -18,7 +18,7 @@ namespace WireGuardServerForWindows.Models
         {
             // Server properties
             PrivateKeyProperty.TargetTypes.Add(GetType());
-            //AddressProperty.TargetTypes.Add(GetType());
+            AddressProperty.TargetTypes.Add(GetType());
             ListenPortProperty.TargetTypes.Add(GetType());
 
             // Client properties
@@ -263,6 +263,31 @@ namespace WireGuardServerForWindows.Models
                 {
                     IPNetwork network = IPNetwork.Parse(AddressProperty.Value);
                     result = network.ListIPAddress().Skip(1).FirstOrDefault()?.ToString() ?? string.Empty;
+                }
+                catch
+                {
+                    // Should never come here, because we should only invoke this method if the AddressProperty has already passed validation.
+                    // But just to be safe...
+                }
+
+                return result;
+            }
+        }
+
+        /// <summary>
+        /// This is a calculated field that generates the subnet from the current <see cref="ServerConfiguration.AddressProperty"/> property.
+        /// Returns an empty string if the IP address cannot be generated for any reason.
+        /// </summary>
+        public string Subnet
+        {
+            get
+            {
+                string result = string.Empty;
+
+                try
+                {
+                    IPNetwork network = IPNetwork.Parse(AddressProperty.Value);
+                    result = network.Cidr.ToString();
                 }
                 catch
                 {

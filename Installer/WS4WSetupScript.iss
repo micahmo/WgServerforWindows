@@ -1,5 +1,5 @@
 #define MyAppName "WireGuard Server for Windows"
-#define MyAppVersion "1.6.1"
+#define MyAppVersion "1.7.0"
 #define MyAppPublisher "Micah Morrison"
 #define MyAppURL "https://github.com/micahmo/WireGuardServerForWindows"
 #define MyAppExeName "WireGuardServerForWindows.exe"
@@ -7,6 +7,8 @@
 #define NetCoreRuntimeVersion "3.1.21"
 #define NetCoreRuntime "windowsdesktop-runtime-" + NetCoreRuntimeVersion + "-win-x64.exe"
 #define UniversalCrtKb "KB3118401"
+#define BuildConfig "Release"
+;#define BuildConfig "Debug"
 
 ; This is relative to SourceDir
 #define RepoRoot "..\..\..\.."
@@ -25,7 +27,7 @@ DefaultDirName={autopf}\WS4W
 DefaultGroupName=WS4W
 AllowNoIcons=yes
 ; This is relative to the .iss file location
-SourceDir=..\WireGuardServerForWindows\bin\Release\netcoreapp3.1\
+SourceDir=..\WireGuardServerForWindows\bin\{#BuildConfig}\netcoreapp3.1\
 ; These are relative to SourceDir (see RepoRoot)
 OutputDir={#RepoRoot}\Installer
 SetupIconFile={#RepoRoot}\WireGuardServerForWindows\Images\logo.ico

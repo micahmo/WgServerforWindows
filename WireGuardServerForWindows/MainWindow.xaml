@@ -21,7 +21,7 @@
             <ItemsControl ItemsSource="{Binding PrerequisiteItems}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <controls:PrerequisiteItemControl Margin="20,10,20,10"/>
+                        <controls:PrerequisiteItemControl/>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>

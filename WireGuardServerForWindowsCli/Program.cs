@@ -13,7 +13,7 @@ namespace WireGuardServerForWindows.Cli
     {
         static void Main(string[] args)
         {
-            var parser = Parser.Default.ParseArguments<RestartInternetSharingCommand, SetPathCommand>(args);
+            var parser = Parser.Default.ParseArguments<RestartInternetSharingCommand, SetPathCommand, SetNetIpAddressCommand>(args);
 
             parser.WithParsed(o =>
             {

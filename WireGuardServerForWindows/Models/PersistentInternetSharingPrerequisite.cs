@@ -1,8 +1,11 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using System.Management;
 using System.Windows.Input;
 using Microsoft.Win32;
+using Microsoft.Win32.TaskScheduler;
+using WireGuardServerForWindows.Cli.Options;
 using WireGuardServerForWindows.Properties;
 
 namespace WireGuardServerForWindows.Models
@@ -38,7 +41,12 @@ namespace WireGuardServerForWindows.Models
                     // If good, result is true
                     if (GetRegistryKeyValue() is {} value && value == 1)
                     {
-                        result = true;
+                        // Finally, verify that the task exists and that all of the parameters are correct.
+                        result = TaskService.Instance.FindTask(RestartInternetSharingTaskUniqueName) is { Enabled: true } task 
+                                 && task.Definition.Triggers.FirstOrDefault() is BootTrigger 
+                                 && task.Definition.Actions.FirstOrDefault() is ExecAction action 
+                                 && action.Path == Path.Combine(AppContext.BaseDirectory, "ws4w.exe") 
+                                 && action.Arguments == typeof(RestartInternetSharingCommand).GetVerb();
                     }
                 }
             }
@@ -60,6 +68,12 @@ namespace WireGuardServerForWindows.Models
 
             SetRegistryKeyValue(1);
 
+            // Create/update a Scheduled Task that disables/enables internet sharing on boot.
+            TaskDefinition td = TaskService.Instance.NewTask();
+            td.Actions.Add(new ExecAction(Path.Combine(AppContext.BaseDirectory, "ws4w.exe"), typeof(RestartInternetSharingCommand).GetVerb()));
+            td.Triggers.Add(new BootTrigger());
+            TaskService.Instance.RootFolder.RegisterTaskDefinition(RestartInternetSharingTaskUniqueName, td, TaskCreation.CreateOrUpdate, "SYSTEM", null, TaskLogonType.ServiceAccount);
+
             Refresh();
 
             Mouse.OverrideCursor = null;
@@ -78,10 +92,17 @@ namespace WireGuardServerForWindows.Models
 
             SetRegistryKeyValue(0);
 
+            if (TaskService.Instance.FindTask(RestartInternetSharingTaskUniqueName) is { } task)
+            {
+                task.Enabled = false;
+            }
+
             Refresh();
 
             Mouse.OverrideCursor = null;
         }
+
+        public override string Category => Resources.InternetConnectionSharing;
 
         #endregion
 
@@ -104,6 +125,12 @@ namespace WireGuardServerForWindows.Models
             var sharedAccessKey = Registry.LocalMachine.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\SharedAccess", writable: true);
             sharedAccessKey?.SetValue("EnableRebootPersistConnection", value);
         }
+
+        #endregion
+
+        #region Private fields
+
+        private readonly string RestartInternetSharingTaskUniqueName = "WS4W Restart Internet Sharing (b17f2530-acc7-42d6-ad05-ab57b923356f)";
 
         #endregion
     }

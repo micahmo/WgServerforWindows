@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Management;
+using System.Net.NetworkInformation;
 using System.Windows.Input;
 using Humanizer;
 using NETCONLib;
@@ -104,10 +105,18 @@ namespace WireGuardServerForWindows.Models
                 // string.Join(' ', ...) will put it back together like "Media Disconnected"
                 string status = string.Join(' ', netSharingManager.NetConnectionProps[connection].Status.Humanize().Transform(To.LowerCase, To.TitleCase).Split().Skip(1));
 
+                // Get the IP address assigned to the adapter, if any. Prefer IPv4.
+                string address = default;
+                if (NetworkInterface.GetAllNetworkInterfaces().FirstOrDefault(i => i.Id == netSharingManager.NetConnectionProps[connection].Guid)?.GetIPProperties() is { } ipProperties)
+                {
+                    address = (ipProperties.UnicastAddresses.FirstOrDefault(a => a.Address.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork)
+                               ?? ipProperties.UnicastAddresses.FirstOrDefault(a => a.Address.AddressFamily == System.Net.Sockets.AddressFamily.InterNetworkV6))?.Address.ToString();
+                }
+
                 selectionWindowModel.Items.Add(new SelectionItem<INetConnection>
                 {
                     DisplayText = $"{netSharingManager.NetConnectionProps[connection].Name} ({status})",
-                    Description = netSharingManager.NetConnectionProps[connection].DeviceName,
+                    Description = $"{netSharingManager.NetConnectionProps[connection].DeviceName}{(string.IsNullOrEmpty(address) ? string.Empty : $" ({address})")}",
                     BackingObject = connection
                 });
             }
@@ -184,6 +193,8 @@ namespace WireGuardServerForWindows.Models
 
             return result;
         }
+
+        public override string Category => Resources.InternetConnectionSharing;
 
         #endregion
     }

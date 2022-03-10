@@ -1,15 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace WireGuardServerForWindows.Controls
 {
@@ -18,9 +8,17 @@ namespace WireGuardServerForWindows.Controls
     /// </summary>
     public partial class PrerequisiteItemControl : UserControl
     {
+        public static readonly DependencyProperty IsChildProperty = DependencyProperty.Register(nameof(IsChild), typeof(bool), typeof(PrerequisiteItemControl));
+
         public PrerequisiteItemControl()
         {
             InitializeComponent();
+        }
+
+        public bool IsChild
+        {
+            get => (bool)GetValue(IsChildProperty);
+            set => SetValue(IsChildProperty, value);
         }
     }
 }

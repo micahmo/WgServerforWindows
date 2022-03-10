@@ -63,7 +63,13 @@ namespace WireGuardAPI
 
         public string ExecuteCommand(WireGuardCommand command)
         {
+            return ExecuteCommand(command, out _);
+        }
+
+        public string ExecuteCommand(WireGuardCommand command, out int exitCode)
+        {
             string result = default;
+            exitCode = 1;
 
             switch (command.WhichExe)
             {
@@ -76,16 +82,20 @@ namespace WireGuardAPI
                     // For some reason, awaiting this can hang, so this method must do everything synchronously.
                     var bufferedResult = cmd.ExecuteBufferedAsync().Task.Result;
                     result = bufferedResult.StandardOutput.Trim();
+                    exitCode = bufferedResult.ExitCode;
 
                     break;
                 case WhichExe.Custom:
-                    Process.Start(new ProcessStartInfo
+                    Process process = Process.Start(new ProcessStartInfo
                     {
                         FileName = command.Args[0],
                         Arguments = string.Join(' ', command.Args.Skip(1)),
-                        Verb = "runas",
-                        UseShellExecute = true,
-                    })?.WaitForExit();
+                        CreateNoWindow = true,
+                        RedirectStandardOutput = true
+                    });
+                    process?.WaitForExit((int)TimeSpan.FromSeconds(30).TotalMilliseconds);
+                    result = process?.StandardOutput.ReadToEnd();
+                    exitCode = process?.ExitCode ?? 1;
                     break;
             }
 

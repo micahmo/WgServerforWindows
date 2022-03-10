@@ -27,9 +27,13 @@ namespace WireGuardServerForWindows
 
             if (e.Args.Any())
             {
-                Parser.Default.ParseArguments<RestartInternetSharingCommand, SetPathCommand>(e.Args)
+                // We don't want to handle Dispatcher exceptions in this scenario, since we are UI-less
+                DispatcherUnhandledException -= Application_DispatcherUnhandledException;
+
+                Parser.Default.ParseArguments<RestartInternetSharingCommand, SetPathCommand, SetNetIpAddressCommand>(e.Args)
                     .WithParsed<RestartInternetSharingCommand>(RestartInternetSharing)
-                    .WithParsed<SetPathCommand>(SetPath);
+                    .WithParsed<SetPathCommand>(SetPath)
+                    .WithParsed<SetNetIpAddressCommand>(SetNetIpAddress);
 
                 // Don't proceed to GUI if started with command-line args
                 Environment.Exit(0);
@@ -103,6 +107,11 @@ namespace WireGuardServerForWindows
             {
                 Console.WriteLine(Cli.Options.Properties.Resources.FoundPwdInPath, pwd);
             }
+        }
+
+        public static void SetNetIpAddress(SetNetIpAddressCommand o)
+        {
+            new NewNetNatPrerequisite().Resolve(o.ServerDataPath);
         }
 
         private void Application_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
