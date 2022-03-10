@@ -2,12 +2,15 @@
 <!-- Things to update: Version, Date, Release Notes -->
 <AppUpdate xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/micahmo/WireGuardServerForWindows/master/WireGuardServerForWindows/AppUpdate.xsd">
-  <Version>1.6.1.0</Version>
-  <ReleaseDate>2021-12-11</ReleaseDate>
+  <Version>1.7.2.0</Version>
+  <ReleaseDate>2022-03-10</ReleaseDate>
   <!-- Default download -->
-  <DownloadLink>https://github.com/micahmo/WireGuardServerForWindows/releases/download/v1.6.1/WS4WSetup-1.6.1.exe</DownloadLink>
-  <DownloadFileName>WS4WSetup-1.6.1.exe</DownloadFileName>
+  <DownloadLink>https://github.com/micahmo/WireGuardServerForWindows/releases/download/v1.7.0/WS4WSetup-1.7.0.exe</DownloadLink>
+  <DownloadFileName>WS4WSetup-1.7.0.exe</DownloadFileName>
   <!-- Release notes -->
-  <VersionNotes>Fix and document inability to enable Internet Sharing (#16)</VersionNotes>
+  <VersionNotes> - Integrate Persistent Internet Sharing workaround into application (#17)
+ - Add New-NetNat feature (#18)
+ - Add Address property to server config file (#20)
+ - Show network adapter addresses in Internet Sharing dialog</VersionNotes>
   <ReleaseNotes></ReleaseNotes>
 </AppUpdate>
