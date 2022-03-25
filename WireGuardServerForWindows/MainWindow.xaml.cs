@@ -40,9 +40,9 @@ namespace WireGuardServerForWindows
             serverConfigurationPrerequisite.CanResolveFunc = clientConfigurationsPrerequisite.CanResolveFunc =
             serverConfigurationPrerequisite.CanConfigureFunc = clientConfigurationsPrerequisite.CanConfigureFunc = () => wireGuardExePrerequisite.Fulfilled;
             
-            // Can't install tunnel until WireGuard exe is installed and server/clients are configured
+            // Can't install tunnel until WireGuard exe is installed and server is configured
             tunnelServicePrerequisite.CanResolveFunc = () =>
-                wireGuardExePrerequisite.Fulfilled && serverConfigurationPrerequisite.Fulfilled && clientConfigurationsPrerequisite.Fulfilled;
+                wireGuardExePrerequisite.Fulfilled && serverConfigurationPrerequisite.Fulfilled;
 
             // Can't uninstall the tunnel while internet sharing is enabled
             tunnelServicePrerequisite.CanConfigureFunc = () => internetSharingPrerequisite.Fulfilled == false && newNetNatPrerequisite.Fulfilled == false;
