@@ -113,7 +113,6 @@ namespace WireGuardServerForWindows.Models
         {
             PersistentPropertyName = "PrivateKey",
             Name = nameof(PrivateKeyProperty),
-            IsReadOnly = true,
             Action = new ConfigurationPropertyAction(this)
             {
                 Name = $"{nameof(PrivateKeyProperty)}{nameof(ConfigurationProperty.Action)}",
@@ -121,10 +120,11 @@ namespace WireGuardServerForWindows.Models
                 {
                     Mouse.OverrideCursor = Cursors.Wait;
                     prop.Value = new WireGuardExe().ExecuteCommand(new GeneratePrivateKeyCommand());
+                    // When the private key changes, the public key becomes invalid
+                    conf.PublicKeyProperty.Value = null;
                     Mouse.OverrideCursor = null;
                 }
-            },
-            Validation = new EmptyStringValidation(Resources.KeyValidationError)
+            }
         };
         private ConfigurationProperty _privateKeyProperty;
 

@@ -18,7 +18,7 @@ namespace WireGuardServerForWindows.Models
         {
             // Server properties
             PrivateKeyProperty.TargetTypes.Add(GetType());
-            AddressProperty.TargetTypes.Add(GetType());
+            //AddressProperty.TargetTypes.Add(GetType());
             ListenPortProperty.TargetTypes.Add(GetType());
 
             // Client properties
@@ -123,6 +123,11 @@ namespace WireGuardServerForWindows.Models
             {
                 EndpointProperty.Port = ListenPortProperty.Value;
             };
+
+            // A couple private key properties are unique to the server.
+            // (On the client, the property can be manually erased and saved without error.)
+            PrivateKeyProperty.IsReadOnly = true;
+            PrivateKeyProperty.Validation = new EmptyStringValidation(Resources.KeyValidationError);
 
             // Resort after changing the index of AddressProperty
             SortProperties();

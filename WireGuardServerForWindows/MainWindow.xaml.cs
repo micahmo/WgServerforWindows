@@ -40,9 +40,9 @@ namespace WireGuardServerForWindows
             serverConfigurationPrerequisite.CanResolveFunc = clientConfigurationsPrerequisite.CanResolveFunc =
             serverConfigurationPrerequisite.CanConfigureFunc = clientConfigurationsPrerequisite.CanConfigureFunc = () => wireGuardExePrerequisite.Fulfilled;
             
-            // Can't install tunnel until WireGuard exe is installed and server/clients are configured
+            // Can't install tunnel until WireGuard exe is installed and server is configured
             tunnelServicePrerequisite.CanResolveFunc = () =>
-                wireGuardExePrerequisite.Fulfilled && serverConfigurationPrerequisite.Fulfilled && clientConfigurationsPrerequisite.Fulfilled;
+                wireGuardExePrerequisite.Fulfilled && serverConfigurationPrerequisite.Fulfilled;
 
             // Can't uninstall the tunnel while internet sharing is enabled
             tunnelServicePrerequisite.CanConfigureFunc = () => internetSharingPrerequisite.Fulfilled == false && newNetNatPrerequisite.Fulfilled == false;
@@ -93,15 +93,27 @@ namespace WireGuardServerForWindows
 
             mainWindowModel.PrerequisiteItems.Add(serverStatusPrerequisite);
 
-            // If one of the prereqs changes, check the validity of all of them
-            mainWindowModel.PrerequisiteItems.ForEach(i => i.PropertyChanged += PrerequisiteItemFulfilledChanged);
+            // If one of the prereqs changes, check the validity of all of them.
+            // Do this recursively.
+            void AddPrerequisiteItemFulfilledChangedHandler(PrerequisiteItem prerequisiteItem)
+            {
+                prerequisiteItem.PropertyChanged += PrerequisiteItemFulfilledChanged;
+                prerequisiteItem.Children.ToList().ForEach(AddPrerequisiteItemFulfilledChangedHandler);
+            }
+            mainWindowModel.PrerequisiteItems.ForEach(AddPrerequisiteItemFulfilledChangedHandler);
+
+            void RemovePrerequisiteItemFulfilledChangedHandler(PrerequisiteItem prerequisiteItem)
+            {
+                prerequisiteItem.PropertyChanged -= PrerequisiteItemFulfilledChanged;
+                prerequisiteItem.Children.ToList().ForEach(RemovePrerequisiteItemFulfilledChangedHandler);
+            }
 
             void PrerequisiteItemFulfilledChanged(object sender, PropertyChangedEventArgs e)
             {
                 Application.Current.Dispatcher.Invoke(() =>
                 {
                     // Unsubscribe before invoking on everyone
-                    mainWindowModel.PrerequisiteItems.ForEach(i => i.PropertyChanged -= PrerequisiteItemFulfilledChanged);
+                    mainWindowModel.PrerequisiteItems.ForEach(RemovePrerequisiteItemFulfilledChangedHandler);
 
                     Mouse.OverrideCursor = Cursors.Wait;
 
@@ -127,7 +139,7 @@ namespace WireGuardServerForWindows
                     Mouse.OverrideCursor = null;
 
                     // Now we can resubscribe to all
-                    mainWindowModel.PrerequisiteItems.ForEach(i => i.PropertyChanged += PrerequisiteItemFulfilledChanged);
+                    mainWindowModel.PrerequisiteItems.ForEach(AddPrerequisiteItemFulfilledChangedHandler);
                 });
             }
 
