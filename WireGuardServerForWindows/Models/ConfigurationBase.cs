@@ -121,6 +121,8 @@ namespace WireGuardServerForWindows.Models
                 {
                     Mouse.OverrideCursor = Cursors.Wait;
                     prop.Value = new WireGuardExe().ExecuteCommand(new GeneratePrivateKeyCommand());
+                    // When the private key changes, the public key becomes invalid
+                    conf.PublicKeyProperty.Value = null;
                     Mouse.OverrideCursor = null;
                 }
             },
