@@ -48,6 +48,10 @@ Once configured, it's easy to import the configuration into your client app of c
 
 ![ClientQrCode](https://i.imgur.com/IOIQ1Rx.png)
 
+You may not want to keep the clients' public keys on the server. In that case, you may delete the private key before saving the client configuration. However, there are two things to keep in mind.
+1. You should export the client config (via QR code or file) before removing the private key and saving.
+2. If you ever need to import the config to your client again, you will have to re-generate both the private and public keys.
+
 ### Tunnnel Service
 Once the server and client(s) are configured, you may install the tunnel service, which creates a new network interface for WireGuard using the `wireguard /installtunnelservice` command. After installation, the tunnel may be also removed directly within WS4W. This uses the `wireguard /uninstalltunnelservice` command.
 
