@@ -18,7 +18,7 @@ namespace WireGuardServerForWindows.Models
         {
             // Server properties
             PrivateKeyProperty.TargetTypes.Add(GetType());
-            AddressProperty.TargetTypes.Add(GetType());
+            //AddressProperty.TargetTypes.Add(GetType());
             ListenPortProperty.TargetTypes.Add(GetType());
 
             // Client properties
