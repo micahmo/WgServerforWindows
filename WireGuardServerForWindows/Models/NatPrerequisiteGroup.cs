@@ -1,15 +1,12 @@
 ﻿namespace WireGuardServerForWindows.Models
 {
-    public class NatPrerequisiteGroup : PrerequisiteItem
+    public class NatPrerequisiteGroup : PrerequisiteGroup
     {
         public NatPrerequisiteGroup(NewNetNatPrerequisite newNetNatPrerequisite, InternetSharingPrerequisite internetSharingPrerequisite, PersistentInternetSharingPrerequisite persistentInternetSharingPrerequisite) : base
         (
-            string.Empty, string.Empty, string.Empty, string.Empty, string.Empty
+            newNetNatPrerequisite, internetSharingPrerequisite, persistentInternetSharingPrerequisite
         )
         {
-            Children.Add(newNetNatPrerequisite);
-            Children.Add(internetSharingPrerequisite);
-            Children.Add(persistentInternetSharingPrerequisite);
         }
     }
 }
