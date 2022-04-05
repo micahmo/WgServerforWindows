@@ -136,13 +136,17 @@ The CLI uses verbs, or top-level commands, each of which has its own set of opti
 
 ### Inability to Enable NAT
 
-If you get the following error while attempting to Enable NAT, there are a few possible workarounds.
+You may get the following error while attempting to Enable NAT.
 
 ![image](https://user-images.githubusercontent.com/7417301/161408922-2f7305fe-e0e1-4759-9497-e2ecdb82372c.png)
 
-1. You may update to Windows 10 21H2.
-2. If you are on a version of Windows 10 prior to 21H2 and have a Pro or better (not Home), you may enable Hyper-V in Control Panel > Programs and Features > Turn Windows features on or off.
-3. If you can neither update Windows nor enable Hyper-V, you will have to use Internet Connection Sharing instead of NAT.
+This is because Hyper-V must be enabled in order to use the Windows NAT Routing feature. Unfortunately, Hyper-V can only be enabled on Windows Pro variants and higher. You may attempt to enable it with the following command.
+
+``` powershell
+Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V -All
+```
+
+If that does not work, you will have to use Internet Connection Sharing instead.
 
 > Follow [#30](https://github.com/micahmo/WireGuardServerForWindows/issues/30) for a permanent fix for this issue.
 
