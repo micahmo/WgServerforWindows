@@ -28,6 +28,13 @@ namespace WireGuardServerForWindows.Models
 
         public override BooleanTimeCachedProperty Fulfilled => _fulfilled ??= new BooleanTimeCachedProperty(TimeSpan.FromSeconds(1), () =>
         {
+            if (!File.Exists(ServerConfigurationPrerequisite.ServerDataPath))
+            {
+                // The server config doesn't exist yet.
+                // We can't even evaluate what the NAT should be.
+                return false;
+            }
+
             bool result = true;
             var serverConfiguration = new ServerConfiguration().Load<ServerConfiguration>(Configuration.LoadFromFile(ServerConfigurationPrerequisite.ServerDataPath));
 
