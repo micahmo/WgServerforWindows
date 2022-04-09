@@ -397,6 +397,15 @@ namespace WireGuardServerForWindows.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Hyper-V may not have installed successfully, so NAT Routing may not be supported on this configuration of Windows. It is recommended to use Internet Connection Sharing instead..
+        /// </summary>
+        public static string HyperVErrorNatRoutingNotSupported {
+            get {
+                return ResourceManager.GetString("HyperVErrorNatRoutingNotSupported", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Install tunnel service.
         /// </summary>
         public static string InstallTunnelService {
@@ -492,6 +501,15 @@ namespace WireGuardServerForWindows.Properties {
         public static string NameProperty {
             get {
                 return ResourceManager.GetString("NameProperty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to NAT Routing may not be supported on this configuration of Windows. It is recommended to use Internet Connection Sharing instead..
+        /// </summary>
+        public static string NatRoutingNotSupported {
+            get {
+                return ResourceManager.GetString("NatRoutingNotSupported", resourceCulture);
             }
         }
         
@@ -726,6 +744,24 @@ namespace WireGuardServerForWindows.Properties {
         public static string PrivateNetworkTitle {
             get {
                 return ResourceManager.GetString("PrivateNetworkTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to WS4W was unable to enable NAT Routing. Sometimes enabling Hyper-V helps. Would you like to enable Hyper-V now?.
+        /// </summary>
+        public static string PromptForHyperV {
+            get {
+                return ResourceManager.GetString("PromptForHyperV", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Remember to reboot after installing Hyper-V. Then try to enable NAT Routing again..
+        /// </summary>
+        public static string PromptForHyperVReboot {
+            get {
+                return ResourceManager.GetString("PromptForHyperVReboot", resourceCulture);
             }
         }
         
@@ -1004,6 +1040,15 @@ namespace WireGuardServerForWindows.Properties {
         public static string WireGuardNetworkOnDomain {
             get {
                 return ResourceManager.GetString("WireGuardNetworkOnDomain", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to WS4W.
+        /// </summary>
+        public static string WS4W {
+            get {
+                return ResourceManager.GetString("WS4W", resourceCulture);
             }
         }
     }

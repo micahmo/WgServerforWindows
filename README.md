@@ -71,7 +71,7 @@ The last step is to allow requests made over the WireGuard interface to be route
 * NAT Routing
 * Internet Sharing + Persistent Internet Sharing
 
-The first option is only available on some systems (requires Windows 10). The second options may be used as necessary, but have some caveats (such as, if the Internet Connection is shared with the WireGuard adapter, it cannot be shared with any other adapter, see #20). There have also been multiple issues reported with Internet Sharing, so NAT Routing should be used if available.
+The first option is only available on some systems (see more below). The second options may be used as necessary, but have some caveats (such as, if the Internet Connection is shared with the WireGuard adapter, it cannot be shared with any other adapter; see [#18](https://github.com/micahmo/WireGuardServerForWindows/issues/18)). There have also been multiple issues reported with Internet Sharing, so NAT Routing should be used if available.
 
 These options are mutually exclusive.
 
@@ -82,6 +82,8 @@ Here you can create a NAT routing rule on the WireGuard interface to allow it to
 * `New-NetIPAddress` is called on the WireGuard adapter to assign a static IP in the range of the Server Configuration's Address property.
 * `New-NetNat` is called to create a new NAT rule on the WireGuard adapter.
 * A Windows Task is created to call `New-NetIPAddress` on boot.
+
+> NAT Routing requires at least Windows 10, and the option to enable it will not even appear in the application on older versions of Windows. However, even with Windows 10, NAT Routing does not always work. Sometimes it requires Hyper-V to be enabled, which the application will prompt for, but that also requires a Pro or higher (i.e., not Home) version of Windows. Ultimately, if the application is unable to enable NAT Routing, it will recommend using Internet Connection Sharing instead (below). See [#30](https://github.com/micahmo/WireGuardServerForWindows/issues/30) for a full discussion about NAT Routing support.
 
 #### Internet Sharing
 ![InternetSharing](https://i.imgur.com/GCKoVIZ.png)
@@ -133,22 +135,6 @@ The CLI uses verbs, or top-level commands, each of which has its own set of opti
       > This command is used by the Scheduled Task that is created when NAT Routing is enabled.
 
 # Known Issues
-
-### Inability to Enable NAT
-
-You may get the following error while attempting to Enable NAT.
-
-![image](https://user-images.githubusercontent.com/7417301/161408922-2f7305fe-e0e1-4759-9497-e2ecdb82372c.png)
-
-This is because Hyper-V must be enabled in order to use the Windows NAT Routing feature. Unfortunately, Hyper-V can only be enabled on Windows Pro variants and higher. You may attempt to enable it with the following command.
-
-``` powershell
-Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V -All
-```
-
-If that does not work, you will have to use Internet Connection Sharing instead.
-
-> Follow [#30](https://github.com/micahmo/WireGuardServerForWindows/issues/30) for a permanent fix for this issue.
 
 ### Inability to Enable Internet Sharing
 

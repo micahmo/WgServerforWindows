@@ -446,4 +446,19 @@ Note: It is preferable to use a domain name with DDNS to avoid dynamic WAN IPs.<
   <data name="NewNatConfigure" xml:space="preserve">
 	  <value>Disable NAT</value>
   </data>
+  <data name="PromptForHyperV" xml:space="preserve">
+	  <value>WS4W was unable to enable NAT Routing. Sometimes enabling Hyper-V helps. Would you like to enable Hyper-V now?</value>
+  </data>
+  <data name="WS4W" xml:space="preserve">
+	  <value>WS4W</value>
+  </data>
+  <data name="PromptForHyperVReboot" xml:space="preserve">
+	  <value>Remember to reboot after installing Hyper-V. Then try to enable NAT Routing again.</value>
+  </data>
+  <data name="NatRoutingNotSupported" xml:space="preserve">
+	  <value>NAT Routing may not be supported on this configuration of Windows. It is recommended to use Internet Connection Sharing instead.</value>
+  </data>
+  <data name="HyperVErrorNatRoutingNotSupported" xml:space="preserve">
+	  <value>Hyper-V may not have installed successfully, so NAT Routing may not be supported on this configuration of Windows. It is recommended to use Internet Connection Sharing instead.</value>
+  </data>
 </root>

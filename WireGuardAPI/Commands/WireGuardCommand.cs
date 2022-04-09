@@ -23,5 +23,6 @@
         WireGuardExe,
         WGExe,
         Custom,
+        CustomInteractive
     }
 }

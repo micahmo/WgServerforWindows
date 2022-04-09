@@ -97,6 +97,15 @@ namespace WireGuardAPI
                     result = process?.StandardOutput.ReadToEnd();
                     exitCode = process?.ExitCode ?? 1;
                     break;
+                case WhichExe.CustomInteractive:
+                    process = Process.Start(new ProcessStartInfo
+                    {
+                        FileName = command.Args[0],
+                        Arguments = string.Join(' ', command.Args.Skip(1)),
+                    });
+                    process?.WaitForExit();
+                    exitCode = process?.ExitCode ?? 1;
+                    break;
             }
 
             return result;

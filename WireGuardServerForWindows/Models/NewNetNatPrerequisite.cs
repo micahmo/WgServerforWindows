@@ -2,11 +2,13 @@
 using System.IO;
 using System.Linq;
 using System.Net.NetworkInformation;
+using System.Windows;
 using System.Windows.Input;
 using Microsoft.Win32.TaskScheduler;
 using SharpConfig;
 using WireGuardAPI;
 using WireGuardServerForWindows.Cli.Options;
+using WireGuardServerForWindows.Controls;
 using WireGuardServerForWindows.Properties;
 
 namespace WireGuardServerForWindows.Models
@@ -115,14 +117,64 @@ namespace WireGuardServerForWindows.Models
 
             if (exitCode != 0)
             {
-                throw new Exception(output);
-            }
+                // Windows is telling us that New-NetNat is unsupported. Ask the user if they want to try enabling Hyper-V.
+                var res = MessageBox.Show(Resources.PromptForHyperV, Resources.WS4W, MessageBoxButton.YesNo);
 
-            // Create/update a Scheduled Task that sets the NetIPAddress on boot.
-            TaskDefinition td = TaskService.Instance.NewTask();
-            td.Actions.Add(new ExecAction(Path.Combine(AppContext.BaseDirectory, "ws4w.exe"), $"{typeof(SetNetIpAddressCommand).GetVerb()} --{typeof(SetNetIpAddressCommand).GetOption(nameof(SetNetIpAddressCommand.ServerDataPath))} {serverDataPath ?? ServerConfigurationPrerequisite.ServerDataPath}"));
-            td.Triggers.Add(new BootTrigger());
-            TaskService.Instance.RootFolder.RegisterTaskDefinition(_netIpAddressTaskUniqueName, td, TaskCreation.CreateOrUpdate, "SYSTEM", null, TaskLogonType.ServiceAccount);
+                if (res == MessageBoxResult.Yes)
+                {
+                    // Let's try to enabled Hyper-V.
+                    new WireGuardExe().ExecuteCommand(new WireGuardCommand(string.Empty, WhichExe.CustomInteractive,
+                            "powershell.exe",
+                            "-NoProfile Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V -All"),
+                        out exitCode);
+
+                    if (exitCode == 0)
+                    {
+                        // Seems to have installed successfully. Prompt for reboot
+                        MessageBox.Show(Resources.PromptForHyperVReboot, Resources.WS4W, MessageBoxButton.OK);
+                    }
+                    else
+                    {
+                        Mouse.OverrideCursor = null;
+
+                        // If we get here, the Hyper-V install failed for some reason (e.g., Windows Home). Recommend ICS.
+                        new UnhandledErrorWindow
+                        {
+                            DataContext = new UnhandledErrorWindowModel
+                            {
+                                Title = Resources.Error,
+                                Text = Resources.HyperVErrorNatRoutingNotSupported,
+                                Exception = new Exception($"{output}{Environment.StackTrace}")
+                            }
+                        }.ShowDialog();
+                    }
+                }
+                else
+                {
+                    Mouse.OverrideCursor = null;
+
+                    // If we get here, the user chose not to install Hyper-V. Recommend ICS.
+                    new UnhandledErrorWindow
+                    {
+                        DataContext = new UnhandledErrorWindowModel
+                        {
+                            Title = Resources.Error,
+                            Text = Resources.NatRoutingNotSupported,
+                            Exception = new Exception($"{output}{Environment.StackTrace}")
+                        }
+                    }.ShowDialog();
+                }
+            }
+            else
+            {
+                // If we get here, we know NAT routing succeeded
+
+                // Create/update a Scheduled Task that sets the NetIPAddress on boot.
+                TaskDefinition td = TaskService.Instance.NewTask();
+                td.Actions.Add(new ExecAction(Path.Combine(AppContext.BaseDirectory, "ws4w.exe"), $"{typeof(SetNetIpAddressCommand).GetVerb()} --{typeof(SetNetIpAddressCommand).GetOption(nameof(SetNetIpAddressCommand.ServerDataPath))} {serverDataPath ?? ServerConfigurationPrerequisite.ServerDataPath}"));
+                td.Triggers.Add(new BootTrigger());
+                TaskService.Instance.RootFolder.RegisterTaskDefinition(_netIpAddressTaskUniqueName, td, TaskCreation.CreateOrUpdate, "SYSTEM", null, TaskLogonType.ServiceAccount);
+            }
 
             Refresh();
 
