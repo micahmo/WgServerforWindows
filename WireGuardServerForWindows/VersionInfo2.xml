@@ -2,15 +2,13 @@
 <!-- Things to update: Version, Date, Release Notes -->
 <AppUpdate xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/micahmo/WireGuardServerForWindows/master/WireGuardServerForWindows/AppUpdate.xsd">
-  <Version>1.7.1.0</Version>
-  <ReleaseDate>2022-03-25</ReleaseDate>
+  <Version>1.7.2.0</Version>
+  <ReleaseDate>2022-04-09</ReleaseDate>
   <!-- Default download -->
-  <DownloadLink>https://github.com/micahmo/WireGuardServerForWindows/releases/download/v1.7.1/WS4WSetup-1.7.1.exe</DownloadLink>
-  <DownloadFileName>WS4WSetup-1.7.1.exe</DownloadFileName>
+  <DownloadLink>https://github.com/micahmo/WireGuardServerForWindows/releases/download/v1.7.2/WS4WSetup-1.7.2.exe</DownloadLink>
+  <DownloadFileName>WS4WSetup-1.7.2.exe</DownloadFileName>
   <!-- Release notes -->
-  <VersionNotes> - Allow installing tunnel without clients configured (#26)
- - Allow saving clients without private key on server (#26)
- - Fix issues related to UI updates
- - Rollback breaking change from #20</VersionNotes>
+  <VersionNotes> - Fixed first-run UI glitch
+ - Added better handling when NAT Routing is not supported by Windows (#30)</VersionNotes>
   <ReleaseNotes></ReleaseNotes>
 </AppUpdate>
