@@ -568,6 +568,42 @@ namespace WireGuardServerForWindows.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Disable Automatic NAT Routing.
+        /// </summary>
+        public static string NewNetIpAddressTaskSubCommandConfigureText {
+            get {
+                return ResourceManager.GetString("NewNetIpAddressTaskSubCommandConfigureText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to NAT Routing will not be automatically configured on startup. Click to enable..
+        /// </summary>
+        public static string NewNetIpAddressTaskSubCommandErrorMessage {
+            get {
+                return ResourceManager.GetString("NewNetIpAddressTaskSubCommandErrorMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enable Automatic NAT Routing.
+        /// </summary>
+        public static string NewNetIpAddressTaskSubCommandResolveText {
+            get {
+                return ResourceManager.GetString("NewNetIpAddressTaskSubCommandResolveText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to NAT Routing will be automatically configured on startup. Click to disable..
+        /// </summary>
+        public static string NewNetIpAddressTaskSubCommandSuccessMessage {
+            get {
+                return ResourceManager.GetString("NewNetIpAddressTaskSubCommandSuccessMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to NAT is enabled..
         /// </summary>
         public static string NewNetSuccess {

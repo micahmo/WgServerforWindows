@@ -26,7 +26,8 @@ namespace WireGuardServerForWindows
             var clientConfigurationsPrerequisite = new ClientConfigurationsPrerequisite();
             var tunnelServicePrerequisite = new TunnelServicePrerequisite();
             var privateNetworkPrerequisite = new PrivateNetworkPrerequisite();
-            var newNetNatPrerequisite = new NewNetNatPrerequisite();
+            var netIpAddressTaskSubCommand = new NewNetIpAddressTaskSubCommand();
+            var newNetNatPrerequisite = new NewNetNatPrerequisite(netIpAddressTaskSubCommand);
             var internetSharingPrerequisite = new InternetSharingPrerequisite();
             var persistentInternetSharingPrerequisite = new PersistentInternetSharingPrerequisite();
             var serverStatusPrerequisite = new ServerStatusPrerequisite();
@@ -76,6 +77,9 @@ namespace WireGuardServerForWindows
                                                              && tunnelServicePrerequisite.Fulfilled
                                                              && !internetSharingPrerequisite.Fulfilled
                                                              && !persistentInternetSharingPrerequisite.Fulfilled;
+
+                netIpAddressTaskSubCommand.CanResolveFunc = netIpAddressTaskSubCommand.CanConfigureFunc = () => newNetNatPrerequisite.Fulfilled;
+
                 var natPrerequisiteGroup = new NatPrerequisiteGroup(newNetNatPrerequisite, internetSharingPrerequisite, persistentInternetSharingPrerequisite);
 
                 if (internetSharingPrerequisite.Fulfilled || persistentInternetSharingPrerequisite.Fulfilled)
@@ -99,6 +103,7 @@ namespace WireGuardServerForWindows
             {
                 prerequisiteItem.PropertyChanged += PrerequisiteItemFulfilledChanged;
                 prerequisiteItem.Children.ToList().ForEach(AddPrerequisiteItemFulfilledChangedHandler);
+                prerequisiteItem.SubCommands.ToList().ForEach(AddPrerequisiteItemFulfilledChangedHandler);
             }
             mainWindowModel.PrerequisiteItems.ForEach(AddPrerequisiteItemFulfilledChangedHandler);
 
@@ -106,6 +111,7 @@ namespace WireGuardServerForWindows
             {
                 prerequisiteItem.PropertyChanged -= PrerequisiteItemFulfilledChanged;
                 prerequisiteItem.Children.ToList().ForEach(RemovePrerequisiteItemFulfilledChangedHandler);
+                prerequisiteItem.SubCommands.ToList().ForEach(RemovePrerequisiteItemFulfilledChangedHandler);
             }
 
             void PrerequisiteItemFulfilledChanged(object sender, PropertyChangedEventArgs e)
@@ -130,6 +136,7 @@ namespace WireGuardServerForWindows
                                 i.RaisePropertyChanged(nameof(i.CanResolve));
 
                                 i.Children.Where(i2 => i2 != senderItem).ToList().ForEach(RaisePropertiesChanged);
+                                i.SubCommands.Where(i2 => i2 != senderItem).ToList().ForEach(RaisePropertiesChanged);
                             }
 
                             RaisePropertiesChanged(prerequisiteItem);

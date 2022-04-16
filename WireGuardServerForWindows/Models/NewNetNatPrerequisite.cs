@@ -4,10 +4,8 @@ using System.Linq;
 using System.Net.NetworkInformation;
 using System.Windows;
 using System.Windows.Input;
-using Microsoft.Win32.TaskScheduler;
 using SharpConfig;
 using WireGuardAPI;
-using WireGuardServerForWindows.Cli.Options;
 using WireGuardServerForWindows.Controls;
 using WireGuardServerForWindows.Properties;
 
@@ -17,7 +15,9 @@ namespace WireGuardServerForWindows.Models
     {
         #region PrerequisiteItem members
 
-        public NewNetNatPrerequisite() : base
+        public NewNetNatPrerequisite() : this(new NewNetIpAddressTaskSubCommand()) { }
+
+        public NewNetNatPrerequisite(NewNetIpAddressTaskSubCommand newNetIpAddressTaskSubCommand) : base
         (
             title: Resources.NewNatName,
             successMessage: Resources.NewNetSuccess,
@@ -26,6 +26,8 @@ namespace WireGuardServerForWindows.Models
             configureText: Resources.NewNatConfigure
         )
         {
+            _newNetIpAddressTaskSubCommand = newNetIpAddressTaskSubCommand;
+            SubCommands.Add(_newNetIpAddressTaskSubCommand);
         }
 
         public override BooleanTimeCachedProperty Fulfilled => _fulfilled ??= new BooleanTimeCachedProperty(TimeSpan.FromSeconds(1), () =>
@@ -59,13 +61,6 @@ namespace WireGuardServerForWindows.Models
                 out exitCode);
 
             result &= exitCode == 0 && output.Contains(serverConfiguration.IpAddress);
-
-            // Finally, verify that the task exists and that all of the parameters are correct.
-            result &= TaskService.Instance.FindTask(_netIpAddressTaskUniqueName) is { Enabled: true } task
-                     && task.Definition.Triggers.FirstOrDefault() is BootTrigger
-                     && task.Definition.Actions.FirstOrDefault() is ExecAction action
-                     && action.Path == Path.Combine(AppContext.BaseDirectory, "ws4w.exe")
-                     && action.Arguments.StartsWith(typeof(SetNetIpAddressCommand).GetVerb());
 
             return result;
         });
@@ -169,11 +164,8 @@ namespace WireGuardServerForWindows.Models
             {
                 // If we get here, we know NAT routing succeeded
 
-                // Create/update a Scheduled Task that sets the NetIPAddress on boot.
-                TaskDefinition td = TaskService.Instance.NewTask();
-                td.Actions.Add(new ExecAction(Path.Combine(AppContext.BaseDirectory, "ws4w.exe"), $"{typeof(SetNetIpAddressCommand).GetVerb()} --{typeof(SetNetIpAddressCommand).GetOption(nameof(SetNetIpAddressCommand.ServerDataPath))} {serverDataPath ?? ServerConfigurationPrerequisite.ServerDataPath}"));
-                td.Triggers.Add(new BootTrigger());
-                TaskService.Instance.RootFolder.RegisterTaskDefinition(_netIpAddressTaskUniqueName, td, TaskCreation.CreateOrUpdate, "SYSTEM", null, TaskLogonType.ServiceAccount);
+                // Invoke our subcommand
+                _newNetIpAddressTaskSubCommand.Resolve(serverDataPath);
             }
 
             Refresh();
@@ -191,11 +183,8 @@ namespace WireGuardServerForWindows.Models
                     $"-NoProfile Remove-NetNat -Name {_netNatName} -Confirm:$false"),
                 out _);
 
-            // Disable the task
-            if (TaskService.Instance.FindTask(_netIpAddressTaskUniqueName) is { } task)
-            {
-                task.Enabled = false;
-            }
+            // Invoke our subcommand
+            _newNetIpAddressTaskSubCommand.Configure();
 
             Refresh();
 
@@ -227,7 +216,7 @@ namespace WireGuardServerForWindows.Models
 
         private readonly string _netNatName = "wg_server_nat";
 
-        private readonly string _netIpAddressTaskUniqueName = "WS4W Set NetIPAddress (1048541f-d027-4a97-842d-ca331c3d03a9)";
+        private readonly NewNetIpAddressTaskSubCommand _newNetIpAddressTaskSubCommand;
 
         #endregion
     }
