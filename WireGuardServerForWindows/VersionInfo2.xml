@@ -2,13 +2,13 @@
 <!-- Things to update: Version, Date, Release Notes -->
 <AppUpdate xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/micahmo/WireGuardServerForWindows/master/WireGuardServerForWindows/AppUpdate.xsd">
-  <Version>1.7.2.0</Version>
-  <ReleaseDate>2022-04-09</ReleaseDate>
+  <Version>1.7.3.0</Version>
+  <ReleaseDate>2022-04-16</ReleaseDate>
   <!-- Default download -->
-  <DownloadLink>https://github.com/micahmo/WireGuardServerForWindows/releases/download/v1.7.2/WS4WSetup-1.7.2.exe</DownloadLink>
-  <DownloadFileName>WS4WSetup-1.7.2.exe</DownloadFileName>
+  <DownloadLink>https://github.com/micahmo/WireGuardServerForWindows/releases/download/v1.7.3/WS4WSetup-1.7.3.exe</DownloadLink>
+  <DownloadFileName>WS4WSetup-1.7.3.exe</DownloadFileName>
   <!-- Release notes -->
-  <VersionNotes> - Fixed first-run UI glitch
- - Added better handling when NAT Routing is not supported by Windows (#30)</VersionNotes>
+  <VersionNotes> - Add the ability to disable automatic NAT configuration on boot (#28)
+ - When auto NAT is enabled, delay slightly before configuring to allow main interface to connect (#28)</VersionNotes>
   <ReleaseNotes></ReleaseNotes>
 </AppUpdate>
