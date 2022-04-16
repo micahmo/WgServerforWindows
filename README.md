@@ -19,7 +19,8 @@ Before introducing an installer, WS4W was distributed as a portable application.
 Below are the tasks that can be performed automatically using this application.
 
 ## Before
-![BeforeScreenshot](https://user-images.githubusercontent.com/7417301/157667050-000989a6-67b0-4112-88e3-870c8c5b226f.png)
+
+![BeforeScreenshot](https://user-images.githubusercontent.com/7417301/163678624-fb766a71-5f45-470d-b1bd-2bc6112ed3af.png)
 
 ### WireGuard.exe
 This step downloads and runs the latest version of WireGuard for Windows from https://download.wireguard.com/windows-client/wireguard-installer.exe. Once installed, it can be uninstalled directly from WS4W, too.
@@ -82,6 +83,7 @@ Here you can create a NAT routing rule on the WireGuard interface to allow it to
 * `New-NetIPAddress` is called on the WireGuard adapter to assign a static IP in the range of the Server Configuration's Address property.
 * `New-NetNat` is called to create a new NAT rule on the WireGuard adapter.
 * A Windows Task is created to call `New-NetIPAddress` on boot.
+  * If you do not wish to have the Windows Task automatically configure the WireGuard interface on boot, you can press the dropdown and choose "Disable Automatic NAT Routing".
 
 > NAT Routing requires at least Windows 10, and the option to enable it will not even appear in the application on older versions of Windows. However, even with Windows 10, NAT Routing does not always work. Sometimes it requires Hyper-V to be enabled, which the application will prompt for, but that also requires a Pro or higher (i.e., not Home) version of Windows. Ultimately, if the application is unable to enable NAT Routing, it will recommend using Internet Connection Sharing instead (below). See [#30](https://github.com/micahmo/WireGuardServerForWindows/issues/30) for a full discussion about NAT Routing support.
 
@@ -107,7 +109,7 @@ Even with these workarounds, Internet Sharing can become disabled after a reboot
 Once the tunnel is installed, the status of the WireGuard interface may be viewed. This is accomplished via the `wg show` command. It will be continually updated as long as `Update Live` is checked.
 
 ## After
-![AfterScreenshot](https://user-images.githubusercontent.com/7417301/157669203-7899d8e1-abc3-476c-998d-6e1daca4de5c.png)
+![AfterScreenshot](https://user-images.githubusercontent.com/7417301/163678848-0de1b82b-0616-4e91-bac7-5419d8f5ec9a.png)
 
 ## CLI
 There is also a CLI bundled in the portable download called `ws4w.exe` which can be invoked from a terminal or called from a script. In addition to messages written to standard out, the CLI will also set the exit code based on the success of executing the given command. In PowerShell, for example, the exit code can be printed with `echo $lastexitcode`.

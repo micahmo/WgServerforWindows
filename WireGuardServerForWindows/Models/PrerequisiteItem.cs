@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using GalaSoft.MvvmLight;
@@ -27,7 +28,33 @@ namespace WireGuardServerForWindows.Models
                 RaisePropertyChanged(nameof(HasChildren));
             };
 
+            SubCommands.CollectionChanged += (_, __) =>
+            {
+                RaisePropertyChanged(nameof(HasSubCommands));
+            };
+
             Refresh();
+        }
+
+        #endregion
+
+        #region Overrides
+
+        /// <inheritdoc/>
+        public override void RaisePropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            if (propertyName == nameof(CanResolve))
+            {
+                Commands.ResolveCommand.RaiseCanExecuteChanged();
+            }
+
+            if (propertyName == nameof(CanConfigure))
+            {
+                
+                Commands.ConfigureCommand.RaiseCanExecuteChanged();
+            }
+
+            base.RaisePropertyChanged(propertyName);
         }
 
         #endregion
@@ -61,7 +88,7 @@ namespace WireGuardServerForWindows.Models
 
         public string ResolveText
         {
-        get => _resolveText;
+            get => _resolveText;
             set => Set(nameof(ResolveText), ref _resolveText, value);
         }
         private string _resolveText;
@@ -85,9 +112,13 @@ namespace WireGuardServerForWindows.Models
 
         public ObservableCollection<PrerequisiteItem> Children { get; } = new ObservableCollection<PrerequisiteItem>();
 
-        public virtual string Category { get; }
-
         public bool HasChildren => Children.Any();
+
+        public ObservableCollection<PrerequisiteItem> SubCommands { get; } = new ObservableCollection<PrerequisiteItem>();
+
+        public bool HasSubCommands => SubCommands.Any();
+
+        public virtual string Category { get; }
 
         public IEnumerable<IGrouping<string, PrerequisiteItem>> ChildrenByCategory => Children.GroupBy(c => c.Category);
 
@@ -127,7 +158,7 @@ namespace WireGuardServerForWindows.Models
         #endregion
     }
 
-    public class PrerequisiteItemCommands
+    public class PrerequisiteItemCommands : ObservableObject
     {
         public PrerequisiteItemCommands(PrerequisiteItem prerequisiteItem)
         {
@@ -138,15 +169,15 @@ namespace WireGuardServerForWindows.Models
 
         #region ICommands
 
-        public ICommand ResolveCommand => _resolveCommand ??= new RelayCommand(PrerequisiteItem.Resolve);
+        // The canExecute parameter is only needed for xctk:SplitButton, which uses ICommand.CanExecute to determine enabled status (instead of IsEnabled) when a Command is bound.
+        // https://github.com/xceedsoftware/wpftoolkit/issues/1466
+        public RelayCommand ResolveCommand => _resolveCommand ??= new RelayCommand(PrerequisiteItem.Resolve, PrerequisiteItem.HasSubCommands ? PrerequisiteItem.CanResolveFunc : null);
         private RelayCommand _resolveCommand;
 
-        public ICommand ConfigureCommand => _configureCommand ??= new RelayCommand(PrerequisiteItem.Configure);
+        // The canExecute parameter is only needed for xctk:SplitButton, which uses ICommand.CanExecute to determine enabled status (instead of IsEnabled) when a Command is bound.
+        // https://github.com/xceedsoftware/wpftoolkit/issues/1466
+        public RelayCommand ConfigureCommand => _configureCommand ??= new RelayCommand(PrerequisiteItem.Configure, PrerequisiteItem.HasSubCommands ? PrerequisiteItem.CanConfigureFunc : null);
         private RelayCommand _configureCommand;
-
-        #endregion
-
-        #region Command implementations
 
         #endregion
     }

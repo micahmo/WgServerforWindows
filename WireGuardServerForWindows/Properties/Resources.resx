@@ -461,4 +461,16 @@ Note: It is preferable to use a domain name with DDNS to avoid dynamic WAN IPs.<
   <data name="HyperVErrorNatRoutingNotSupported" xml:space="preserve">
 	  <value>Hyper-V may not have installed successfully, so NAT Routing may not be supported on this configuration of Windows. It is recommended to use Internet Connection Sharing instead.</value>
   </data>
+  <data name="NewNetIpAddressTaskSubCommandResolveText" xml:space="preserve">
+	  <value>Enable Automatic NAT Routing</value>
+  </data>
+  <data name="NewNetIpAddressTaskSubCommandConfigureText" xml:space="preserve">
+	  <value>Disable Automatic NAT Routing</value>
+  </data>
+  <data name="NewNetIpAddressTaskSubCommandErrorMessage" xml:space="preserve">
+	  <value>NAT Routing will not be automatically configured on startup. Click to enable.</value>
+  </data>
+  <data name="NewNetIpAddressTaskSubCommandSuccessMessage" xml:space="preserve">
+	  <value>NAT Routing will be automatically configured on startup. Click to disable.</value>
+  </data>
 </root>

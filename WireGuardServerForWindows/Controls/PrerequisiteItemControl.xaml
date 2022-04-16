@@ -6,6 +6,7 @@
              xmlns:models="clr-namespace:WireGuardServerForWindows.Models"
              xmlns:c="clr-namespace:CalcBinding;assembly=CalcBinding"
              xmlns:controls="clr-namespace:WireGuardServerForWindows.Controls"
+             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
              mc:Ignorable="d" 
              d:DataContext="{d:DesignInstance Type={x:Type models:PrerequisiteItem}}" d:DesignWidth="800"
              x:Name="This">
@@ -52,16 +53,76 @@
                        Visibility="{c:Binding '!Fulfilled and !IsInformational', FalseToVisibility=Collapsed}" VerticalAlignment="Center"/>
             </Grid>
 
-            <Button Grid.Column="2" Padding="5" Margin="5" VerticalAlignment="Center"
-                Content="{Binding ResolveText}" 
-                Command="{Binding Commands.ResolveCommand}"
-                Visibility="{c:Binding '!Fulfilled', FalseToVisibility=Collapsed}"
-                IsEnabled="{Binding CanResolve}"/>
-            <Button Grid.Column="2" Padding="5" Margin="5" VerticalAlignment="Center"
-                Content="{Binding ConfigureText}" 
-                Command="{Binding Commands.ConfigureCommand}"
-                Visibility="{c:Binding 'Fulfilled', FalseToVisibility=Collapsed}"
-                IsEnabled="{Binding CanConfigure}"/>
+            <Grid Grid.Column="2" Visibility="{c:Binding '!HasSubCommands'}">
+                <Button Padding="5" Margin="5" VerticalAlignment="Center"
+                    Content="{Binding ResolveText}" 
+                    Command="{Binding Commands.ResolveCommand}"
+                    Visibility="{c:Binding '!Fulfilled', FalseToVisibility=Collapsed}"
+                    IsEnabled="{Binding CanResolve}"/>
+                <Button Padding="5" Margin="5" VerticalAlignment="Center"
+                    Content="{Binding ConfigureText}" 
+                    Command="{Binding Commands.ConfigureCommand}"
+                    Visibility="{c:Binding 'Fulfilled', FalseToVisibility=Collapsed}"
+                    IsEnabled="{Binding CanConfigure}"/>
+            </Grid>
+
+            <Grid Grid.Column="2" Visibility="{c:Binding 'HasSubCommands'}">
+                <xctk:SplitButton Height="28" Padding="5" Margin="5" VerticalAlignment="Center"
+                    Content="{Binding ResolveText}" 
+                    Command="{Binding Commands.ResolveCommand}"
+                    Visibility="{c:Binding '!Fulfilled', FalseToVisibility=Collapsed}">
+                    <xctk:SplitButton.DropDownContent>
+                        <ItemsControl ItemsSource="{Binding SubCommands}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid>
+                                        <!-- Keep these buttons in sync with the dropdown buttons below. -->
+                                        <Button Padding="5"
+                                                Content="{Binding ResolveText}" 
+                                                Command="{Binding Commands.ResolveCommand}"
+                                                Visibility="{c:Binding '!Fulfilled'}"
+                                                IsEnabled="{Binding CanResolve}"
+                                                ToolTip="{Binding ErrorMessage}"/>
+                                        <Button Padding="5"
+                                                Content="{Binding ConfigureText}" 
+                                                Command="{Binding Commands.ConfigureCommand}"
+                                                Visibility="{c:Binding 'Fulfilled'}"
+                                                IsEnabled="{Binding CanConfigure}"
+                                                ToolTip="{Binding SuccessMessage}"/>
+                                    </Grid>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </xctk:SplitButton.DropDownContent>
+                </xctk:SplitButton>
+                <xctk:SplitButton Height="28" Padding="5" Margin="5" VerticalAlignment="Center"
+                    Content="{Binding ConfigureText}" 
+                    Command="{Binding Commands.ConfigureCommand}"
+                    Visibility="{c:Binding 'Fulfilled', FalseToVisibility=Collapsed}">
+                    <xctk:SplitButton.DropDownContent>
+                        <ItemsControl ItemsSource="{Binding SubCommands}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid>
+                                        <Button Padding="5"
+                                                Content="{Binding ResolveText}" 
+                                                Command="{Binding Commands.ResolveCommand}"
+                                                Visibility="{c:Binding '!Fulfilled'}"
+                                                IsEnabled="{Binding CanResolve}"
+                                                ToolTip="{Binding ErrorMessage}"/>
+                                        <Button Padding="5"
+                                                Content="{Binding ConfigureText}" 
+                                                Command="{Binding Commands.ConfigureCommand}"
+                                                Visibility="{c:Binding 'Fulfilled'}"
+                                                IsEnabled="{Binding CanConfigure}"
+                                                ToolTip="{Binding SuccessMessage}"/>
+                                    </Grid>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </xctk:SplitButton.DropDownContent>
+                </xctk:SplitButton>
+            </Grid>
         </Grid>
 
         <TabControl Visibility="{c:Binding HasChildren, FalseToVisibility=Collapsed}" ItemsSource="{Binding ChildrenByCategory}" SelectedIndex="{Binding SelectedChildIndex}" Margin="10,5,10,5">

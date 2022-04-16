@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Threading;
@@ -111,6 +112,7 @@ namespace WireGuardServerForWindows
 
         public static void SetNetIpAddress(SetNetIpAddressCommand o)
         {
+            Thread.Sleep(TimeSpan.FromSeconds(10));
             new NewNetNatPrerequisite().Resolve(o.ServerDataPath);
         }
 
