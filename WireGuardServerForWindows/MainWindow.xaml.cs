@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
@@ -16,14 +17,20 @@ namespace WireGuardServerForWindows
     {
         public MainWindow()
         {
+            AppSettings.Instance.Load();
+
             InitializeComponent();
 
             // Never put quotes around config file values
             Configuration.OutputRawStringValues = true;
 
             var wireGuardExePrerequisite = new WireGuardExePrerequisite();
-            var serverConfigurationPrerequisite = new ServerConfigurationPrerequisite();
-            var clientConfigurationsPrerequisite = new ClientConfigurationsPrerequisite();
+            var openServerConfigDirectorySubCommand = new OpenServerConfigDirectorySubCommand();
+            var changeServerConfigDirectorySubCommand = new ChangeServerConfigDirectorySubCommand();
+            var serverConfigurationPrerequisite = new ServerConfigurationPrerequisite(openServerConfigDirectorySubCommand, changeServerConfigDirectorySubCommand);
+            var openClientConfigDirectorySubCommand = new OpenClientConfigDirectorySubCommand();
+            var changeClientConfigDirectorySubCommand = new ChangeClientConfigDirectorySubCommand();
+            var clientConfigurationsPrerequisite = new ClientConfigurationsPrerequisite(openClientConfigDirectorySubCommand, changeClientConfigDirectorySubCommand);
             var tunnelServicePrerequisite = new TunnelServicePrerequisite();
             var privateNetworkPrerequisite = new PrivateNetworkPrerequisite();
             var netIpAddressTaskSubCommand = new NewNetIpAddressTaskSubCommand();
@@ -60,6 +67,10 @@ namespace WireGuardServerForWindows
 
             // Can't view server status unless tunnel is installed
             serverStatusPrerequisite.CanConfigureFunc = () => tunnelServicePrerequisite.Fulfilled;
+
+            // Can't open server or folders unless they exist
+            openServerConfigDirectorySubCommand.CanConfigureFunc = () => Directory.Exists(ServerConfigurationPrerequisite.ServerConfigDirectory);
+            openClientConfigDirectorySubCommand.CanConfigureFunc = () => Directory.Exists(ClientConfigurationsPrerequisite.ClientConfigDirectory);
 
             // Add the prereqs to the Model
             MainWindowModel mainWindowModel = new MainWindowModel();

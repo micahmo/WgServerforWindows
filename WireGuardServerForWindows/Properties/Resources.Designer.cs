@@ -115,6 +115,42 @@ namespace WireGuardServerForWindows.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Change client configuration directory.
+        /// </summary>
+        public static string ChangeClientConfigDirectoryConfigureText {
+            get {
+                return ResourceManager.GetString("ChangeClientConfigDirectoryConfigureText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Current directory is: {0}.
+        /// </summary>
+        public static string ChangeClientConfigDirectorySuccessMessage {
+            get {
+                return ResourceManager.GetString("ChangeClientConfigDirectorySuccessMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Change server configuration directory.
+        /// </summary>
+        public static string ChangeServerConfigDirectoryConfigureText {
+            get {
+                return ResourceManager.GetString("ChangeServerConfigDirectoryConfigureText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Current directory is: {0}.
+        /// </summary>
+        public static string ChangeServerConfigDirectorySuccessMessage {
+            get {
+                return ResourceManager.GetString("ChangeServerConfigDirectorySuccessMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Client address must be a single IP address, such as 10.232.0.2 or 10.232.0.2/32.
         /// </summary>
         public static string ClientAddressValidationError {
@@ -618,6 +654,42 @@ namespace WireGuardServerForWindows.Properties {
         public static string OK {
             get {
                 return ResourceManager.GetString("OK", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Open client configuration directory.
+        /// </summary>
+        public static string OpenClientConfigDirectoryConfigureText {
+            get {
+                return ResourceManager.GetString("OpenClientConfigDirectoryConfigureText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Open the following path in File Explorer: {0}.
+        /// </summary>
+        public static string OpenClientConfigDirectorySuccessMessage {
+            get {
+                return ResourceManager.GetString("OpenClientConfigDirectorySuccessMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Open server configuration directory.
+        /// </summary>
+        public static string OpenServerConfigDirectoryConfigureText {
+            get {
+                return ResourceManager.GetString("OpenServerConfigDirectoryConfigureText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Open the following path in File Explorer: {0}.
+        /// </summary>
+        public static string OpenServerConfigDirectorySuccessMessage {
+            get {
+                return ResourceManager.GetString("OpenServerConfigDirectorySuccessMessage", resourceCulture);
             }
         }
         

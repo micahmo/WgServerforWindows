@@ -78,13 +78,15 @@
                                     <Grid>
                                         <!-- Keep these buttons in sync with the dropdown buttons below. -->
                                         <Button Padding="5"
-                                                Content="{Binding ResolveText}" 
+                                                Content="{Binding ResolveText}"
+                                                HorizontalContentAlignment="Left"
                                                 Command="{Binding Commands.ResolveCommand}"
                                                 Visibility="{c:Binding '!Fulfilled'}"
                                                 IsEnabled="{Binding CanResolve}"
                                                 ToolTip="{Binding ErrorMessage}"/>
                                         <Button Padding="5"
                                                 Content="{Binding ConfigureText}" 
+                                                HorizontalContentAlignment="Left"
                                                 Command="{Binding Commands.ConfigureCommand}"
                                                 Visibility="{c:Binding 'Fulfilled'}"
                                                 IsEnabled="{Binding CanConfigure}"
@@ -105,13 +107,15 @@
                                 <DataTemplate>
                                     <Grid>
                                         <Button Padding="5"
-                                                Content="{Binding ResolveText}" 
+                                                Content="{Binding ResolveText}"
+                                                HorizontalContentAlignment="Left"
                                                 Command="{Binding Commands.ResolveCommand}"
                                                 Visibility="{c:Binding '!Fulfilled'}"
                                                 IsEnabled="{Binding CanResolve}"
                                                 ToolTip="{Binding ErrorMessage}"/>
                                         <Button Padding="5"
-                                                Content="{Binding ConfigureText}" 
+                                                Content="{Binding ConfigureText}"
+                                                HorizontalContentAlignment="Left"
                                                 Command="{Binding Commands.ConfigureCommand}"
                                                 Visibility="{c:Binding 'Fulfilled'}"
                                                 IsEnabled="{Binding CanConfigure}"
