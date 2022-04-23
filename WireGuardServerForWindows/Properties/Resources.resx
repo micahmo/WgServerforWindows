@@ -473,4 +473,28 @@ Note: It is preferable to use a domain name with DDNS to avoid dynamic WAN IPs.<
   <data name="NewNetIpAddressTaskSubCommandSuccessMessage" xml:space="preserve">
 	  <value>NAT Routing will be automatically configured on startup. Click to disable.</value>
   </data>
+  <data name="ChangeServerConfigDirectoryConfigureText" xml:space="preserve">
+	  <value>Change server configuration directory</value>
+  </data>
+  <data name="ChangeServerConfigDirectorySuccessMessage" xml:space="preserve">
+	  <value>Current directory is: {0}</value>
+  </data>
+  <data name="OpenClientConfigDirectoryConfigureText" xml:space="preserve">
+	  <value>Open client configuration directory</value>
+  </data>
+  <data name="OpenClientConfigDirectorySuccessMessage" xml:space="preserve">
+	  <value>Open the following path in File Explorer: {0}</value>
+  </data>
+  <data name="OpenServerConfigDirectoryConfigureText" xml:space="preserve">
+	  <value>Open server configuration directory</value>
+  </data>
+  <data name="OpenServerConfigDirectorySuccessMessage" xml:space="preserve">
+	  <value>Open the following path in File Explorer: {0}</value>
+  </data>
+  <data name="ChangeClientConfigDirectoryConfigureText" xml:space="preserve">
+	  <value>Change client configuration directory</value>
+  </data>
+  <data name="ChangeClientConfigDirectorySuccessMessage" xml:space="preserve">
+	  <value>Current directory is: {0}</value>
+  </data>
 </root>

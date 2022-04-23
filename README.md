@@ -20,7 +20,7 @@ Below are the tasks that can be performed automatically using this application.
 
 ## Before
 
-![BeforeScreenshot](https://user-images.githubusercontent.com/7417301/163678624-fb766a71-5f45-470d-b1bd-2bc6112ed3af.png)
+![BeforeScreenshot](https://user-images.githubusercontent.com/7417301/164948118-6353bec5-4693-41de-8209-f0d5230ae0c4.png)
 
 ### WireGuard.exe
 This step downloads and runs the latest version of WireGuard for Windows from https://download.wireguard.com/windows-client/wireguard-installer.exe. Once installed, it can be uninstalled directly from WS4W, too.
@@ -109,7 +109,8 @@ Even with these workarounds, Internet Sharing can become disabled after a reboot
 Once the tunnel is installed, the status of the WireGuard interface may be viewed. This is accomplished via the `wg show` command. It will be continually updated as long as `Update Live` is checked.
 
 ## After
-![AfterScreenshot](https://user-images.githubusercontent.com/7417301/163678848-0de1b82b-0616-4e91-bac7-5419d8f5ec9a.png)
+
+![AfterScreenshot](https://user-images.githubusercontent.com/7417301/164948126-f207ce7e-5365-47a5-90cd-cc541874ad65.png)
 
 ## CLI
 There is also a CLI bundled in the portable download called `ws4w.exe` which can be invoked from a terminal or called from a script. In addition to messages written to standard out, the CLI will also set the exit code based on the success of executing the given command. In PowerShell, for example, the exit code can be printed with `echo $lastexitcode`.

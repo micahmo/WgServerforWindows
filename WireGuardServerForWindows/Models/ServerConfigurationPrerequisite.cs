@@ -2,7 +2,6 @@
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Net;
 using System.Net.NetworkInformation;
 using System.Windows.Input;
 using Microsoft.Win32;
@@ -20,14 +19,24 @@ namespace WireGuardServerForWindows.Models
     {
         #region Constructor
 
-        public ServerConfigurationPrerequisite() : base
+        public ServerConfigurationPrerequisite() : this(new OpenServerConfigDirectorySubCommand(), new ChangeServerConfigDirectorySubCommand())
+        {
+        }
+
+        public ServerConfigurationPrerequisite(
+            OpenServerConfigDirectorySubCommand openServerConfigDirectorySubCommand, 
+            ChangeServerConfigDirectorySubCommand changeServerConfigDirectorySubCommand) : base
         (
             title: Resources.ServerConfiguration,
             successMessage: Resources.ServerConfigurationSuccessMessage,
             errorMessage: Resources.ServerConfigurationMissingErrorMessage,
             resolveText: Resources.ServerConfigurationConfigureText,
             configureText: Resources.ServerConfigurationConfigureText
-        ) { }
+        )
+        {
+            SubCommands.Add(openServerConfigDirectorySubCommand);
+            SubCommands.Add(changeServerConfigDirectorySubCommand);
+        }
 
         #endregion
 
@@ -192,9 +201,18 @@ namespace WireGuardServerForWindows.Models
 
         #region Public static properties
 
-        public static string ServerWGPath { get; } = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "WS4W", "server_wg", "wg_server.conf");
+        public static string ServerConfigDirectory =>
+            !string.IsNullOrWhiteSpace(AppSettings.Instance.CustomServerConfigDirectory) && Directory.Exists(AppSettings.Instance.CustomServerConfigDirectory)
+                ? AppSettings.Instance.CustomServerConfigDirectory
+                : Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "WS4W");
 
-        public static string ServerDataPath { get; } = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "WS4W", "server_data", "wg_server.conf");
+        public static string ServerWGDirectory => Path.Combine(ServerConfigDirectory, "server_wg");
+
+        public static string ServerWGPath => Path.Combine(ServerWGDirectory, "wg_server.conf");
+
+        public static string ServerDataDirectory => Path.Combine(ServerConfigDirectory, "server_data");
+
+        public static string ServerDataPath => Path.Combine(ServerDataDirectory, "wg_server.conf");
 
         public static string WireGuardServerInterfaceName => Path.GetFileNameWithoutExtension(ServerWGPath);
 

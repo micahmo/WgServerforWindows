@@ -16,14 +16,24 @@ namespace WireGuardServerForWindows.Models
     {
         #region Constructor
 
-        public ClientConfigurationsPrerequisite() : base
+        public ClientConfigurationsPrerequisite() : this(new OpenClientConfigDirectorySubCommand(), new ChangeClientConfigDirectorySubCommand())
+        {
+        }
+
+        public ClientConfigurationsPrerequisite(
+            OpenClientConfigDirectorySubCommand openClientConfigDirectorySubCommand,
+            ChangeClientConfigDirectorySubCommand changeClientConfigDirectorySubCommand) : base
         (
             title: Resources.ClientConfigurations,
             successMessage: Resources.ClientConfigurationsSuccessMessage,
             errorMessage: Resources.ClientConfigurationsMissingErrorMessage,
             resolveText: Resources.ClientConfigurationsResolveText,
             configureText: Resources.ClientConfigurationsResolveText
-        ) { }
+        )
+        {
+            SubCommands.Add(openClientConfigDirectorySubCommand);
+            SubCommands.Add(changeClientConfigDirectorySubCommand);
+        }
 
         #endregion
 
@@ -203,13 +213,14 @@ namespace WireGuardServerForWindows.Models
 
         #region Public static properties
 
-        public static string ClientDataDirectory { get; } = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "WS4W", "clients_data");
+        public static string ClientConfigDirectory =>
+            !string.IsNullOrWhiteSpace(AppSettings.Instance.CustomClientConfigDirectory) && Directory.Exists(AppSettings.Instance.CustomClientConfigDirectory)
+                ? AppSettings.Instance.CustomClientConfigDirectory
+                : Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "WS4W");
 
-        #endregion
+        public static string ClientDataDirectory => Path.Combine(ClientConfigDirectory, "clients_data");
 
-        #region Private static properties
-
-        private static string ClientWGDirectory { get; } = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "WS4W", "clients_wg");
+        public static string ClientWGDirectory => Path.Combine(ClientConfigDirectory, "clients_wg");
 
         #endregion
     }

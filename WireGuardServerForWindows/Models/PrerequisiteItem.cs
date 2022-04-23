@@ -72,7 +72,7 @@ namespace WireGuardServerForWindows.Models
 
         public virtual BooleanTimeCachedProperty Fulfilled { get; } = new BooleanTimeCachedProperty(TimeSpan.Zero, () => true);
 
-        public string SuccessMessage
+        public virtual string SuccessMessage
         {
             get => _successMessage;
             set => Set(nameof(SuccessMessage), ref _successMessage, value);
