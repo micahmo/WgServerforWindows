@@ -497,4 +497,10 @@ Note: It is preferable to use a domain name with DDNS to avoid dynamic WAN IPs.<
   <data name="ChangeClientConfigDirectorySuccessMessage" xml:space="preserve">
 	  <value>Current directory is: {0}</value>
   </data>
+  <data name="ServerStatusTitle" xml:space="preserve">
+	  <value>View Server Status</value>
+  </data>
+  <data name="ServerStatusConfigureText" xml:space="preserve">
+	  <value>View</value>
+  </data>
 </root>
