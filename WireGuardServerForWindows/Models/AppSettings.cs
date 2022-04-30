@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Windows;
 using GalaSoft.MvvmLight;
 using Jot;
 using Jot.Storage;
@@ -11,13 +12,38 @@ namespace WireGuardServerForWindows.Models
     /// </summary>
     internal class AppSettings : ObservableObject
     {
+        #region Singleton member
+
         /// <summary>
         /// Singleton instance
         /// </summary>
         public static AppSettings Instance { get; } = new AppSettings();
 
+        #endregion
+
+        #region Private constructor
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        private AppSettings()
+        {
+            // Set up Window tracking
+            Tracker.Configure<Window>()
+                .Id(w => w.Name, new Size(SystemParameters.VirtualScreenWidth, SystemParameters.VirtualScreenHeight))
+                .Properties(w => new { w.Top, w.Width, w.Height, w.Left, w.WindowState })
+                .PersistOn(nameof(Window.Closing))
+                .StopTrackingOn(nameof(Window.Closing))
+                .WhenPersistingProperty((w, p) => p.Cancel = p.Property == nameof(w.WindowState) && w.WindowState == WindowState.Minimized);
+        }
+
+        #endregion
+
+        #region Public methods
+
         public void Load()
         {
+            // Set up AppSettings tracking
             Tracker.Configure<AppSettings>()
                 .Property(a => a.CustomServerConfigDirectory)
                 .Property(a => a.CustomClientConfigDirectory)
@@ -28,6 +54,10 @@ namespace WireGuardServerForWindows.Models
         {
             Tracker.Persist(this);
         }
+
+        #endregion
+
+        #region Public properties
 
         /// <summary>
         /// The parent directory of the server configuration files
@@ -49,9 +79,10 @@ namespace WireGuardServerForWindows.Models
         }
         private string _customClientConfigDirectory;
 
-        #region Private fields
-
-        private static readonly Tracker Tracker = new Tracker(new JsonFileStore(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "WS4W")));
+        /// <summary>
+        /// The public tracker instance. Can be used to track things other than the <see cref="Instance"/>.
+        /// </summary>
+        public Tracker Tracker { get; } = new Tracker(new JsonFileStore(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "WS4W")));
 
         #endregion
     }

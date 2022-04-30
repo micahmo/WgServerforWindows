@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Windows;
@@ -175,6 +176,13 @@ namespace WireGuardServerForWindows
         #endregion
 
         #region Event handlers
+
+        protected override void OnSourceInitialized(EventArgs e)
+        {
+            base.OnSourceInitialized(e);
+
+            AppSettings.Instance.Tracker.Track(this);
+        }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
