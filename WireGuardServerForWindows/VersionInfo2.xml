@@ -2,12 +2,15 @@
 <!-- Things to update: Version, Date, Release Notes -->
 <AppUpdate xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/micahmo/WireGuardServerForWindows/master/WireGuardServerForWindows/AppUpdate.xsd">
-  <Version>1.7.4.0</Version>
-  <ReleaseDate>2022-04-23</ReleaseDate>
+  <Version>1.7.5.0</Version>
+  <ReleaseDate>2022-04-30</ReleaseDate>
   <!-- Default download -->
-  <DownloadLink>https://github.com/micahmo/WireGuardServerForWindows/releases/download/v1.7.4/WS4WSetup-1.7.4.exe</DownloadLink>
-  <DownloadFileName>WS4WSetup-1.7.4.exe</DownloadFileName>
+  <DownloadLink>https://github.com/micahmo/WireGuardServerForWindows/releases/download/v1.7.5/WS4WSetup-1.7.5.exe</DownloadLink>
+  <DownloadFileName>WS4WSetup-1.7.5.exe</DownloadFileName>
   <!-- Release notes -->
-  <VersionNotes> - Added the ability to open and/or change configuration directories (#29)</VersionNotes>
+  <VersionNotes> - Added the ability to minimize/close the main window when the Status window is open (#31)
+ - Minor UI fixes
+ - Added splash screen
+ - Remember window size and position</VersionNotes>
   <ReleaseNotes></ReleaseNotes>
 </AppUpdate>
