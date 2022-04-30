@@ -53,7 +53,7 @@ namespace WireGuardServerForWindows.Models
 
         public void Resolve(string networkToShare)
         {
-            Mouse.OverrideCursor = Cursors.Wait;
+            WaitCursor.SetOverrideCursor(Cursors.Wait);
 
             NetSharingManagerClass netSharingManager = new NetSharingManagerClass();
             
@@ -85,7 +85,7 @@ namespace WireGuardServerForWindows.Models
                 }
             }
 
-            Mouse.OverrideCursor = null;
+            WaitCursor.SetOverrideCursor(null);
 
             // Allow the user to pick the interface to share
             var selectionWindowModel = new SelectionWindowModel<INetConnection>
@@ -136,7 +136,7 @@ namespace WireGuardServerForWindows.Models
             
             if (internetConnection is { })
             {
-                Mouse.OverrideCursor = Cursors.Wait;
+                WaitCursor.SetOverrideCursor(Cursors.Wait);
 
                 var wg_server = netSharingManager.EnumEveryConnection.OfType<INetConnection>().FirstOrDefault(n => netSharingManager.NetConnectionProps[n].Name == ServerConfigurationPrerequisite.WireGuardServerInterfaceName);
 
@@ -148,7 +148,7 @@ namespace WireGuardServerForWindows.Models
 
                 Refresh();
 
-                Mouse.OverrideCursor = null;
+                WaitCursor.SetOverrideCursor(null);
             }
 
             Refresh();
@@ -156,7 +156,7 @@ namespace WireGuardServerForWindows.Models
 
         public override void Configure()
         {
-            Mouse.OverrideCursor = Cursors.Wait;
+            WaitCursor.SetOverrideCursor(Cursors.Wait);
 
             NetSharingManagerClass netSharingManager = new NetSharingManagerClass();
 
@@ -170,7 +170,7 @@ namespace WireGuardServerForWindows.Models
 
             Refresh();
 
-            Mouse.OverrideCursor = null;
+            WaitCursor.SetOverrideCursor(null);
         }
 
         /// <summary>

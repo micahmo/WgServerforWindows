@@ -3,7 +3,9 @@ using System.IO;
 using System.Windows.Threading;
 using WireGuardAPI;
 using WireGuardAPI.Commands;
+using WireGuardServerForWindows.Cli.Options;
 using WireGuardServerForWindows.Controls;
+using WireGuardServerForWindows.Properties;
 
 namespace WireGuardServerForWindows.Models
 {
@@ -13,11 +15,11 @@ namespace WireGuardServerForWindows.Models
 
         public ServerStatusPrerequisite() : base
         (
-            title: "View Server Status",
-            successMessage: string.Empty,
+            title: Resources.ServerStatusTitle,
+            successMessage: Resources.ServerStatusSuccessMessage,
             errorMessage: string.Empty,
             resolveText: string.Empty,
-            configureText: "View"
+            configureText: Resources.ServerStatusConfigureText
         )
         {
             _updateTimer = new DispatcherTimer {Interval = TimeSpan.FromSeconds(1)};
@@ -39,14 +41,27 @@ namespace WireGuardServerForWindows.Models
 
         public override void Configure()
         {
-            _updateTimer.IsEnabled = true;
-            new ServerStatusWindow { DataContext = this }.ShowDialog();
-            _updateTimer.IsEnabled = false;
+            CliWrap.Cli.Wrap(Path.Combine(AppContext.BaseDirectory, "WireGuardServerForWindows.exe"))
+                .WithArguments(typeof(StatusCommand).GetVerb())
+                .ExecuteAsync();
         }
 
         public override BooleanTimeCachedProperty IsInformational { get; } = new BooleanTimeCachedProperty(TimeSpan.Zero, () => true);
 
         #endregion
+
+        #region Public methods
+
+        public void Show()
+        {
+            _updateTimer.IsEnabled = true;
+            new ServerStatusWindow { DataContext = this }.ShowDialog();
+            _updateTimer.IsEnabled = false;
+        }
+
+        #endregion
+
+        #region Public properties
 
         public string ServerStatus => new WireGuardExe().ExecuteCommand(new ShowCommand(ServerConfigurationPrerequisite.WireGuardServerInterfaceName));
 
@@ -56,6 +71,8 @@ namespace WireGuardServerForWindows.Models
             set => Set(nameof(UpdateLive), ref _updateLive, value);
         }
         private bool _updateLive = true;
+
+        #endregion
 
         #region Private fields
 

@@ -37,7 +37,7 @@ namespace WireGuardServerForWindows.Models
         {
             if (CanConfigure)
             {
-                Mouse.OverrideCursor = Cursors.Wait;
+                WaitCursor.SetOverrideCursor(Cursors.Wait);
 
                 Process.Start(new ProcessStartInfo
                 {
@@ -45,7 +45,7 @@ namespace WireGuardServerForWindows.Models
                     UseShellExecute = true
                 });
 
-                Mouse.OverrideCursor = null;
+                WaitCursor.SetOverrideCursor(null);
             }
         }
 

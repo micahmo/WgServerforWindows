@@ -118,11 +118,11 @@ namespace WireGuardServerForWindows.Models
                 Name = $"{nameof(PrivateKeyProperty)}{nameof(ConfigurationProperty.Action)}",
                 Action = (conf, prop) =>
                 {
-                    Mouse.OverrideCursor = Cursors.Wait;
+                    WaitCursor.SetOverrideCursor(Cursors.Wait);
                     prop.Value = new WireGuardExe().ExecuteCommand(new GeneratePrivateKeyCommand());
                     // When the private key changes, the public key becomes invalid
                     conf.PublicKeyProperty.Value = null;
-                    Mouse.OverrideCursor = null;
+                    WaitCursor.SetOverrideCursor(null);
                 }
             }
         };
@@ -138,9 +138,9 @@ namespace WireGuardServerForWindows.Models
                 Name = $"{nameof(PublicKeyProperty)}{nameof(ConfigurationProperty.Action)}",
                 Action = (conf, prop) =>
                 {
-                    Mouse.OverrideCursor = Cursors.Wait;
+                    WaitCursor.SetOverrideCursor(Cursors.Wait);
                     prop.Value = new WireGuardExe().ExecuteCommand(new GeneratePublicKeyCommand(conf.PrivateKeyProperty.Value));
-                    Mouse.OverrideCursor = null;
+                    WaitCursor.SetOverrideCursor(null);
                 },
                 DependentProperty = PrivateKeyProperty,
                 DependencySatisfiedFunc = prop => string.IsNullOrEmpty(prop.Value) == false

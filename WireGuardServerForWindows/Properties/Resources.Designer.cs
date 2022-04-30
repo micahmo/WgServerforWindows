@@ -1020,6 +1020,42 @@ namespace WireGuardServerForWindows.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to View.
+        /// </summary>
+        public static string ServerStatusConfigureText {
+            get {
+                return ResourceManager.GetString("ServerStatusConfigureText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to View a live status of the server (interface) and any configured clients (peers)..
+        /// </summary>
+        public static string ServerStatusSuccessMessage {
+            get {
+                return ResourceManager.GetString("ServerStatusSuccessMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to View Server Status.
+        /// </summary>
+        public static string ServerStatusTitle {
+            get {
+                return ResourceManager.GetString("ServerStatusTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to WireGuard Server For Windows.
+        /// </summary>
+        public static string SplashScreenText {
+            get {
+                return ResourceManager.GetString("SplashScreenText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Tunnel Service.
         /// </summary>
         public static string TunnelService {

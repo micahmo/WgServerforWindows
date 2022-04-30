@@ -16,7 +16,7 @@ namespace WireGuardServerForWindows.Controls
 
         protected override void OnActivated(EventArgs e)
         {
-            Mouse.OverrideCursor = null;
+            WaitCursor.SetOverrideCursor(null);
         }
 
         #region Event handlers
