@@ -1029,6 +1029,15 @@ namespace WireGuardServerForWindows.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to View a live status of the server (interface) and any configured clients (peers)..
+        /// </summary>
+        public static string ServerStatusSuccessMessage {
+            get {
+                return ResourceManager.GetString("ServerStatusSuccessMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to View Server Status.
         /// </summary>
         public static string ServerStatusTitle {

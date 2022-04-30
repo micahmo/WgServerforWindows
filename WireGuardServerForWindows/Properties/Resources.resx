@@ -503,4 +503,7 @@ Note: It is preferable to use a domain name with DDNS to avoid dynamic WAN IPs.<
   <data name="ServerStatusConfigureText" xml:space="preserve">
 	  <value>View</value>
   </data>
+  <data name="ServerStatusSuccessMessage" xml:space="preserve">
+	  <value>View a live status of the server (interface) and any configured clients (peers).</value>
+  </data>
 </root>

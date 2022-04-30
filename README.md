@@ -20,7 +20,7 @@ Below are the tasks that can be performed automatically using this application.
 
 ## Before
 
-![BeforeScreenshot](https://user-images.githubusercontent.com/7417301/164948118-6353bec5-4693-41de-8209-f0d5230ae0c4.png)
+![BeforeScreenshot](https://user-images.githubusercontent.com/7417301/166121959-0c2d00d8-e03b-471f-b1da-8affb536f2d6.png)
 
 ### WireGuard.exe
 This step downloads and runs the latest version of WireGuard for Windows from https://download.wireguard.com/windows-client/wireguard-installer.exe. Once installed, it can be uninstalled directly from WS4W, too.
@@ -110,7 +110,7 @@ Once the tunnel is installed, the status of the WireGuard interface may be viewe
 
 ## After
 
-![AfterScreenshot](https://user-images.githubusercontent.com/7417301/164948126-f207ce7e-5365-47a5-90cd-cc541874ad65.png)
+![AfterScreenshot](https://user-images.githubusercontent.com/7417301/166122027-9061fc1a-dfed-4425-9b42-c99a64b0aee9.png)
 
 ## CLI
 There is also a CLI bundled in the portable download called `ws4w.exe` which can be invoked from a terminal or called from a script. In addition to messages written to standard out, the CLI will also set the exit code based on the success of executing the given command. In PowerShell, for example, the exit code can be printed with `echo $lastexitcode`.

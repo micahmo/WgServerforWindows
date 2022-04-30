@@ -16,7 +16,7 @@ namespace WireGuardServerForWindows.Models
         public ServerStatusPrerequisite() : base
         (
             title: Resources.ServerStatusTitle,
-            successMessage: string.Empty,
+            successMessage: Resources.ServerStatusSuccessMessage,
             errorMessage: string.Empty,
             resolveText: string.Empty,
             configureText: Resources.ServerStatusConfigureText
