@@ -64,9 +64,9 @@ namespace WireGuardServerForWindows.Models
                 Name = $"{nameof(PresharedKeyProperty)}{nameof(ConfigurationProperty.Action)}",
                 Action = (conf, prop) =>
                 {
-                    Mouse.OverrideCursor = Cursors.Wait;
+                    WaitCursor.SetOverrideCursor(Cursors.Wait);
                     prop.Value = new WireGuardExe().ExecuteCommand(new GeneratePresharedKeyCommand());
-                    Mouse.OverrideCursor = null;
+                    WaitCursor.SetOverrideCursor(null);
                 }
             };
 
@@ -81,7 +81,7 @@ namespace WireGuardServerForWindows.Models
 
                     string ip = null;
 
-                    Mouse.OverrideCursor = Cursors.Wait;
+                    WaitCursor.SetOverrideCursor(Cursors.Wait);
 
                     try
                     {
@@ -105,7 +105,7 @@ namespace WireGuardServerForWindows.Models
                         EndpointProperty.Action.Name = nameof(Resources.Updated);
                     }
 
-                    Mouse.OverrideCursor = null;
+                    WaitCursor.SetOverrideCursor(null);
 
                     // Wait a short time so the user can see the status message
                     await Task.Delay(TimeSpan.FromSeconds(5));

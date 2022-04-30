@@ -31,7 +31,7 @@ namespace WireGuardServerForWindows.Models
 
         public override void Resolve()
         {
-            Mouse.OverrideCursor = Cursors.Wait;
+            WaitCursor.SetOverrideCursor(Cursors.Wait);
             
             string downloadPath = Path.Combine(Path.GetTempPath(), "wireguard.exe");
             new WebClient().DownloadFile(wireGuardExeDownload, downloadPath);
@@ -44,17 +44,17 @@ namespace WireGuardServerForWindows.Models
 
             Task.Run(WaitForFulfilled);
 
-            Mouse.OverrideCursor = null;
+            WaitCursor.SetOverrideCursor(null);
         }
 
         public override void Configure()
         {
-            Mouse.OverrideCursor = Cursors.Wait;
+            WaitCursor.SetOverrideCursor(Cursors.Wait);
 
             _wireGuardExe.ExecuteCommand(new UninstallCommand());
             Refresh();
 
-            Mouse.OverrideCursor = null;
+            WaitCursor.SetOverrideCursor(null);
         }
 
         private readonly string wireGuardExeDownload = @"https://download.wireguard.com/windows-client/wireguard-installer.exe";

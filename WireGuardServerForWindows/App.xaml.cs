@@ -12,6 +12,7 @@ using CommandLine;
 using WireGuardServerForWindows.Cli.Options;
 using WireGuardServerForWindows.Controls;
 using WireGuardServerForWindows.Models;
+using SplashScreen = WireGuardServerForWindows.Controls.SplashScreen;
 
 namespace WireGuardServerForWindows
 {
@@ -75,7 +76,7 @@ namespace WireGuardServerForWindows
                 }
 
                 // Finally, do a normal startup.
-                new MainWindow().Show();
+                new SplashScreen().Show();
             }
         }
 
@@ -182,7 +183,7 @@ namespace WireGuardServerForWindows
         private void Application_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
         {
             // In case something was in progress when the error occurred
-            Mouse.OverrideCursor = null;
+            WaitCursor.SetOverrideCursor(null);
 
             Exception realException = e.Exception;
             while (realException.InnerException is { } innerException)

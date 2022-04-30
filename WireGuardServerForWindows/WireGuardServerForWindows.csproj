@@ -14,6 +14,7 @@
     <None Remove="Images\checked.png" />
     <None Remove="Images\info.png" />
     <None Remove="Images\logo.ico" />
+    <None Remove="Images\logo.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -56,6 +57,7 @@
     <Resource Include="Images\checked.png" />
     <Resource Include="Images\info.png" />
     <Resource Include="Images\logo.ico" />
+    <Resource Include="Images\logo.png" />
   </ItemGroup>
 
   <ItemGroup>

@@ -115,10 +115,10 @@ namespace WireGuardServerForWindows.Models
             
             ServerConfigurationEditorWindow serverConfigurationEditor = new ServerConfigurationEditorWindow {DataContext = serverConfiguration};
 
-            Mouse.OverrideCursor = Cursors.Wait;
+            WaitCursor.SetOverrideCursor(Cursors.Wait);
             if (serverConfigurationEditor.ShowDialog() == true)
             {
-                Mouse.OverrideCursor = Cursors.Wait;
+                WaitCursor.SetOverrideCursor(Cursors.Wait);
 
                 // Save to Data
                 SaveData(serverConfiguration);
@@ -154,7 +154,7 @@ namespace WireGuardServerForWindows.Models
                     new WireGuardExe().ExecuteCommand(new SyncConfigurationCommand(WireGuardServerInterfaceName, ServerWGPath));
                 }
 
-                Mouse.OverrideCursor = null;
+                WaitCursor.SetOverrideCursor(null);
             }
 
             Refresh();

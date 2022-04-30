@@ -46,7 +46,7 @@ namespace WireGuardServerForWindows.Models
                 && Directory.Exists(commonOpenFileDialog.FileName)
                 && !commonOpenFileDialog.FileName.Equals(ClientConfigurationsPrerequisite.ClientConfigDirectory, StringComparison.OrdinalIgnoreCase))
             {
-                Mouse.OverrideCursor = Cursors.Wait;
+                WaitCursor.SetOverrideCursor(Cursors.Wait);
 
                 if (Directory.Exists(ClientConfigurationsPrerequisite.ClientWGDirectory))
                 {
@@ -61,7 +61,7 @@ namespace WireGuardServerForWindows.Models
                 AppSettings.Instance.CustomClientConfigDirectory = commonOpenFileDialog.FileName;
                 AppSettings.Instance.Save();
 
-                Mouse.OverrideCursor = null;
+                WaitCursor.SetOverrideCursor(null);
             }
         }
 

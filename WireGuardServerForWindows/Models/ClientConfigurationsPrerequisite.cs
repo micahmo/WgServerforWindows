@@ -106,10 +106,10 @@ namespace WireGuardServerForWindows.Models
 
             ClientConfigurationEditorWindow clientConfigurationEditorWindow = new ClientConfigurationEditorWindow {DataContext = clientConfigurations};
 
-            Mouse.OverrideCursor = Cursors.Wait;
+            WaitCursor.SetOverrideCursor(Cursors.Wait);
             if (clientConfigurationEditorWindow.ShowDialog() == true)
             {
-                Mouse.OverrideCursor = Cursors.Wait;
+                WaitCursor.SetOverrideCursor(Cursors.Wait);
 
                 // Delete the existing files (can't rely on updating them since the name of the client may have changed)
                 foreach (string clientConfigurationFile in Directory.GetFiles(ClientDataDirectory, "*.conf"))
@@ -165,7 +165,7 @@ namespace WireGuardServerForWindows.Models
                     new WireGuardExe().ExecuteCommand(new SyncConfigurationCommand(ServerConfigurationPrerequisite.WireGuardServerInterfaceName, ServerConfigurationPrerequisite.ServerWGPath));
                 }
 
-                Mouse.OverrideCursor = null;
+                WaitCursor.SetOverrideCursor(null);
             }
 
             Refresh();

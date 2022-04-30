@@ -7,6 +7,7 @@ using Bluegrams.Application;
 using Bluegrams.Application.WPF;
 using SharpConfig;
 using WireGuardServerForWindows.Models;
+using SplashScreen = WireGuardServerForWindows.Controls.SplashScreen;
 
 namespace WireGuardServerForWindows
 {
@@ -132,7 +133,7 @@ namespace WireGuardServerForWindows
                     // Unsubscribe before invoking on everyone
                     mainWindowModel.PrerequisiteItems.ForEach(RemovePrerequisiteItemFulfilledChangedHandler);
 
-                    Mouse.OverrideCursor = Cursors.Wait;
+                    WaitCursor.SetOverrideCursor(Cursors.Wait);
 
                     if (sender is PrerequisiteItem senderItem && e.PropertyName == nameof(PrerequisiteItem.Fulfilled))
                     {
@@ -154,7 +155,7 @@ namespace WireGuardServerForWindows
                         });
                     }
 
-                    Mouse.OverrideCursor = null;
+                    WaitCursor.SetOverrideCursor(null);
 
                     // Now we can resubscribe to all
                     mainWindowModel.PrerequisiteItems.ForEach(AddPrerequisiteItemFulfilledChangedHandler);
@@ -177,6 +178,10 @@ namespace WireGuardServerForWindows
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
+            Application.Current.Windows.OfType<SplashScreen>().ToList().ForEach(w => w.Close());
+            WaitCursor.IgnoreOverrideCursor = false;
+            WaitCursor.SetOverrideCursor(null);
+
             // Auto allows the user to Skip (updates are still available via F1)
             _updateChecker.CheckForUpdates(UpdateNotifyMode.Auto);
         }

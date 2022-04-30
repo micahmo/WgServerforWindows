@@ -1047,6 +1047,15 @@ namespace WireGuardServerForWindows.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to WireGuard Server For Windows.
+        /// </summary>
+        public static string SplashScreenText {
+            get {
+                return ResourceManager.GetString("SplashScreenText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Tunnel Service.
         /// </summary>
         public static string TunnelService {

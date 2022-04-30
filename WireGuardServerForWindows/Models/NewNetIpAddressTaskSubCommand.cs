@@ -40,7 +40,7 @@ namespace WireGuardServerForWindows.Models
 
         public void Resolve(string serverDataPath)
         {
-            Mouse.OverrideCursor = Cursors.Wait;
+            WaitCursor.SetOverrideCursor(Cursors.Wait);
 
             // Create/update a Scheduled Task that sets the NetIPAddress on boot.
             TaskDefinition td = TaskService.Instance.NewTask();
@@ -50,12 +50,12 @@ namespace WireGuardServerForWindows.Models
 
             Refresh();
 
-            Mouse.OverrideCursor = null;
+            WaitCursor.SetOverrideCursor(null);
         }
 
         public override void Configure()
         {
-            Mouse.OverrideCursor = Cursors.Wait;
+            WaitCursor.SetOverrideCursor(Cursors.Wait);
 
             // Disable the task
             if (TaskService.Instance.FindTask(_netIpAddressTaskUniqueName) is { } task)
@@ -65,7 +65,7 @@ namespace WireGuardServerForWindows.Models
 
             Refresh();
 
-            Mouse.OverrideCursor = null;
+            WaitCursor.SetOverrideCursor(null);
         }
 
         #endregion

@@ -16,7 +16,7 @@ namespace WireGuardServerForWindows
             _previousCursor = restoreCursorToNull ? null : Mouse.OverrideCursor;
             _dispatcherPriority = dispatcherPriority;
 
-            Mouse.OverrideCursor = Cursors.Wait;
+            SetOverrideCursor(Cursors.Wait);
         }
 
         public WaitCursor(DispatcherPriority dispatcherPriority = DispatcherPriority.Normal, Cursor restoreCursor = null)
@@ -24,7 +24,7 @@ namespace WireGuardServerForWindows
             _previousCursor = restoreCursor ?? Mouse.OverrideCursor;
             _dispatcherPriority = dispatcherPriority;
 
-            Mouse.OverrideCursor = Cursors.Wait;
+            SetOverrideCursor(Cursors.Wait);
         }
 
         #region IDisposable Members
@@ -33,10 +33,27 @@ namespace WireGuardServerForWindows
         {
             Application.Current?.Dispatcher.Invoke(() =>
             {
-                Mouse.OverrideCursor = _previousCursor;
+                SetOverrideCursor(_previousCursor);
             }, _dispatcherPriority);
         }
 
         #endregion
+
+        /// <summary>
+        /// Globally set the <see cref="Mouse.OverrideCursor"/>.
+        /// </summary>
+        /// <param name="cursor"></param>
+        public static void SetOverrideCursor(Cursor cursor)
+        {
+            if (!IgnoreOverrideCursor)
+            {
+                Mouse.OverrideCursor = cursor;
+            }
+        }
+
+        /// <summary>
+        /// Whether or not to allow <see cref="SetOverrideCursor(Cursor)"/> to take effect.
+        /// </summary>
+        public static bool IgnoreOverrideCursor { get; set; }
     }
 }

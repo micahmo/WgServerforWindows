@@ -73,7 +73,7 @@ namespace WireGuardServerForWindows.Models
 
         public void Resolve(string serverDataPath)
         {
-            Mouse.OverrideCursor = Cursors.Wait;
+            WaitCursor.SetOverrideCursor(Cursors.Wait);
 
             // Get the network interface
             int? index = NetworkInterface.GetAllNetworkInterfaces().FirstOrDefault(i => i.Name == ServerConfigurationPrerequisite.WireGuardServerInterfaceName)?
@@ -130,7 +130,7 @@ namespace WireGuardServerForWindows.Models
                     }
                     else
                     {
-                        Mouse.OverrideCursor = null;
+                        WaitCursor.SetOverrideCursor(null);
 
                         // If we get here, the Hyper-V install failed for some reason (e.g., Windows Home). Recommend ICS.
                         new UnhandledErrorWindow
@@ -146,7 +146,7 @@ namespace WireGuardServerForWindows.Models
                 }
                 else
                 {
-                    Mouse.OverrideCursor = null;
+                    WaitCursor.SetOverrideCursor(null);
 
                     // If we get here, the user chose not to install Hyper-V. Recommend ICS.
                     new UnhandledErrorWindow
@@ -170,12 +170,12 @@ namespace WireGuardServerForWindows.Models
 
             Refresh();
 
-            Mouse.OverrideCursor = null;
+            WaitCursor.SetOverrideCursor(null);
         }
 
         public override void Configure()
         {
-            Mouse.OverrideCursor = Cursors.Wait;
+            WaitCursor.SetOverrideCursor(Cursors.Wait);
 
             // Delete the NAT rule
             new WireGuardExe().ExecuteCommand(new WireGuardCommand(string.Empty, WhichExe.Custom,
@@ -188,7 +188,7 @@ namespace WireGuardServerForWindows.Models
 
             Refresh();
 
-            Mouse.OverrideCursor = null;
+            WaitCursor.SetOverrideCursor(null);
         }
 
         public override string Category => Resources.NetworkAddressTranslation;

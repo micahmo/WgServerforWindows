@@ -55,14 +55,14 @@ namespace WireGuardServerForWindows.Models
                         return;
                     }
 
-                    Mouse.OverrideCursor = Cursors.Wait;
+                    WaitCursor.SetOverrideCursor(Cursors.Wait);
 
                     var existingAddresses = parentList.List.Select(c => c.AddressProperty.Value);
 
                     // Find the first address that isn't used by another client
                     prop.Value = possibleAddresses.FirstOrDefault(a => existingAddresses.Contains(a.ToString()) == false)?.ToString();
 
-                    Mouse.OverrideCursor = null;
+                    WaitCursor.SetOverrideCursor(null);
                 }
             };
 
@@ -108,9 +108,9 @@ namespace WireGuardServerForWindows.Models
                 Name = $"Client{nameof(PresharedKeyProperty)}{nameof(ConfigurationProperty.Action)}",
                 Action = (conf, prop) =>
                 {
-                    Mouse.OverrideCursor = Cursors.Wait;
+                    WaitCursor.SetOverrideCursor(Cursors.Wait);
                     prop.Value = serverConfiguration.PresharedKeyProperty.Value;
-                    Mouse.OverrideCursor = null;
+                    WaitCursor.SetOverrideCursor(null);
                 }
             };
 

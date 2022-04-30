@@ -55,7 +55,7 @@ namespace WireGuardServerForWindows.Models
 
         public override void Resolve()
         {
-            Mouse.OverrideCursor = Cursors.Wait;
+            WaitCursor.SetOverrideCursor(Cursors.Wait);
 
             if (ServerConfigurationPrerequisite.GetNetwork() is { } network)
             {
@@ -64,12 +64,12 @@ namespace WireGuardServerForWindows.Models
 
             Refresh();
 
-            Mouse.OverrideCursor = null;
+            WaitCursor.SetOverrideCursor(null);
         }
 
         public override void Configure()
         {
-            Mouse.OverrideCursor = Cursors.Wait;
+            WaitCursor.SetOverrideCursor(Cursors.Wait);
 
 
             if (ServerConfigurationPrerequisite.GetNetwork() is { } network)
@@ -94,7 +94,7 @@ namespace WireGuardServerForWindows.Models
 
             Refresh();
 
-            Mouse.OverrideCursor = null;
+            WaitCursor.SetOverrideCursor(null);
         }
 
         public override BooleanTimeCachedProperty IsInformational => _isInformationalProperty ??= new BooleanTimeCachedProperty(TimeSpan.Zero, () => _isInformational);

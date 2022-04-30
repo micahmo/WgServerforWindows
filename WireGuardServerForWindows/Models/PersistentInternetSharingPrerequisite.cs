@@ -57,7 +57,7 @@ namespace WireGuardServerForWindows.Models
 
         public override void Resolve()
         {
-            Mouse.OverrideCursor = Cursors.Wait;
+            WaitCursor.SetOverrideCursor(Cursors.Wait);
 
             if (GetICSService() is { } service)
             {
@@ -76,12 +76,12 @@ namespace WireGuardServerForWindows.Models
 
             Refresh();
 
-            Mouse.OverrideCursor = null;
+            WaitCursor.SetOverrideCursor(null);
         }
 
         public override void Configure()
         {
-            Mouse.OverrideCursor = Cursors.Wait;
+            WaitCursor.SetOverrideCursor(Cursors.Wait);
 
             if (GetICSService() is { } service)
             {
@@ -99,7 +99,7 @@ namespace WireGuardServerForWindows.Models
 
             Refresh();
 
-            Mouse.OverrideCursor = null;
+            WaitCursor.SetOverrideCursor(null);
         }
 
         public override string Category => Resources.InternetConnectionSharing;

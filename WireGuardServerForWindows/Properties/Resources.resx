@@ -506,4 +506,7 @@ Note: It is preferable to use a domain name with DDNS to avoid dynamic WAN IPs.<
   <data name="ServerStatusSuccessMessage" xml:space="preserve">
 	  <value>View a live status of the server (interface) and any configured clients (peers).</value>
   </data>
+  <data name="SplashScreenText" xml:space="preserve">
+	  <value>WireGuard Server For Windows</value>
+  </data>
 </root>

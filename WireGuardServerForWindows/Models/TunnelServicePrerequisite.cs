@@ -32,22 +32,22 @@ namespace WireGuardServerForWindows.Models
 
         public override async void Resolve()
         {
-            Mouse.OverrideCursor = Cursors.Wait;
+            WaitCursor.SetOverrideCursor(Cursors.Wait);
             
             new WireGuardExe().ExecuteCommand(new InstallTunnelServiceCommand(ServerConfigurationPrerequisite.ServerWGPath));
             await WaitForFulfilled();
             
-            Mouse.OverrideCursor = null;
+            WaitCursor.SetOverrideCursor(null);
         }
 
         public override async void Configure()
         {
-            Mouse.OverrideCursor = Cursors.Wait;
+            WaitCursor.SetOverrideCursor(Cursors.Wait);
             
             new WireGuardExe().ExecuteCommand(new UninstallTunnelServiceCommand(ServerConfigurationPrerequisite.WireGuardServerInterfaceName));
             await WaitForFulfilled(false);
             
-            Mouse.OverrideCursor = null;
+            WaitCursor.SetOverrideCursor(null);
         }
     }
 }
