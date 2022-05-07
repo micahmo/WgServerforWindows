@@ -1,9 +1,9 @@
 <Project>
     <PropertyGroup>
         <!-- Keep in sync with WS4WSetupScript.iss and VersionInfo.xml -->
-        <AssemblyVersion>1.7.5.0</AssemblyVersion>
-        <FileVersion>1.7.5.0</FileVersion>
-        <InformationalVersion>1.7.5.0</InformationalVersion>
+        <AssemblyVersion>1.7.6.0</AssemblyVersion>
+        <FileVersion>1.7.6.0</FileVersion>
+        <InformationalVersion>1.7.6.0</InformationalVersion>
         <Authors>Micah Morrison</Authors>
         <Product>WS4W</Product>
     </PropertyGroup>
