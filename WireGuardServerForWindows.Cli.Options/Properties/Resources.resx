@@ -104,7 +104,7 @@
   <data name="SetNetIpAddressHelpText" xml:space="preserve">
     <value>Attempts to call New-NetIPAddress on the WireGuard network interface.</value>
   </data>
-    <data name="SetPathHelpText" xml:space="preserve">
+  <data name="SetPathHelpText" xml:space="preserve">
     <value>Adds the directory containing the currently executing ws4w.exe to the system's PATH environment variable.</value>
   </data>
   <data name="RestartInternetSharingNetworkHelpText" xml:space="preserve">
@@ -113,19 +113,19 @@
   <data name="SetNetIpAddressCommandServerDataPathHelpText" xml:space="preserve">
     <value>The path to the WireGuard server configuration file.</value>
   </data>
-    <data name="CantLoadPath" xml:space="preserve">
-        <value>Unable to load the system's PATH environment variable.</value>
-    </data>
-    <data name="CantLoadPwd" xml:space="preserve">
-        <value>Unable to detect the current working directory.</value>
-    </data>
-    <data name="AddedPwdToPath" xml:space="preserve">
-        <value>Successfully added '{0}' to the PATH.</value>
-    </data>
-    <data name="FoundPwdInPath" xml:space="preserve">
-        <value>Found that '{0}' was already in the PATH.</value>
-    </data>
-	<data name="PrivateNetworkHelpText" xml:space="preserve">
-        <value>Sets the category of the WireGuard network interface to Private.</value>
-    </data>
+  <data name="CantLoadPath" xml:space="preserve">
+    <value>Unable to load the system's PATH environment variable.</value>
+  </data>
+  <data name="CantLoadPwd" xml:space="preserve">
+    <value>Unable to detect the current working directory.</value>
+  </data>
+  <data name="AddedPwdToPath" xml:space="preserve">
+    <value>Successfully added '{0}' to the PATH.</value>
+  </data>
+  <data name="FoundPwdInPath" xml:space="preserve">
+    <value>Found that '{0}' was already in the PATH.</value>
+  </data>
+  <data name="PrivateNetworkHelpText" xml:space="preserve">
+    <value>Sets the category of the WireGuard network interface to Private.</value>
+  </data>
 </root>
