@@ -43,10 +43,11 @@ namespace WireGuardServerForWindows
                     // We don't want to handle Dispatcher exceptions in this scenario, since we are UI-less
                     DispatcherUnhandledException -= Application_DispatcherUnhandledException;
 
-                    Parser.Default.ParseArguments<RestartInternetSharingCommand, SetPathCommand, SetNetIpAddressCommand>(e.Args)
+                    Parser.Default.ParseArguments<RestartInternetSharingCommand, SetPathCommand, SetNetIpAddressCommand, PrivateNetworkCommand>(e.Args)
                         .WithParsed<RestartInternetSharingCommand>(RestartInternetSharing)
                         .WithParsed<SetPathCommand>(SetPath)
-                        .WithParsed<SetNetIpAddressCommand>(SetNetIpAddress);
+                        .WithParsed<SetNetIpAddressCommand>(SetNetIpAddress)
+                        .WithParsed<PrivateNetworkCommand>(PrivateNetwork);
 
                     // Don't proceed to GUI if started with command-line args
                     Environment.Exit(0);
@@ -153,6 +154,12 @@ namespace WireGuardServerForWindows
         {
             Thread.Sleep(TimeSpan.FromSeconds(10));
             new NewNetNatPrerequisite().Resolve(o.ServerDataPath);
+        }
+
+        public static void PrivateNetwork(PrivateNetworkCommand o)
+        {
+            Thread.Sleep(TimeSpan.FromSeconds(10));
+            new PrivateNetworkPrerequisite().Resolve();
         }
 
         public static void Status(StatusCommand o)

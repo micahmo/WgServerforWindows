@@ -847,6 +847,42 @@ namespace WireGuardServerForWindows.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Disable Automatic Private Network.
+        /// </summary>
+        public static string PrivateNetworkTaskSubCommandConfigureText {
+            get {
+                return ResourceManager.GetString("PrivateNetworkTaskSubCommandConfigureText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The WireGuard interface will not automatically be set to Private on startup. Click to enable..
+        /// </summary>
+        public static string PrivateNetworkTaskSubCommandErrorMessage {
+            get {
+                return ResourceManager.GetString("PrivateNetworkTaskSubCommandErrorMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enable Automatic Private Network.
+        /// </summary>
+        public static string PrivateNetworkTaskSubCommandResolveText {
+            get {
+                return ResourceManager.GetString("PrivateNetworkTaskSubCommandResolveText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The WireGuard interface will automatically be set to Private on startup. Click to disable..
+        /// </summary>
+        public static string PrivateNetworkTaskSubCommandSuccessMessage {
+            get {
+                return ResourceManager.GetString("PrivateNetworkTaskSubCommandSuccessMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Private Network.
         /// </summary>
         public static string PrivateNetworkTitle {

@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.Reflection;
+using System.Windows;
 using System.Windows.Threading;
 
 namespace WireGuardServerForWindows.Controls
@@ -24,5 +25,7 @@ namespace WireGuardServerForWindows.Controls
                 new MainWindow().Show();
             });
         }
+
+        public string Version => Assembly.GetEntryAssembly().GetName().Version.ToString();
     }
 }

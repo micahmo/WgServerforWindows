@@ -9,7 +9,9 @@ namespace WireGuardServerForWindows.Models
     {
         #region PrerequisiteItem members
 
-        public PrivateNetworkPrerequisite() : base
+        public PrivateNetworkPrerequisite() : this(new PrivateNetworkTaskSubCommand()) { }
+        
+        public PrivateNetworkPrerequisite(PrivateNetworkTaskSubCommand privateNetworkTaskSubCommand) : base
         (
             title: Resources.PrivateNetworkTitle,
             successMessage: Resources.PrivateNetworkSuccess,
@@ -18,6 +20,8 @@ namespace WireGuardServerForWindows.Models
             configureText: Resources.PrivateNetworkConfigure
         )
         {
+            _privateNetworkTaskSubCommand = privateNetworkTaskSubCommand;
+            SubCommands.Add(_privateNetworkTaskSubCommand);
         }
 
         public override BooleanTimeCachedProperty Fulfilled => _fulfilled ??= new BooleanTimeCachedProperty(TimeSpan.FromSeconds(1), () =>
@@ -62,6 +66,8 @@ namespace WireGuardServerForWindows.Models
                 network.Category = NetworkCategory.Private;
             }
 
+            _privateNetworkTaskSubCommand.Resolve();
+
             Refresh();
 
             WaitCursor.SetOverrideCursor(null);
@@ -92,6 +98,8 @@ namespace WireGuardServerForWindows.Models
                 }
             }
 
+            _privateNetworkTaskSubCommand.Configure();
+
             Refresh();
 
             WaitCursor.SetOverrideCursor(null);
@@ -100,6 +108,12 @@ namespace WireGuardServerForWindows.Models
         public override BooleanTimeCachedProperty IsInformational => _isInformationalProperty ??= new BooleanTimeCachedProperty(TimeSpan.Zero, () => _isInformational);
         private BooleanTimeCachedProperty _isInformationalProperty;
         private bool _isInformational;
+
+        #endregion
+
+        #region Private fields
+
+        private readonly PrivateNetworkTaskSubCommand _privateNetworkTaskSubCommand;
 
         #endregion
     }

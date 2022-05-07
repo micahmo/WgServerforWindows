@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         Title="SplashScreen" Height="200" Width="400"
         WindowStartupLocation="CenterScreen" WindowStyle="None" Background="#323232" ResizeMode="NoResize"
-        Loaded="Window_Loaded">
+        Loaded="Window_Loaded" Name="This">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width=".05*"/>
@@ -23,7 +23,11 @@
         </Grid.RowDefinitions>
 
         <Image Grid.Column="1" Grid.Row="1" Source="/Images/logo.png" RenderOptions.BitmapScalingMode="Fant"/>
-        <TextBlock Grid.Column="3" Grid.Row="1" Foreground="White" FontSize="16" FontWeight="Bold" Text="{x:Static properties:Resources.SplashScreenText}"
+        <StackPanel Grid.Column="3" Grid.Row="1" VerticalAlignment="Center">
+            <TextBlock Foreground="White" FontSize="16" FontWeight="Bold" Text="{x:Static properties:Resources.SplashScreenText}"
                    VerticalAlignment="Center" TextWrapping="Wrap"/>
+            <TextBlock Foreground="White" FontSize="14" FontWeight="Medium" Text="{Binding Version, ElementName=This}"
+                   VerticalAlignment="Center" TextWrapping="Wrap"/>
+        </StackPanel>
     </Grid>
 </Window>

@@ -20,7 +20,7 @@ Below are the tasks that can be performed automatically using this application.
 
 ## Before
 
-![BeforeScreenshot](https://user-images.githubusercontent.com/7417301/166121959-0c2d00d8-e03b-471f-b1da-8affb536f2d6.png)
+![BeforeScreenshot](https://user-images.githubusercontent.com/7417301/167274102-2bcd7bd5-2c34-4079-8c35-0553a7b5314a.png)
 
 ### WireGuard.exe
 This step downloads and runs the latest version of WireGuard for Windows from https://download.wireguard.com/windows-client/wireguard-installer.exe. Once installed, it can be uninstalled directly from WS4W, too.
@@ -62,6 +62,8 @@ After completing this step, WireGuard clients should be able to get as far as pe
 
 ### Private Network
 Even after the tunnel service is installed, some protocols may be blocked. It is recommended to change the network profile to `Private`, which eases Windows restrictions on the network.
+
+This step also creates a Windows Task to make the network Private automatically on boot. You may disable the Task via the dropdown. 
 
 > **Note**: On a system where the shared internet connection originates from a domain network, this step is not necessary, as the WireGuard interfaces picks up the profile of the shared domain network.
 
@@ -110,7 +112,7 @@ Once the tunnel is installed, the status of the WireGuard interface may be viewe
 
 ## After
 
-![AfterScreenshot](https://user-images.githubusercontent.com/7417301/166122027-9061fc1a-dfed-4425-9b42-c99a64b0aee9.png)
+![AfterScreenshot](https://user-images.githubusercontent.com/7417301/167274118-23e84437-fbae-4971-8216-409a308bb0f5.png)
 
 ## CLI
 There is also a CLI bundled in the portable download called `ws4w.exe` which can be invoked from a terminal or called from a script. In addition to messages written to standard out, the CLI will also set the exit code based on the success of executing the given command. In PowerShell, for example, the exit code can be printed with `echo $lastexitcode`.
@@ -136,6 +138,10 @@ The CLI uses verbs, or top-level commands, each of which has its own set of opti
 * ```ws4w.exe setnetipaddress --serverdatapath <PATH_TO_SERVER_CONFIG>```
     * This will tell WS4W to call `Set-NetIPAddress` on the WireGuard interface, using the network Address as defined in the given WireGuard server configuration file.
       > This command is used by the Scheduled Task that is created when NAT Routing is enabled.
+* ```ws4w.exe privatenetwork```
+    * This will set the category of the WireGuard network interface to Private.
+    * This verb has no options.
+      > This command is used by the Windows Task that is created when Private Network is enabled.
 
 # Known Issues
 
