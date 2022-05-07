@@ -509,4 +509,16 @@ Note: It is preferable to use a domain name with DDNS to avoid dynamic WAN IPs.<
   <data name="SplashScreenText" xml:space="preserve">
 	  <value>WireGuard Server For Windows</value>
   </data>
+  <data name="PrivateNetworkTaskSubCommandSuccessMessage" xml:space="preserve">
+	  <value>The WireGuard interface will automatically be set to Private on startup. Click to disable.</value>
+  </data>
+  <data name="PrivateNetworkTaskSubCommandErrorMessage" xml:space="preserve">
+	  <value>The WireGuard interface will not automatically be set to Private on startup. Click to enable.</value>
+  </data>
+  <data name="PrivateNetworkTaskSubCommandResolveText" xml:space="preserve">
+	  <value>Enable Automatic Private Network</value>
+  </data>
+  <data name="PrivateNetworkTaskSubCommandConfigureText" xml:space="preserve">
+	  <value>Disable Automatic Private Network</value>
+  </data>
 </root>

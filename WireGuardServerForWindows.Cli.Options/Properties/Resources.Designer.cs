@@ -97,6 +97,15 @@ namespace WireGuardServerForWindows.Cli.Options.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Sets the category of the WireGuard network interface to Private..
+        /// </summary>
+        public static string PrivateNetworkHelpText {
+            get {
+                return ResourceManager.GetString("PrivateNetworkHelpText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Attempts to Disable Internet Sharing and then Enable Internet Sharing..
         /// </summary>
         public static string RestartInternetSharingHelpText {

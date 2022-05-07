@@ -34,7 +34,8 @@ namespace WireGuardServerForWindows
             var changeClientConfigDirectorySubCommand = new ChangeClientConfigDirectorySubCommand();
             var clientConfigurationsPrerequisite = new ClientConfigurationsPrerequisite(openClientConfigDirectorySubCommand, changeClientConfigDirectorySubCommand);
             var tunnelServicePrerequisite = new TunnelServicePrerequisite();
-            var privateNetworkPrerequisite = new PrivateNetworkPrerequisite();
+            var privateNetworkTaskSubCommand = new PrivateNetworkTaskSubCommand();
+            var privateNetworkPrerequisite = new PrivateNetworkPrerequisite(privateNetworkTaskSubCommand);
             var netIpAddressTaskSubCommand = new NewNetIpAddressTaskSubCommand();
             var newNetNatPrerequisite = new NewNetNatPrerequisite(netIpAddressTaskSubCommand);
             var internetSharingPrerequisite = new InternetSharingPrerequisite();
@@ -63,6 +64,9 @@ namespace WireGuardServerForWindows
 
             // Can't configure private network if it's only information (e.g., on a domain)
             privateNetworkPrerequisite.CanConfigureFunc = () => privateNetworkPrerequisite.IsInformational == false;
+
+            // Can't enable/disable automatic private network if it's not already enabled.
+            privateNetworkTaskSubCommand.CanResolveFunc = privateNetworkTaskSubCommand.CanConfigureFunc = () => privateNetworkPrerequisite.Fulfilled;
 
             // Can't enable internet sharing unless tunnel is installed
             internetSharingPrerequisite.CanResolveFunc = () => tunnelServicePrerequisite.Fulfilled;

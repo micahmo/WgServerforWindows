@@ -125,4 +125,7 @@
     <data name="FoundPwdInPath" xml:space="preserve">
         <value>Found that '{0}' was already in the PATH.</value>
     </data>
+	<data name="PrivateNetworkHelpText" xml:space="preserve">
+        <value>Sets the category of the WireGuard network interface to Private.</value>
+    </data>
 </root>
