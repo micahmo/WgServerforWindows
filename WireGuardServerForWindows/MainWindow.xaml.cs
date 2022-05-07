@@ -204,5 +204,11 @@ namespace WireGuardServerForWindows
                 UpdateChecker = _updateChecker,
             }.ShowDialog();
         }
+
+        private void RefreshCommand_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            // Raise Fulfilled PropertyChanged on any prerequisite item. This will trigger the rest to update as well.
+            (DataContext as MainWindowModel)?.PrerequisiteItems.FirstOrDefault()?.RaisePropertyChanged(nameof(PrerequisiteItem.Fulfilled));
+        }
     }
 }

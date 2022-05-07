@@ -14,6 +14,7 @@
 
     <Window.CommandBindings>
         <CommandBinding Command="{x:Static local:ShortcutCommands.AboutBoxCommand}" Executed="AboutBoxCommand_Executed"/>
+        <CommandBinding Command="{x:Static local:ShortcutCommands.RefreshCommand}" Executed="RefreshCommand_Executed"/>
     </Window.CommandBindings>
 
     <Grid>
