@@ -15,10 +15,11 @@ namespace WireGuardServerForWindows.Models
         #region Public properties
 
         /// <summary>
-        /// Allows ordering Properties. Default value is <see cref="int.MaxValue"/>,
-        /// so any other value will order the property before properties with no index.
+        /// Allows ordering Properties. Default value is: <code>int.MaxValue / 2</code>
+        /// Any value less than that will order properties before those with no custom value.
+        /// Any value higher than that will order properties after those with no custom value.
         /// </summary>
-        public int Index { get; set; } = int.MaxValue;
+        public int Index { get; set; } = int.MaxValue / 2;
 
         public string Name { get; set; }
 
@@ -55,6 +56,14 @@ namespace WireGuardServerForWindows.Models
         public bool IsReadOnly { get; set; }
 
         public bool IsHidden { get; set; }
+
+        /// <summary>
+        /// Specifies whether the property's value is calculated on the fly based on in-memory data.
+        /// </summary>
+        /// <remarks>
+        /// Properties for whom <see cref="IsCalculated"/> is true will NOT be read from or persisted to data confs (but may be persisted to wg confs).
+        /// </remarks>
+        public bool IsCalculated { get; set; } = false;
 
         public ConfigurationPropertyAction Action { get; set; }
 

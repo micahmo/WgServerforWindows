@@ -4,8 +4,6 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using WireGuardAPI;
-using WireGuardAPI.Commands;
 using WireGuardServerForWindows.Properties;
 
 namespace WireGuardServerForWindows.Models
@@ -22,7 +20,7 @@ namespace WireGuardServerForWindows.Models
             ListenPortProperty.TargetTypes.Add(GetType());
 
             // Client properties
-            PresharedKeyProperty.TargetTypes.Add(typeof(ClientConfiguration));
+            ClientPresharedKeyProperty.TargetTypes.Add(typeof(ClientConfiguration));
             PublicKeyProperty.TargetTypes.Add(typeof(ClientConfiguration));
             AllowedIpsProperty.TargetTypes.Add(typeof(ClientConfiguration));
             EndpointProperty.TargetTypes.Add(typeof(ClientConfiguration));
@@ -55,18 +53,6 @@ namespace WireGuardServerForWindows.Models
                     }
 
                     return result;
-                }
-            };
-
-            // The Server actually generates the pre-shared key
-            PresharedKeyProperty.Action = new ConfigurationPropertyAction(this)
-            {
-                Name = $"{nameof(PresharedKeyProperty)}{nameof(ConfigurationProperty.Action)}",
-                Action = (conf, prop) =>
-                {
-                    WaitCursor.SetOverrideCursor(Cursors.Wait);
-                    prop.Value = new WireGuardExe().ExecuteCommand(new GeneratePresharedKeyCommand());
-                    WaitCursor.SetOverrideCursor(null);
                 }
             };
 
@@ -254,6 +240,18 @@ namespace WireGuardServerForWindows.Models
         };
         private ConfigurationProperty _persistentKeepaliveProperty;
 
+        // Note: This is really a client property, but it goes in the peer (server) section of the client's config.
+        // So we'll trick the config generator by putting it in the server, targeting it to the client, and returning the client's value.
+        // This property needs a Client Context to evaluate.
+        public ConfigurationProperty ClientPresharedKeyProperty => _clientPresharedKeyProperty ??= new ConfigurationProperty(this)
+        {
+            PersistentPropertyName = "PresharedKey",
+            IsHidden = true,
+            IsCalculated = true,
+            GetValueFunc = () => _clientContext?.PresharedKeyProperty.Value
+        };
+        private ConfigurationProperty _clientPresharedKeyProperty;
+
         /// <summary>
         /// This is a calculated field that generates a Server IP address based on the current <see cref="ServerConfiguration.AddressProperty"/> property.
         /// Returns an empty string if the IP address cannot be generated for any reason.
@@ -303,6 +301,29 @@ namespace WireGuardServerForWindows.Models
                 return result;
             }
         }
+
+        #endregion
+
+        #region Public methods
+
+        public ServerConfiguration WithClientContext(ClientConfiguration clientConfiguration)
+        {
+            _clientContext = clientConfiguration;
+            return this;
+        }
+
+        #endregion
+
+        #region Private fields
+
+        /// <summary>
+        /// This field should be set during a <see cref="ConfigurationBase.ToConfiguration"/> call
+        /// when certain properties (e.g., <see cref="ClientPresharedKeyProperty"/>) need client info in order to evaluate.
+        /// </summary>
+        /// <remarks>
+        /// Should be set fluently via <see cref="WithClientContext(ClientConfiguration)"/>.
+        /// </remarks>
+        private ClientConfiguration _clientContext;
 
         #endregion
     }

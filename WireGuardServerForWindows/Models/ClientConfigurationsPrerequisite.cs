@@ -203,6 +203,7 @@ namespace WireGuardServerForWindows.Models
             {
                 serverConfiguration = new ServerConfiguration()
                     .Load<ServerConfiguration>(Configuration.LoadFromFile(ServerConfigurationPrerequisite.ServerDataPath))
+                    .WithClientContext(clientConfiguration)
                     .ToConfiguration<ClientConfiguration>();
             }
 
