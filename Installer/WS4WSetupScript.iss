@@ -4,7 +4,8 @@
 #define MyAppURL "https://github.com/micahmo/WireGuardServerForWindows"
 #define MyAppExeName "WireGuardServerForWindows.exe"
 #define CliName "ws4w.exe"
-#define NetCoreRuntimeVersion "3.1.21"
+#define NetCoreRuntimeMinorVersion "21"
+#define NetCoreRuntimeVersion "3.1." + NetCoreRuntimeMinorVersion
 #define NetCoreRuntime "windowsdesktop-runtime-" + NetCoreRuntimeVersion + "-win-x64.exe"
 #define UniversalCrtKb "KB3118401"
 #define BuildConfig "Release"
@@ -45,8 +46,41 @@ UCrtError={#MyAppName} requires the Universal C Runtime. Please perform all outs
 
 [Code]
 function NetCoreRuntimeNotInstalled: Boolean;
+var
+  InstalledRuntimes: TArrayOfString;
+  I: Integer;
+  MinorVersion: String;
+  MinorVersionInt: Longint;
 begin
-  Result := not RegValueExists(HKEY_LOCAL_MACHINE, 'SOFTWARE\WOW6432Node\dotnet\Setup\InstalledVersions\x64\sharedfx\Microsoft.NETCore.App', '{#NetCoreRuntimeVersion}');
+  Result := True;
+  
+  // Check if ANY .NET Desktop Runtime exists
+  if RegKeyExists(HKEY_LOCAL_MACHINE, 'SOFTWARE\WOW6432Node\dotnet\Setup\InstalledVersions\x64\sharedfx\Microsoft.NETCore.App') then
+  begin
+    // Get all of the installed runtimes
+    if RegGetValueNames(HKEY_LOCAL_MACHINE, 'SOFTWARE\WOW6432Node\dotnet\Setup\InstalledVersions\x64\sharedfx\Microsoft.NETCore.App', InstalledRuntimes) then
+    begin
+      for I := 0 to GetArrayLength(InstalledRuntimes)-1 do
+      begin 
+        // See if the runtime starts with 3.1.
+        if WildcardMatch(InstalledRuntimes[I], '3.1.*') then
+        begin
+          // Get just the minor version and convert it to an int
+          MinorVersion := InstalledRuntimes[I];
+          Delete(MinorVersion, 1, 4);
+          MinorVersionInt := StrToIntDef(MinorVersion, 0);
+          
+          // Check if it's at least the version we want
+          if MinorVersionInt >= {#NetCoreRuntimeMinorVersion} then
+          begin
+            // Finally, this system has a new enough version installed
+            Result := False;
+            Break;
+          end
+        end
+      end
+    end
+  end
 end;
 
 // More info: https://docs.microsoft.com/en-us/cpp/windows/universal-crt-deployment?view=msvc-170
