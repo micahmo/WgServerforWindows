@@ -148,7 +148,7 @@ namespace WireGuardServerForWindows.Models
                 }
 
                 // Update the tunnel service, if everyone is happy
-                if (Fulfilled && clientConfigurationsPrerequisite.Fulfilled && new TunnelServicePrerequisite().Fulfilled)
+                if (Fulfilled && (clientConfigurationsPrerequisite.Fulfilled || !ClientConfigurationsPrerequisite.AnyClients) && new TunnelServicePrerequisite().Fulfilled)
                 {
                     // Sync conf to tunnel
                     new WireGuardExe().ExecuteCommand(new SyncConfigurationCommand(WireGuardServerInterfaceName, ServerWGPath));

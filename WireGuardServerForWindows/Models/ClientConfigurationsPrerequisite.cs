@@ -160,7 +160,7 @@ namespace WireGuardServerForWindows.Models
                 serverConfigurationPrerequisite.Update();
 
                 // Update the tunnel service, if everyone is happy
-                if (Fulfilled && serverConfigurationPrerequisite.Fulfilled && new TunnelServicePrerequisite().Fulfilled)
+                if ((Fulfilled || !AnyClients) && serverConfigurationPrerequisite.Fulfilled && new TunnelServicePrerequisite().Fulfilled)
                 {
                     new WireGuardExe().ExecuteCommand(new SyncConfigurationCommand(ServerConfigurationPrerequisite.WireGuardServerInterfaceName, ServerConfigurationPrerequisite.ServerWGPath));
                 }
@@ -222,6 +222,16 @@ namespace WireGuardServerForWindows.Models
         public static string ClientDataDirectory => Path.Combine(ClientConfigDirectory, "clients_data");
 
         public static string ClientWGDirectory => Path.Combine(ClientConfigDirectory, "clients_wg");
+
+        /// <summary>
+        /// The number of clients that are currently configured.
+        /// </summary>
+        public static int ClientCount => Directory.Exists(ClientWGDirectory) ? Directory.GetFiles(ClientWGDirectory).Length : 0;
+
+        /// <summary>
+        /// Whether or not there are any clients configured.
+        /// </summary>
+        public static bool AnyClients => ClientCount > 0;
 
         #endregion
     }
