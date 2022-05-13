@@ -1083,6 +1083,15 @@ namespace WireGuardServerForWindows.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to There was an error syncing the server configuration..
+        /// </summary>
+        public static string ServerSyncError {
+            get {
+                return ResourceManager.GetString("ServerSyncError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to WireGuard Server For Windows.
         /// </summary>
         public static string SplashScreenText {

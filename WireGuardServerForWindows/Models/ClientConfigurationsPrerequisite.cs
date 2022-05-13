@@ -162,7 +162,23 @@ namespace WireGuardServerForWindows.Models
                 // Update the tunnel service, if everyone is happy
                 if ((Fulfilled || !AnyClients) && serverConfigurationPrerequisite.Fulfilled && new TunnelServicePrerequisite().Fulfilled)
                 {
-                    new WireGuardExe().ExecuteCommand(new SyncConfigurationCommand(ServerConfigurationPrerequisite.WireGuardServerInterfaceName, ServerConfigurationPrerequisite.ServerWGPath));
+                    string output = new WireGuardExe().ExecuteCommand(new SyncConfigurationCommand(ServerConfigurationPrerequisite.WireGuardServerInterfaceName, ServerConfigurationPrerequisite.ServerWGPath), out int exitCode);
+
+                    if (exitCode != 0)
+                    {
+                        // Notify the user that there was an error syncing the server conf.
+                        WaitCursor.SetOverrideCursor(null);
+
+                        new UnhandledErrorWindow
+                        {
+                            DataContext = new UnhandledErrorWindowModel
+                            {
+                                Title = Resources.Error,
+                                Text = $"{Resources.ServerSyncError}{Environment.NewLine}{Environment.NewLine}{output}",
+                                Exception = new Exception(output)
+                            }
+                        }.ShowDialog();
+                    }
                 }
 
                 WaitCursor.SetOverrideCursor(null);
