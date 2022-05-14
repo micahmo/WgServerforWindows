@@ -84,6 +84,11 @@ namespace WireGuardAPI
                     result = bufferedResult.StandardOutput.Trim();
                     exitCode = bufferedResult.ExitCode;
 
+                    if (exitCode != 0)
+                    {
+                        result += bufferedResult.StandardError.Trim();
+                    }
+
                     break;
                 case WhichExe.Custom:
                     Process process = Process.Start(new ProcessStartInfo

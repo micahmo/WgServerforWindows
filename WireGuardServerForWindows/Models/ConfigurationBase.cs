@@ -43,7 +43,7 @@ namespace WireGuardServerForWindows.Models
             {
                 foreach (Setting setting in section)
                 {
-                    if (Properties.FirstOrDefault(p => p.PersistentPropertyName == setting.Name) is { } property)
+                    if (Properties.FirstOrDefault(p => p.PersistentPropertyName == setting.Name && !p.IsCalculated) is { } property)
                     {
                         property.Value = setting.StringValue;
                     }
@@ -62,7 +62,7 @@ namespace WireGuardServerForWindows.Models
 
             var configuration = new Configuration();
             configuration[sectionName].PreComment = NameProperty.Value ?? string.Empty;
-            foreach (ConfigurationProperty property in Properties)
+            foreach (ConfigurationProperty property in Properties.Where(p => !p.IsCalculated))
             {
                 configuration[sectionName][property.PersistentPropertyName].RawValue = property.Value;
             }
@@ -148,16 +148,6 @@ namespace WireGuardServerForWindows.Models
             Validation = new EmptyStringValidation(Resources.KeyValidationError)
         };
         private ConfigurationProperty _publicKeyProperty;
-
-        public ConfigurationProperty PresharedKeyProperty => _presharedKeyProperty ??= new ConfigurationProperty(this)
-        {
-            PersistentPropertyName = "PresharedKey",
-            Name = nameof(PresharedKeyProperty),
-            IsReadOnly = true,
-            // Action is different on Server and Client, so it should be implemented there
-            Validation = new EmptyStringValidation(Resources.KeyValidationError)
-        };
-        private ConfigurationProperty _presharedKeyProperty;
 
         public ConfigurationProperty AddressProperty => _addressProperty ??= new ConfigurationProperty(this)
         {

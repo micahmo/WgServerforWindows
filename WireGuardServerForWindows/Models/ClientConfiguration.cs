@@ -9,6 +9,8 @@ using System.Windows.Threading;
 using GalaSoft.MvvmLight.Command;
 using QRCoder;
 using SharpConfig;
+using WireGuardAPI;
+using WireGuardAPI.Commands;
 using WireGuardServerForWindows.Extensions;
 using WireGuardServerForWindows.Properties;
 using ECCLevel = QRCoder.QRCodeGenerator.ECCLevel;
@@ -102,14 +104,14 @@ namespace WireGuardServerForWindows.Models
                 }
             };
 
-            // The client only copies the PSK from the server
+            // The client generates the PSK
             PresharedKeyProperty.Action = new ConfigurationPropertyAction(this)
             {
-                Name = $"Client{nameof(PresharedKeyProperty)}{nameof(ConfigurationProperty.Action)}",
+                Name = $"{nameof(PresharedKeyProperty)}{nameof(ConfigurationProperty.Action)}",
                 Action = (conf, prop) =>
                 {
                     WaitCursor.SetOverrideCursor(Cursors.Wait);
-                    prop.Value = serverConfiguration.PresharedKeyProperty.Value;
+                    prop.Value = new WireGuardExe().ExecuteCommand(new GeneratePresharedKeyCommand());
                     WaitCursor.SetOverrideCursor(null);
                 }
             };
@@ -203,6 +205,18 @@ namespace WireGuardServerForWindows.Models
         };
         private ConfigurationProperty _persistentKeepaliveProperty;
 
+        // Note: This is a client-specific property. It goes in the peer (client) section of the server's config, and is thus targeted to the server config type.
+        // However, it also goes in the peer (server) section of the client config.
+        // Therefore, it must also be defined on the server, targeted to the client, and return this client's value.
+        public ConfigurationProperty PresharedKeyProperty => _presharedKeyProperty ??= new ConfigurationProperty(this)
+        {
+            PersistentPropertyName = "PresharedKey",
+            Name = nameof(PresharedKeyProperty),
+            IsReadOnly = true, // Don't allow manual clearing; this would require a full resync anyway. See README.
+            Index = int.MaxValue // Put it at the end
+        };
+        private ConfigurationProperty _presharedKeyProperty;
+
         public ConfigurationPropertyAction DeleteAction => _deleteAction ??= new ConfigurationPropertyAction(this)
         {
             Name = nameof(Resources.DeleteAction),
@@ -229,6 +243,7 @@ namespace WireGuardServerForWindows.Models
                 {
                     serverConfiguration = new ServerConfiguration()
                         .Load<ServerConfiguration>(Configuration.LoadFromFile(ServerConfigurationPrerequisite.ServerDataPath))
+                        .WithClientContext(conf as ClientConfiguration)
                         .ToConfiguration<ClientConfiguration>();
                 }
 
@@ -272,6 +287,7 @@ namespace WireGuardServerForWindows.Models
                     {
                         serverConfiguration = new ServerConfiguration()
                             .Load<ServerConfiguration>(Configuration.LoadFromFile(ServerConfigurationPrerequisite.ServerDataPath))
+                            .WithClientContext(conf as ClientConfiguration)
                             .ToConfiguration<ClientConfiguration>();
                     }
 

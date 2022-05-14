@@ -521,4 +521,7 @@ Note: It is preferable to use a domain name with DDNS to avoid dynamic WAN IPs.<
   <data name="PrivateNetworkTaskSubCommandConfigureText" xml:space="preserve">
 	  <value>Disable Automatic Private Network</value>
   </data>
+  <data name="ServerSyncError" xml:space="preserve">
+    <value>There was an error syncing the server configuration.</value>
+  </data>
 </root>
