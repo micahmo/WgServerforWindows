@@ -1,5 +1,5 @@
 #define MyAppName "WireGuard Server for Windows"
-#define MyAppVersion "1.7.6"
+#define MyAppVersion "1.7.7"
 #define MyAppPublisher "Micah Morrison"
 #define MyAppURL "https://github.com/micahmo/WireGuardServerForWindows"
 #define MyAppExeName "WireGuardServerForWindows.exe"
