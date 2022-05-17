@@ -2,15 +2,12 @@
 <!-- Things to update: Version, Date, Release Notes -->
 <AppUpdate xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/micahmo/WireGuardServerForWindows/master/WireGuardServerForWindows/AppUpdate.xsd">
-  <Version>1.7.7.0</Version>
-  <ReleaseDate>2022-05-14</ReleaseDate>
+  <Version>1.7.8.0</Version>
+  <ReleaseDate>2022-05-17</ReleaseDate>
   <!-- Default download -->
-  <DownloadLink>https://github.com/micahmo/WireGuardServerForWindows/releases/download/v1.7.7/WS4WSetup-1.7.7.exe</DownloadLink>
-  <DownloadFileName>WS4WSetup-1.7.7.exe</DownloadFileName>
+  <DownloadLink>https://github.com/micahmo/WireGuardServerForWindows/releases/download/v1.7.8/WS4WSetup-1.7.8.exe</DownloadLink>
+  <DownloadFileName>WS4WSetup-1.7.8.exe</DownloadFileName>
   <!-- Release notes -->
-  <VersionNotes> - Fix the implementation of Preshared Keys and allow them to be optional (#34)
- - Fix an issue that prevented all clients from being deleted
- - Display server configuration sync errors
- - Fix install issue</VersionNotes>
+  <VersionNotes> - Added support for custom private keys (#38)</VersionNotes>
   <ReleaseNotes></ReleaseNotes>
 </AppUpdate>

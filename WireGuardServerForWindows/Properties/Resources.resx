@@ -524,4 +524,7 @@ Note: It is preferable to use a domain name with DDNS to avoid dynamic WAN IPs.<
   <data name="ServerSyncError" xml:space="preserve">
     <value>There was an error syncing the server configuration.</value>
   </data>
+  <data name="PublicKeyError" xml:space="preserve">
+    <value>There was an error generating the public key for the private key: '{0}'.</value>
+  </data>
 </root>

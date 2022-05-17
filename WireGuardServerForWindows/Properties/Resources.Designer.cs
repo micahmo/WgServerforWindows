@@ -930,6 +930,15 @@ namespace WireGuardServerForWindows.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to There was an error generating the public key for the private key: &apos;{0}&apos;..
+        /// </summary>
+        public static string PublicKeyError {
+            get {
+                return ResourceManager.GetString("PublicKeyError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Public Key.
         /// </summary>
         public static string PublicKeyProperty {
