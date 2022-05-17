@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Reflection;
@@ -7,6 +8,7 @@ using GalaSoft.MvvmLight;
 using SharpConfig;
 using WireGuardAPI;
 using WireGuardAPI.Commands;
+using WireGuardServerForWindows.Controls;
 using WireGuardServerForWindows.Properties;
 
 namespace WireGuardServerForWindows.Models
@@ -139,8 +141,25 @@ namespace WireGuardServerForWindows.Models
                 Action = (conf, prop) =>
                 {
                     WaitCursor.SetOverrideCursor(Cursors.Wait);
-                    prop.Value = new WireGuardExe().ExecuteCommand(new GeneratePublicKeyCommand(conf.PrivateKeyProperty.Value));
+                    string output = new WireGuardExe().ExecuteCommand(new GeneratePublicKeyCommand(conf.PrivateKeyProperty.Value), out int exitCode);
                     WaitCursor.SetOverrideCursor(null);
+                    
+                    if (exitCode == 0)
+                    {
+                        prop.Value = output;
+                    }
+                    else
+                    {
+                        new UnhandledErrorWindow
+                        {
+                            DataContext = new UnhandledErrorWindowModel
+                            {
+                                Title = Resources.Error,
+                                Text = $"{string.Format(Resources.PublicKeyError, PrivateKeyProperty.Value)}{Environment.NewLine}{Environment.NewLine}{output}",
+                                Exception = new Exception(output)
+                            }
+                        }.ShowDialog();
+                    }
                 },
                 DependentProperty = PrivateKeyProperty,
                 DependencySatisfiedFunc = prop => string.IsNullOrEmpty(prop.Value) == false
