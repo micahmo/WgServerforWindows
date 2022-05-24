@@ -166,4 +166,6 @@ However, if you experience the following error message when enabling Internet Sh
 
 # Attribution
 
+WireGuard is a registered trademark of Jason A. Donenfeld.
+
 [Icon](https://www.flaticon.com/free-icon/sign_28310) made by [Freepik](https://www.flaticon.com/authors/freepik) from [www.flaticon.com](https://www.flaticon.com/).
