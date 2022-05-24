@@ -26,4 +26,4 @@ jobs:
       - name: Build
         run: msbuild
       - name: Test
-        run: vstest.console WireGuardServerForWindows.Tests\bin\Debug\netcoreapp3.1\WireGuardServerForWindows.Tests.dll
+        run: vstest.console WgServerforWindows.Tests\bin\Debug\netcoreapp3.1\WgServerforWindows.Tests.dll
