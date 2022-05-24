@@ -1,5 +1,5 @@
 
-<img src="https://i.imgur.com/6XRP3gB.png" width="100" height="100" />
+<img src="https://user-images.githubusercontent.com/7417301/170061921-fee5feb8-b348-40a8-9cd4-8db46d1aceec.png" />
 
 # WireGuard Server for Windows
 WS4W is a desktop application that allows running and managing a WireGuard server endpoint on Windows.
@@ -163,3 +163,7 @@ However, if you experience the following error message when enabling Internet Sh
  - Close and reopen WS4W. It should now show Internet Sharing enabled, and subsequent attempts to disable/re-enable should be sucessful going forward.
 
 > Note: This issue is often triggered after creating a new virtual switch for a VM. The manual workaround should only be needed once after that and does not affect the virtual switch.
+
+# Attribution
+
+[Icon](https://www.flaticon.com/free-icon/sign_28310) made by [Freepik](https://www.flaticon.com/authors/freepik) from [www.flaticon.com](https://www.flaticon.com/).
