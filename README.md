@@ -1,13 +1,13 @@
 
 <img src="https://user-images.githubusercontent.com/7417301/170061921-fee5feb8-b348-40a8-9cd4-8db46d1aceec.png" />
 
-# WireGuard Server for Windows
+# Wg Server for Windows
 WS4W is a desktop application that allows running and managing a WireGuard server endpoint on Windows.
 
 Inspired by Henry Chang's post, [How to Setup Wireguard VPN Server On Windows](https://www.henrychang.ca/how-to-setup-wireguard-vpn-server-on-windows/), my goal was to create an application that automated and simplified many of the complex steps. While still not quite a plug-and-play solution, the idea is to be able to perform each of the prerequisite steps, one-by-one, without running any scripts, modifying the Registry, or entering the Control Panel.
 
 # Getting Started
-The latest release is available [here](https://github.com/micahmo/WireGuardServerForWindows/releases/latest). Download the installer and run.
+The latest release is available [here](https://github.com/micahmo/WgServerforWindows/releases/latest). Download the installer and run.
 
 > **Note**: The application will request to run as Administrator. Due to all the finagling of the registry, Windows services, wg.exe calls, etc., it is easier to run the whole application elevated.
 
@@ -43,7 +43,7 @@ You should set the Endpoint property to your public IPv4, IPv6, or domain addres
 ### Client Configuration
 ![ClientConfiguration](https://user-images.githubusercontent.com/7417301/170072655-e5f73062-d18d-449c-8f63-a0191377c7ba.png)
 
-Here you can configure the client(s). The Address can be entered manually or calculated based on the server's network range. For example, if the server's network is `10.253.0.0/24`, the client config can determine that `10.253.0.2` is a valid address. Note that the first address in the range (in this example, `10.253.0.1`) is reserved for the server. DNS is optional, but recommended. Lastly, the Private Key, Public Key, and Preshared Key are generated using `wg genkey`, `wg pubkey [private key]`, and `wg genpsk`. (You may specify your own Private Key. Preshared Keys are optional, generated uniquely per-client, and shared with the server's configuration. See [#34](https://github.com/micahmo/WireGuardServerForWindows/issues/34) for more info.)
+Here you can configure the client(s). The Address can be entered manually or calculated based on the server's network range. For example, if the server's network is `10.253.0.0/24`, the client config can determine that `10.253.0.2` is a valid address. Note that the first address in the range (in this example, `10.253.0.1`) is reserved for the server. DNS is optional, but recommended. Lastly, the Private Key, Public Key, and Preshared Key are generated using `wg genkey`, `wg pubkey [private key]`, and `wg genpsk`. (You may specify your own Private Key. Preshared Keys are optional, generated uniquely per-client, and shared with the server's configuration. See [#34](https://github.com/micahmo/WgServerforWindows/issues/34) for more info.)
 
 > Due to a bit of a quirk in WireGuard, if you were to remove a client Preshared Key and sync the server configuration, WireGuard would still expect the client to connect with a PSK. Therefore, WS4W does not allow you to clear the Preshared Key field from clients. Instead, delete and recreate a client to remove the PSK.
 
@@ -76,7 +76,7 @@ The last step is to allow requests made over the WireGuard interface to be route
 * NAT Routing
 * Internet Sharing + Persistent Internet Sharing
 
-The first option is only available on some systems (see more below). The second options may be used as necessary, but have some caveats (such as, if the Internet Connection is shared with the WireGuard adapter, it cannot be shared with any other adapter; see [#18](https://github.com/micahmo/WireGuardServerForWindows/issues/18)). There have also been multiple issues reported with Internet Sharing, so NAT Routing should be used if available.
+The first option is only available on some systems (see more below). The second options may be used as necessary, but have some caveats (such as, if the Internet Connection is shared with the WireGuard adapter, it cannot be shared with any other adapter; see [#18](https://github.com/micahmo/WgServerforWindows/issues/18)). There have also been multiple issues reported with Internet Sharing, so NAT Routing should be used if available.
 
 These options are mutually exclusive.
 
@@ -89,7 +89,7 @@ Here you can create a NAT routing rule on the WireGuard interface to allow it to
 * A Windows Task is created to call `New-NetIPAddress` on boot.
   * If you do not wish to have the Windows Task automatically configure the WireGuard interface on boot, you can press the dropdown and choose "Disable Automatic NAT Routing".
 
-> NAT Routing requires at least Windows 10, and the option to enable it will not even appear in the application on older versions of Windows. However, even with Windows 10, NAT Routing does not always work. Sometimes it requires Hyper-V to be enabled, which the application will prompt for, but that also requires a Pro or higher (i.e., not Home) version of Windows. Ultimately, if the application is unable to enable NAT Routing, it will recommend using Internet Connection Sharing instead (below). See [#30](https://github.com/micahmo/WireGuardServerForWindows/issues/30) for a full discussion about NAT Routing support.
+> NAT Routing requires at least Windows 10, and the option to enable it will not even appear in the application on older versions of Windows. However, even with Windows 10, NAT Routing does not always work. Sometimes it requires Hyper-V to be enabled, which the application will prompt for, but that also requires a Pro or higher (i.e., not Home) version of Windows. Ultimately, if the application is unable to enable NAT Routing, it will recommend using Internet Connection Sharing instead (below). See [#30](https://github.com/micahmo/WgServerforWindows/issues/30) for a full discussion about NAT Routing support.
 
 #### Internet Sharing
 ![InternetSharing](https://user-images.githubusercontent.com/7417301/170073850-fde3a685-79d5-4ea9-a2b6-acb9b08c58d0.png)
