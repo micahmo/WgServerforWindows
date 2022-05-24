@@ -1,0 +1,56 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30804.86
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WgServerforWindows", "WgServerforWindows\WgServerforWindows.csproj", "{BF1E275D-A372-4C32-A118-EF85A28B60C8}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WgAPI", "WgAPI\WgAPI.csproj", "{16FC6541-F37F-492B-88AB-ABF73AA7BB1E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{42A258C8-5F33-4D0D-B0CF-0861EB334E97}"
+	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
+		Directory.Build.props = Directory.Build.props
+		README.md = README.md
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WgServerforWindows.Cli", "WgServerforWindowsCli\WgServerforWindows.Cli.csproj", "{94DDF147-2EA8-45F4-B843-9470EA3C38F5}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WgServerforWindows.Cli.Options", "WgServerforWindows.Cli.Options\WgServerforWindows.Cli.Options.csproj", "{841E987C-04F2-4EC8-A66B-DEE8344D3211}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WgServerforWindows.Tests", "WgServerforWindows.Tests\WgServerforWindows.Tests.csproj", "{BE244BB9-CE9D-44BE-9AF4-81705554908F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BF1E275D-A372-4C32-A118-EF85A28B60C8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BF1E275D-A372-4C32-A118-EF85A28B60C8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BF1E275D-A372-4C32-A118-EF85A28B60C8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BF1E275D-A372-4C32-A118-EF85A28B60C8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{16FC6541-F37F-492B-88AB-ABF73AA7BB1E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{16FC6541-F37F-492B-88AB-ABF73AA7BB1E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{16FC6541-F37F-492B-88AB-ABF73AA7BB1E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{16FC6541-F37F-492B-88AB-ABF73AA7BB1E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{94DDF147-2EA8-45F4-B843-9470EA3C38F5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{94DDF147-2EA8-45F4-B843-9470EA3C38F5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{94DDF147-2EA8-45F4-B843-9470EA3C38F5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{94DDF147-2EA8-45F4-B843-9470EA3C38F5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{841E987C-04F2-4EC8-A66B-DEE8344D3211}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{841E987C-04F2-4EC8-A66B-DEE8344D3211}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{841E987C-04F2-4EC8-A66B-DEE8344D3211}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{841E987C-04F2-4EC8-A66B-DEE8344D3211}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BE244BB9-CE9D-44BE-9AF4-81705554908F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BE244BB9-CE9D-44BE-9AF4-81705554908F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BE244BB9-CE9D-44BE-9AF4-81705554908F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BE244BB9-CE9D-44BE-9AF4-81705554908F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {88F06C70-1467-4254-BB07-2FA2A5C828FF}
+	EndGlobalSection
+EndGlobal

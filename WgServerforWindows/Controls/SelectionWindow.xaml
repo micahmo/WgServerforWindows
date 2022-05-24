@@ -1,0 +1,51 @@
+﻿<Window x:Class="WgServerforWindows.Controls.SelectionWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:properties="clr-namespace:WgServerforWindows.Properties"
+        xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
+        mc:Ignorable="d"
+        Title="{Binding Title}" SizeToContent="WidthAndHeight" MaxWidth="350">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="20"/> <!-- Padding -->
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="0" Margin="20,10,20,10" Text="{Binding Text}" TextWrapping="Wrap"/>
+
+        <ComboBox Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="1" Margin="20,10,20,10" IsEditable="False"
+                  ItemsSource="{Binding Items}" SelectedItem="{Binding SelectedItem}" DisplayMemberPath="DisplayText">
+            <ComboBox.ItemContainerStyle>
+                <Style>
+                    <Setter Property="Control.ToolTip" Value="{Binding Description}" />
+                </Style>
+            </ComboBox.ItemContainerStyle>
+        </ComboBox>
+
+        <Button Grid.Column="1" Grid.Row="3" Padding="10,5,10,5" Margin="20,10,10,10" Content="{x:Static properties:Resources.Cancel}" Command="{Binding CancelCommand}">
+            <b:Interaction.Triggers>
+                <b:EventTrigger EventName="Click">
+                    <b:CallMethodAction MethodName="Close" TargetObject="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}"/>
+                </b:EventTrigger>
+            </b:Interaction.Triggers>
+        </Button>
+        <Button Grid.Column="2" Grid.Row="3" Padding="10,5,10,5" Margin="10,10,20,10" Content="{x:Static properties:Resources.OK}" Command="{Binding SelectCommand}"
+                IsEnabled="{Binding CanSelect}">
+            <b:Interaction.Triggers>
+                <b:EventTrigger EventName="Click">
+                    <b:CallMethodAction MethodName="Close" TargetObject="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}"/>
+                </b:EventTrigger>
+            </b:Interaction.Triggers>
+        </Button>
+    </Grid>
+</Window>
