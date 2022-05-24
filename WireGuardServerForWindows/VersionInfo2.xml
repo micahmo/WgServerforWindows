@@ -2,12 +2,12 @@
 <!-- Things to update: Version, Date, Release Notes -->
 <AppUpdate xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/micahmo/WgServerforWindows/master/WireGuardServerForWindows/AppUpdate.xsd">
-  <Version>1.7.8.0</Version>
-  <ReleaseDate>2022-05-17</ReleaseDate>
+  <Version>2.0.0.0</Version>
+  <ReleaseDate>2022-05-24</ReleaseDate>
   <!-- Default download -->
-  <DownloadLink>https://github.com/micahmo/WgServerforWindows/releases/download/v1.7.8/WS4WSetup-1.7.8.exe</DownloadLink>
-  <DownloadFileName>WS4WSetup-1.7.8.exe</DownloadFileName>
+  <DownloadLink>https://github.com/micahmo/WgServerforWindows/releases/download/v2.0.0/WS4WSetup-2.0.0.exe</DownloadLink>
+  <DownloadFileName>WS4WSetup-2.0.0.exe</DownloadFileName>
   <!-- Release notes -->
-  <VersionNotes> - Added support for custom private keys (#38)</VersionNotes>
+  <VersionNotes> - Remove WireGuard branding and logo (#48)</VersionNotes>
   <ReleaseNotes></ReleaseNotes>
 </AppUpdate>

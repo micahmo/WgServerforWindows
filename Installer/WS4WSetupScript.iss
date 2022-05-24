@@ -1,5 +1,5 @@
 #define MyAppName "Wg Server for Windows"
-#define MyAppVersion "1.7.8"
+#define MyAppVersion "2.0.0"
 #define MyAppPublisher "Micah Morrison"
 #define MyAppURL "https://github.com/micahmo/WgServerforWindows"
 #define MyAppExeName "WgServerforWindows.exe"
