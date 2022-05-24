@@ -1101,7 +1101,7 @@ namespace WgServerforWindows.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to WireGuard Server For Windows.
+        ///   Looks up a localized string similar to Wg Server for Windows.
         /// </summary>
         public static string SplashScreenText {
             get {

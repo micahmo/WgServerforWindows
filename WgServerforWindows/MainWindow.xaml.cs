@@ -170,7 +170,7 @@ namespace WgServerforWindows
             DataContext = mainWindowModel;
 
             // Check for updates
-            _updateChecker = new MyUpdateChecker("https://raw.githubusercontent.com/micahmo/WireGuardServerForWindows/master/WireGuardServerForWindows/VersionInfo2.xml", this);
+            _updateChecker = new MyUpdateChecker("https://raw.githubusercontent.com/micahmo/WgServerforWindows/master/WireGuardServerForWindows/VersionInfo2.xml", this);
         }
 
         #region Private fields

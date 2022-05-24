@@ -507,7 +507,7 @@ Note: It is preferable to use a domain name with DDNS to avoid dynamic WAN IPs.<
 	  <value>View a live status of the server (interface) and any configured clients (peers).</value>
   </data>
   <data name="SplashScreenText" xml:space="preserve">
-	  <value>Wg Server For Windows</value>
+	  <value>Wg Server for Windows</value>
   </data>
   <data name="PrivateNetworkTaskSubCommandSuccessMessage" xml:space="preserve">
 	  <value>The WireGuard interface will automatically be set to Private on startup. Click to disable.</value>
