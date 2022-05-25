@@ -66,8 +66,8 @@ namespace WgServerforWindows
                     {
                         if (ws4wInstance.GetPropertyValue("CommandLine")?.ToString() is { } commandLine)
                         {
-                            string arguments = commandLine.Substring(commandLine.LastIndexOf('"') + 2);
-                            if (string.IsNullOrEmpty(arguments))
+                            int substringIndex = commandLine.LastIndexOf('"') + 2;
+                            if (substringIndex > commandLine.Length || string.IsNullOrEmpty(commandLine.Substring(substringIndex)))
                             {
                                 SetForegroundWindow(existingProcess.MainWindowHandle);
                                 Environment.Exit(0);
@@ -173,7 +173,8 @@ namespace WgServerforWindows
                 {
                     if (ws4wInstance.GetPropertyValue("CommandLine")?.ToString() is { } commandLine)
                     {
-                        string arguments = commandLine.Substring(commandLine.LastIndexOf('"') + 2);
+                        int substringIndex = commandLine.LastIndexOf('"') + 2;
+                        string arguments = substringIndex <= commandLine.Length ? commandLine.Substring(commandLine.LastIndexOf('"') + 2) : string.Empty;
                         if (arguments == typeof(StatusCommand).GetVerb())
                         {
                             SetForegroundWindow(existingProcess.MainWindowHandle);
