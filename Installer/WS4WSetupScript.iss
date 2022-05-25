@@ -1,8 +1,9 @@
-#define MyAppName "WireGuard Server for Windows"
-#define MyAppVersion "1.7.8"
+#define MyAppNameOld "WireGuard Server For Windows"
+#define MyAppName "Wg Server for Windows"
+#define MyAppVersion "2.0.0"
 #define MyAppPublisher "Micah Morrison"
-#define MyAppURL "https://github.com/micahmo/WireGuardServerForWindows"
-#define MyAppExeName "WireGuardServerForWindows.exe"
+#define MyAppURL "https://github.com/micahmo/WgServerforWindows"
+#define MyAppExeName "WgServerforWindows.exe"
 #define CliName "ws4w.exe"
 #define NetCoreRuntimeMinorVersion "21"
 #define NetCoreRuntimeVersion "3.1." + NetCoreRuntimeMinorVersion
@@ -28,12 +29,12 @@ DefaultDirName={autopf}\WS4W
 DefaultGroupName=WS4W
 AllowNoIcons=yes
 ; This is relative to the .iss file location
-SourceDir=..\WireGuardServerForWindows\bin\{#BuildConfig}\netcoreapp3.1\
+SourceDir=..\WgServerforWindows\bin\{#BuildConfig}\netcoreapp3.1\
 ; These are relative to SourceDir (see RepoRoot)
 OutputDir={#RepoRoot}\Installer
-SetupIconFile={#RepoRoot}\WireGuardServerForWindows\Images\logo.ico
+SetupIconFile={#RepoRoot}\WgServerforWindows\Images\logo.ico
 ; This is an install-time path, so it must refer to something on the installed machine, like the main exe
-UninstallDisplayIcon={app}\WireGuardServerForWindows.exe
+UninstallDisplayIcon={app}\WgServerforWindows.exe
 OutputBaseFilename=WS4WSetup-{#MyAppVersion}
 Compression=lzma
 SolidCompression=yes
@@ -108,6 +109,22 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 [Tasks]
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 Name: "setpath"; Description: "Add '{app}' to the PATH variable for CLI access."; GroupDescription: "{cm:AdditionalIcons}"
+
+[InstallDelete]
+; Manually clean up files which use the old name
+Type: files; Name: "{app}\WireGuardAPI.dll"
+Type: files; Name: "{app}\WireGuardAPI.pdb"
+Type: files; Name: "{app}\WireGuardServerForWindows.Cli.Options.dll"
+Type: files; Name: "{app}\WireGuardServerForWindows.Cli.Options.pdb"
+Type: files; Name: "{app}\WireGuardServerForWindows.deps.json"
+Type: files; Name: "{app}\WireGuardServerForWindows.dll"
+Type: files; Name: "{app}\WireGuardServerForWindows.exe"
+Type: files; Name: "{app}\WireGuardServerForWindows.pdb"
+Type: files; Name: "{app}\WireGuardServerForWindows.runtimeconfig.dev.json"
+Type: files; Name: "{app}\WireGuardServerForWindows.runtimeconfig.json"
+; Delete old shortcuts
+Type: files; Name: "{group}\{#MyAppNameOld}.lnk"
+Type: files; Name: "{autodesktop}\{#MyAppNameOld}.lnk"
 
 [Files]
 ; These are relative to SourceDir

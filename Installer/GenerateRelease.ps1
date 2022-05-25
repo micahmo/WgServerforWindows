@@ -3,12 +3,12 @@
 # Requires that "C:\Program Files (x86)\Inno Setup 6" be in the PATH for iscc.
 
 foreach ($configuration in "Debug", "Release") {
-    if (Test-Path -Path WireGuardServerForWindows\bin\$configuration) {
-        Remove-Item -Recurse WireGuardServerForWindows\bin\$configuration
+    if (Test-Path -Path WgServerforWindows\bin\$configuration) {
+        Remove-Item -Recurse WgServerforWindows\bin\$configuration
     }
 }
 
-msbuild WireGuardServerForWindows.sln /property:Configuration=Release
+msbuild WgServerforWindows.sln /property:Configuration=Release
 
 Remove-Item Installer\WS4WSetup-*.exe
 
