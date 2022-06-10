@@ -283,6 +283,12 @@ Current value: {1}</value>
   <data name="DnsProperty" xml:space="preserve">
     <value>DNS</value>
   </data>
+  <data name="DnsSearchDomainsProperty" xml:space="preserve">
+    <value>DNS Search Domains</value>
+  </data>
+  <data name="DnsSearchDomainsPropertyDescription" xml:space="preserve">
+    <value>Also known as DNS Suffixes</value>
+  </data>
   <data name="EndpointProperty" xml:space="preserve">
     <value>Endpoint
 (Public IP:Port)</value>
@@ -362,6 +368,9 @@ Current value: {1}</value>
   </data>
   <data name="DnsAddressValidationError" xml:space="preserve">
     <value>DNS address(es) must be valid IPs, such as 8.8.8.8</value>
+  </data>
+  <data name="DnsSearchDomainsValidationError" xml:space="preserve">
+    <value>DNS Search Domains must be a comma-separated list of names.</value>
   </data>
   <data name="PersistentKeepaliveValidationError" xml:space="preserve">
     <value>Persistent Keepalive must have a numerical value. Use 0 to disable the feature.</value>

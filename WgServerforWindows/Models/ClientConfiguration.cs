@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -28,7 +29,7 @@ namespace WgServerforWindows.Models
 
             // Client properties
             PrivateKeyProperty.TargetTypes.Add(GetType());
-            DnsProperty.TargetTypes.Add(GetType());
+            FullDnsProperty.TargetTypes.Add(GetType());
             AddressProperty.TargetTypes.Add(GetType());
 
             // Server properties
@@ -178,7 +179,7 @@ namespace WgServerforWindows.Models
                     // Only validate if not empty. (No DNS is valid.)
                     if (string.IsNullOrEmpty(obj.Value) == false)
                     {
-                        foreach (string address in obj.Value.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(a => a.Trim()))
+                        foreach (string address in obj.Value.Split(new[] { ',' }).Select(a => a.Trim()))
                         {
                             // We don't want any CIDR here, so parse with IPAddress instead of IPNetwork
                             if (IPAddress.TryParse(address, out _) == false)
@@ -194,6 +195,52 @@ namespace WgServerforWindows.Models
             }
         };
         private ConfigurationProperty _dnsProperty;
+
+        public ConfigurationProperty DnsSearchDomainsProperty => _dnsSearchDomainsProperty ??= new ConfigurationProperty(this)
+        {
+            PersistentPropertyName = "DNSSearchDomains",
+            Name = nameof(DnsSearchDomainsProperty),
+            Description = Resources.DnsSearchDomainsPropertyDescription,
+            Validation = new ConfigurationPropertyValidation
+            {
+                Validate = obj =>
+                {
+                    if (!string.IsNullOrEmpty(obj.Value))
+                    {
+                        // If they've specified a value, make sure it's a list of non-empty, comma-separated strings.
+                        IEnumerable<string> dnsSearchDomains = obj.Value.Split(new[] { ',' }).Select(a => a.Trim()).ToList();
+                        if (dnsSearchDomains.Any(string.IsNullOrWhiteSpace))
+                        {
+                            return Resources.DnsSearchDomainsValidationError;
+                        }
+
+                        // If any of the domains contains a space, it is invalid.
+                        if (dnsSearchDomains.Any(a => a.Any(char.IsWhiteSpace)))
+                        {
+                            return Resources.DnsSearchDomainsValidationError;
+                        }
+                    }
+
+                    // If we get here, everything's good.
+                    return default;
+                }
+            }
+        };
+        private ConfigurationProperty _dnsSearchDomainsProperty;
+
+        /// <summary>
+        /// Combines the values of <see cref="DnsProperty"/> and <see cref="DnsSearchDomainsProperty"/> for the final configuration file.
+        /// </summary>
+        public ConfigurationProperty FullDnsProperty => _fullDnsProperty ??= new ConfigurationProperty(this)
+        {
+            PersistentPropertyName = "DNS",
+            IsHidden = true,
+            IsCalculated = true,
+            GetValueFunc = () => string.Join(',', (
+                DnsProperty.Value?.Split(new[] { ',' }) ?? Enumerable.Empty<string>()).Select(a => a.Trim()).Where(a => !string.IsNullOrWhiteSpace(a)).Concat((
+                DnsSearchDomainsProperty.Value?.Split(new[] { ',' }) ?? Enumerable.Empty<string>()).Select(a => a.Trim()).Where(a => !string.IsNullOrWhiteSpace(a))))
+        };
+        private ConfigurationProperty _fullDnsProperty;
 
         // Note: This is really a server property, but it goes in the in the (peer) client section of the server's config.
         // So we'll trick the config generator by putting it in the client, targeting it to the server, and returning the server's value,

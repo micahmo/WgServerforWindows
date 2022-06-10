@@ -19,7 +19,7 @@ namespace WgServerforWindows.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class Resources {
@@ -309,6 +309,33 @@ namespace WgServerforWindows.Properties {
         public static string DnsProperty {
             get {
                 return ResourceManager.GetString("DnsProperty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to DNS Search Domains.
+        /// </summary>
+        public static string DnsSearchDomainsProperty {
+            get {
+                return ResourceManager.GetString("DnsSearchDomainsProperty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Also known as DNS Suffixes.
+        /// </summary>
+        public static string DnsSearchDomainsPropertyDescription {
+            get {
+                return ResourceManager.GetString("DnsSearchDomainsPropertyDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to DNS Search Domains must be a comma-separated list of names..
+        /// </summary>
+        public static string DnsSearchDomainsValidationError {
+            get {
+                return ResourceManager.GetString("DnsSearchDomainsValidationError", resourceCulture);
             }
         }
         
