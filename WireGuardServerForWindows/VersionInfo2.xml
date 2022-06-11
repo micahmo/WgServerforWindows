@@ -2,13 +2,13 @@
 <!-- Things to update: Version, Date, Release Notes -->
 <AppUpdate xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/micahmo/WgServerforWindows/master/WireGuardServerForWindows/AppUpdate.xsd">
-  <Version>2.0.0.0</Version>
-  <ReleaseDate>2022-05-25</ReleaseDate>
+  <Version>2.0.1.0</Version>
+  <ReleaseDate>2022-06-11</ReleaseDate>
   <!-- Default download -->
-  <DownloadLink>https://github.com/micahmo/WgServerforWindows/releases/download/v2.0.0/WS4WSetup-2.0.0.exe</DownloadLink>
-  <DownloadFileName>WS4WSetup-2.0.0.exe</DownloadFileName>
+  <DownloadLink>https://github.com/micahmo/WgServerforWindows/releases/download/v2.0.1/WS4WSetup-2.0.1.exe</DownloadLink>
+  <DownloadFileName>WS4WSetup-2.0.1.exe</DownloadFileName>
   <!-- Release notes -->
-  <VersionNotes> - Remove WireGuard branding and logo (#48)
- - Fix issue where Status could not be opened after running installer</VersionNotes>
+  <VersionNotes> - Add DNS Search Domains to client config (#50)
+ - Allow customizing Allowed IPs per client config (#36)</VersionNotes>
   <ReleaseNotes></ReleaseNotes>
 </AppUpdate>
