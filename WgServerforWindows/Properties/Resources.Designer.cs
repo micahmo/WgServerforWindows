@@ -88,6 +88,15 @@ namespace WgServerforWindows.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Allowed IPs.
+        /// </summary>
+        public static string AllowedRoutableIpsProperty {
+            get {
+                return ResourceManager.GetString("AllowedRoutableIpsProperty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Cancel.
         /// </summary>
         public static string Cancel {
@@ -780,6 +789,24 @@ namespace WgServerforWindows.Properties {
         public static string PersistentKeepaliveValidationError {
             get {
                 return ResourceManager.GetString("PersistentKeepaliveValidationError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Populate the default Allowed IPs from the server configuration (currently: {0}).
+        /// </summary>
+        public static string PopulateClientAllowedIpsActionDescription {
+            get {
+                return ResourceManager.GetString("PopulateClientAllowedIpsActionDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Populate from Server.
+        /// </summary>
+        public static string PopulateFromServerAction {
+            get {
+                return ResourceManager.GetString("PopulateFromServerAction", resourceCulture);
             }
         }
         

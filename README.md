@@ -41,7 +41,7 @@ In addition to creating/udpating the configuration file for the server endpoint,
 You should set the Endpoint property to your public IPv4, IPv6, or domain address, followed by whatever port you have forwarded. The `Detect Public IP Address` button will attempt to detect your public address automatically using the [ipify.org](https://ipify.org) API. However, if possible, it is recommended that you use a domain name with DDNS. That way, if your public IP address changes, your clients will be able to find your server endpoint without reconfiguration.
 
 ### Client Configuration
-![ClientConfiguration](https://user-images.githubusercontent.com/7417301/173132462-40d5176c-a25e-43e9-8431-a6749463ecb5.png)
+![ClientConfiguration](https://user-images.githubusercontent.com/7417301/173172783-5a16da01-f725-4a47-b738-1e52f79f49cd.png)
 
 Here you can configure the client(s). The Address can be entered manually or calculated based on the server's network range. For example, if the server's network is `10.253.0.0/24`, the client config can determine that `10.253.0.2` is a valid address. Note that the first address in the range (in this example, `10.253.0.1`) is reserved for the server. DNS is optional, but recommended. You may add DNS Search Domains (also known as DNS Suffixes, [read more](https://en.wikipedia.org/wiki/Search_domain)). Lastly, the Private Key, Public Key, and Preshared Key are generated using `wg genkey`, `wg pubkey [private key]`, and `wg genpsk`. (You may specify your own Private Key. Preshared Keys are optional, generated uniquely per-client, and shared with the server's configuration. See [#34](https://github.com/micahmo/WgServerforWindows/issues/34) for more info.)
 

@@ -39,6 +39,7 @@ namespace WgServerforWindows.Models
 
             var serverConfiguration = new ServerConfiguration().Load<ServerConfiguration>(Configuration.LoadFromFile(ServerConfigurationPrerequisite.ServerDataPath));
             string serverIp = serverConfiguration.AddressProperty.Value;
+            string allowedIpsDefault = serverConfiguration.AllowedIpsProperty.Value;
 
             // Add support for generating client IP
             AddressProperty.Action = new ConfigurationPropertyAction(this)
@@ -105,6 +106,21 @@ namespace WgServerforWindows.Models
                 }
             };
 
+            AllowedRoutableIpsProperty.Action = new ConfigurationPropertyAction(this)
+            {
+                Name = nameof(Resources.PopulateFromServerAction),
+                Description = string.Format(Resources.PopulateClientAllowedIpsActionDescription, allowedIpsDefault),
+                DependentProperty = serverConfiguration.AllowedIpsProperty,
+                DependencySatisfiedFunc = prop => string.IsNullOrEmpty(prop.Validation?.Validate?.Invoke(prop)),
+                Action = (conf, prop) =>
+                {
+                    prop.Value = allowedIpsDefault;
+                }
+            };
+
+            // Initial value is server value
+            AllowedRoutableIpsProperty.Value = allowedIpsDefault;
+
             // The client generates the PSK
             PresharedKeyProperty.Action = new ConfigurationPropertyAction(this)
             {
@@ -164,6 +180,41 @@ namespace WgServerforWindows.Models
             IsHidden = true
         };
         private ConfigurationProperty _index;
+
+        /// <summary>
+        /// This is a funny one. This is first defined on the server. Then the user can import that default value into the client config.
+        /// Then the property needs to go to the server and be targeted to the client's config (under the server/peer section).
+        /// </summary>
+        public ConfigurationProperty AllowedRoutableIpsProperty => _allowedIpsProperty ??= new ConfigurationProperty(this)
+        {
+            Index = 2,
+            // This doesn't match any WG Conf property, but it doesn't matter since the actual WG value will come from the server's client-targeted property.
+            PersistentPropertyName = "AllowedRoutableIPs",
+            Name = nameof(AllowedRoutableIpsProperty),
+            Description = Resources.ServerAllowedIpsDescription,
+            Validation = new ConfigurationPropertyValidation
+            {
+                Validate = obj =>
+                {
+                    if (string.IsNullOrEmpty(obj.Value))
+                    {
+                        return Resources.NetworkAddressValidationError;
+                    }
+
+                    // Support CSV allowed IPs
+                    foreach (string address in obj.Value.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(a => a.Trim()))
+                    {
+                        if (IPNetwork.TryParse(address, out _) == false)
+                        {
+                            return Resources.NetworkAddressValidationError;
+                        }
+                    }
+
+                    return default;
+                }
+            }
+        };
+        private ConfigurationProperty _allowedIpsProperty;
 
         public ConfigurationProperty DnsProperty => _dnsProperty ??= new ConfigurationProperty(this)
         {
