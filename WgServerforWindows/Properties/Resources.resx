@@ -273,6 +273,9 @@ Current value: {1}</value>
   <data name="GenerateFromServerAction" xml:space="preserve">
     <value>Generate from Server</value>
   </data>
+  <data name="PopulateFromServerAction" xml:space="preserve">
+    <value>Populate from Server</value>
+  </data>
   <data name="Undefined" xml:space="preserve">
     <value>UNDEFINED</value>
   </data>
@@ -280,8 +283,17 @@ Current value: {1}</value>
     <value>Generate an IP in the range defined by the server address (currently: {0})</value>
     <comment>{0} is the IP of the server</comment>
   </data>
+  <data name="PopulateClientAllowedIpsActionDescription" xml:space="preserve">
+    <value>Populate the default Allowed IPs from the server configuration (currently: {0})</value>
+  </data>
   <data name="DnsProperty" xml:space="preserve">
     <value>DNS</value>
+  </data>
+  <data name="DnsSearchDomainsProperty" xml:space="preserve">
+    <value>DNS Search Domains</value>
+  </data>
+  <data name="DnsSearchDomainsPropertyDescription" xml:space="preserve">
+    <value>Also known as DNS Suffixes</value>
   </data>
   <data name="EndpointProperty" xml:space="preserve">
     <value>Endpoint
@@ -362,6 +374,9 @@ Current value: {1}</value>
   </data>
   <data name="DnsAddressValidationError" xml:space="preserve">
     <value>DNS address(es) must be valid IPs, such as 8.8.8.8</value>
+  </data>
+  <data name="DnsSearchDomainsValidationError" xml:space="preserve">
+    <value>DNS Search Domains must be a comma-separated list of names.</value>
   </data>
   <data name="PersistentKeepaliveValidationError" xml:space="preserve">
     <value>Persistent Keepalive must have a numerical value. Use 0 to disable the feature.</value>
@@ -526,5 +541,8 @@ Note: It is preferable to use a domain name with DDNS to avoid dynamic WAN IPs.<
   </data>
   <data name="PublicKeyError" xml:space="preserve">
     <value>There was an error generating the public key for the private key: '{0}'.</value>
+  </data>
+  <data name="AllowedRoutableIpsProperty" xml:space="preserve">
+    <value>Allowed IPs</value>
   </data>
 </root>

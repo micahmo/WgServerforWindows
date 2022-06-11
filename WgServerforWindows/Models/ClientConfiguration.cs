@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -28,7 +29,7 @@ namespace WgServerforWindows.Models
 
             // Client properties
             PrivateKeyProperty.TargetTypes.Add(GetType());
-            DnsProperty.TargetTypes.Add(GetType());
+            FullDnsProperty.TargetTypes.Add(GetType());
             AddressProperty.TargetTypes.Add(GetType());
 
             // Server properties
@@ -38,6 +39,7 @@ namespace WgServerforWindows.Models
 
             var serverConfiguration = new ServerConfiguration().Load<ServerConfiguration>(Configuration.LoadFromFile(ServerConfigurationPrerequisite.ServerDataPath));
             string serverIp = serverConfiguration.AddressProperty.Value;
+            string allowedIpsDefault = serverConfiguration.AllowedIpsProperty.Value;
 
             // Add support for generating client IP
             AddressProperty.Action = new ConfigurationPropertyAction(this)
@@ -104,6 +106,21 @@ namespace WgServerforWindows.Models
                 }
             };
 
+            AllowedRoutableIpsProperty.Action = new ConfigurationPropertyAction(this)
+            {
+                Name = nameof(Resources.PopulateFromServerAction),
+                Description = string.Format(Resources.PopulateClientAllowedIpsActionDescription, allowedIpsDefault),
+                DependentProperty = serverConfiguration.AllowedIpsProperty,
+                DependencySatisfiedFunc = prop => string.IsNullOrEmpty(prop.Validation?.Validate?.Invoke(prop)),
+                Action = (conf, prop) =>
+                {
+                    prop.Value = allowedIpsDefault;
+                }
+            };
+
+            // Initial value is server value
+            AllowedRoutableIpsProperty.Value = allowedIpsDefault;
+
             // The client generates the PSK
             PresharedKeyProperty.Action = new ConfigurationPropertyAction(this)
             {
@@ -164,6 +181,41 @@ namespace WgServerforWindows.Models
         };
         private ConfigurationProperty _index;
 
+        /// <summary>
+        /// This is a funny one. This is first defined on the server. Then the user can import that default value into the client config.
+        /// Then the property needs to go to the server and be targeted to the client's config (under the server/peer section).
+        /// </summary>
+        public ConfigurationProperty AllowedRoutableIpsProperty => _allowedIpsProperty ??= new ConfigurationProperty(this)
+        {
+            Index = 2,
+            // This doesn't match any WG Conf property, but it doesn't matter since the actual WG value will come from the server's client-targeted property.
+            PersistentPropertyName = "AllowedRoutableIPs",
+            Name = nameof(AllowedRoutableIpsProperty),
+            Description = Resources.ServerAllowedIpsDescription,
+            Validation = new ConfigurationPropertyValidation
+            {
+                Validate = obj =>
+                {
+                    if (string.IsNullOrEmpty(obj.Value))
+                    {
+                        return Resources.NetworkAddressValidationError;
+                    }
+
+                    // Support CSV allowed IPs
+                    foreach (string address in obj.Value.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(a => a.Trim()))
+                    {
+                        if (IPNetwork.TryParse(address, out _) == false)
+                        {
+                            return Resources.NetworkAddressValidationError;
+                        }
+                    }
+
+                    return default;
+                }
+            }
+        };
+        private ConfigurationProperty _allowedIpsProperty;
+
         public ConfigurationProperty DnsProperty => _dnsProperty ??= new ConfigurationProperty(this)
         {
             PersistentPropertyName = "DNS",
@@ -178,7 +230,7 @@ namespace WgServerforWindows.Models
                     // Only validate if not empty. (No DNS is valid.)
                     if (string.IsNullOrEmpty(obj.Value) == false)
                     {
-                        foreach (string address in obj.Value.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(a => a.Trim()))
+                        foreach (string address in obj.Value.Split(new[] { ',' }).Select(a => a.Trim()))
                         {
                             // We don't want any CIDR here, so parse with IPAddress instead of IPNetwork
                             if (IPAddress.TryParse(address, out _) == false)
@@ -194,6 +246,52 @@ namespace WgServerforWindows.Models
             }
         };
         private ConfigurationProperty _dnsProperty;
+
+        public ConfigurationProperty DnsSearchDomainsProperty => _dnsSearchDomainsProperty ??= new ConfigurationProperty(this)
+        {
+            PersistentPropertyName = "DNSSearchDomains",
+            Name = nameof(DnsSearchDomainsProperty),
+            Description = Resources.DnsSearchDomainsPropertyDescription,
+            Validation = new ConfigurationPropertyValidation
+            {
+                Validate = obj =>
+                {
+                    if (!string.IsNullOrEmpty(obj.Value))
+                    {
+                        // If they've specified a value, make sure it's a list of non-empty, comma-separated strings.
+                        IEnumerable<string> dnsSearchDomains = obj.Value.Split(new[] { ',' }).Select(a => a.Trim()).ToList();
+                        if (dnsSearchDomains.Any(string.IsNullOrWhiteSpace))
+                        {
+                            return Resources.DnsSearchDomainsValidationError;
+                        }
+
+                        // If any of the domains contains a space, it is invalid.
+                        if (dnsSearchDomains.Any(a => a.Any(char.IsWhiteSpace)))
+                        {
+                            return Resources.DnsSearchDomainsValidationError;
+                        }
+                    }
+
+                    // If we get here, everything's good.
+                    return default;
+                }
+            }
+        };
+        private ConfigurationProperty _dnsSearchDomainsProperty;
+
+        /// <summary>
+        /// Combines the values of <see cref="DnsProperty"/> and <see cref="DnsSearchDomainsProperty"/> for the final configuration file.
+        /// </summary>
+        public ConfigurationProperty FullDnsProperty => _fullDnsProperty ??= new ConfigurationProperty(this)
+        {
+            PersistentPropertyName = "DNS",
+            IsHidden = true,
+            IsCalculated = true,
+            GetValueFunc = () => string.Join(',', (
+                DnsProperty.Value?.Split(new[] { ',' }) ?? Enumerable.Empty<string>()).Select(a => a.Trim()).Where(a => !string.IsNullOrWhiteSpace(a)).Concat((
+                DnsSearchDomainsProperty.Value?.Split(new[] { ',' }) ?? Enumerable.Empty<string>()).Select(a => a.Trim()).Where(a => !string.IsNullOrWhiteSpace(a))))
+        };
+        private ConfigurationProperty _fullDnsProperty;
 
         // Note: This is really a server property, but it goes in the in the (peer) client section of the server's config.
         // So we'll trick the config generator by putting it in the client, targeting it to the server, and returning the server's value,

@@ -22,7 +22,7 @@ namespace WgServerforWindows.Models
             // Client properties
             ClientPresharedKeyProperty.TargetTypes.Add(typeof(ClientConfiguration));
             PublicKeyProperty.TargetTypes.Add(typeof(ClientConfiguration));
-            AllowedIpsProperty.TargetTypes.Add(typeof(ClientConfiguration));
+            ClientAllowedRoutableIpsProperty.TargetTypes.Add(typeof(ClientConfiguration));
             EndpointProperty.TargetTypes.Add(typeof(ClientConfiguration));
 
             // Set some properties that are unique to server
@@ -160,19 +160,21 @@ namespace WgServerforWindows.Models
             {
                 Validate = obj =>
                 {
-                    string result = default;
+                    if (string.IsNullOrEmpty(obj.Value))
+                    {
+                        return Resources.NetworkAddressValidationError;
+                    }
 
                     // Support CSV allowed IPs
                     foreach (string address in obj.Value.Split(new[] {','}, StringSplitOptions.RemoveEmptyEntries).Select(a => a.Trim()))
                     {
                         if (IPNetwork.TryParse(address, out _) == false)
                         {
-                            result = Resources.NetworkAddressValidationError;
-                            break;
+                            return Resources.NetworkAddressValidationError;
                         }
                     }
 
-                    return result;
+                    return default;
                 }
             }
         };
@@ -250,6 +252,18 @@ namespace WgServerforWindows.Models
             GetValueFunc = () => _clientContext?.PresharedKeyProperty.Value
         };
         private ConfigurationProperty _clientPresharedKeyProperty;
+
+        // Note: This is really a client property, but it goes in the peer (server) section of the client's config.
+        // So we'll trick the config generator by putting it in the server, targeting it to the client, and returning the client's value.
+        // This property needs a Client Context to evaluate.
+        public ConfigurationProperty ClientAllowedRoutableIpsProperty => _clientAllowedRoutableIpsProperty ??= new ConfigurationProperty(this)
+        {
+            PersistentPropertyName = "AllowedIPs",
+            IsHidden = true,
+            IsCalculated = true,
+            GetValueFunc = () => _clientContext?.AllowedRoutableIpsProperty.Value
+        };
+        private ConfigurationProperty _clientAllowedRoutableIpsProperty;
 
         /// <summary>
         /// This is a calculated field that generates a Server IP address based on the current <see cref="ServerConfiguration.AddressProperty"/> property.
