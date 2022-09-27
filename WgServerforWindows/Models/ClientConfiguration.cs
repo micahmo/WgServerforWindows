@@ -51,10 +51,10 @@ namespace WgServerforWindows.Models
                 Action = (conf, prop) =>
                 {
                     IPNetwork serverNetwork = IPNetwork.Parse(serverConfiguration.AddressProperty.Value);
-                    var possibleAddresses = serverNetwork.ListIPAddress().Skip(2).SkipLast(1).ToList(); // Skip reserved .0 and .1 and .255.
+                    var possibleAddresses = serverNetwork.ListIPAddress().Skip(2).SkipLast(1); // Skip reserved .0 and .1 and .255.
 
                     // If the current address is already in range, we're done
-                    if (possibleAddresses.Select(a => a.ToString()).Contains(prop.Value))
+                    if (IPAddress.TryParse(prop.Value, out var currentAddress) && serverNetwork.Contains(currentAddress))
                     {
                         return;
                     }
