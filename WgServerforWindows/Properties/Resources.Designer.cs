@@ -160,7 +160,7 @@ namespace WgServerforWindows.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Client address must be a single IP address, such as 10.232.0.2 or 10.232.0.2/32.
+        ///   Looks up a localized string similar to Client address must be at least one IP address, such as 10.232.0.2 or 10.232.0.2/32.
         /// </summary>
         public static string ClientAddressValidationError {
             get {

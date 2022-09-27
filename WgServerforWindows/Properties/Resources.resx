@@ -370,7 +370,7 @@ Current value: {1}</value>
     <value>Specify which IPs will be routed from the client to the server. Use 0.0.0.0/0 to route everything. Optionally specify multiple routes, separated by commas, like 10.0.0.0/8, 192.168.1.0/24</value>
   </data>
   <data name="ClientAddressValidationError" xml:space="preserve">
-    <value>Client address must be a single IP address, such as 10.232.0.2 or 10.232.0.2/32</value>
+    <value>Client address must be at least one IP address, such as 10.232.0.2 or 10.232.0.2/32</value>
   </data>
   <data name="DnsAddressValidationError" xml:space="preserve">
     <value>DNS address(es) must be valid IPs, such as 8.8.8.8</value>
