@@ -2,13 +2,13 @@
 <!-- Things to update: Version, Date, Release Notes -->
 <AppUpdate xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/micahmo/WgServerforWindows/master/WireGuardServerForWindows/AppUpdate.xsd">
-  <Version>2.0.1.0</Version>
-  <ReleaseDate>2022-06-11</ReleaseDate>
+  <Version>2.0.2.0</Version>
+  <ReleaseDate>2022-09-27</ReleaseDate>
   <!-- Default download -->
-  <DownloadLink>https://github.com/micahmo/WgServerforWindows/releases/download/v2.0.1/WS4WSetup-2.0.1.exe</DownloadLink>
-  <DownloadFileName>WS4WSetup-2.0.1.exe</DownloadFileName>
+  <DownloadLink>https://github.com/micahmo/WgServerforWindows/releases/download/v2.0.2/WS4WSetup-2.0.2.exe</DownloadLink>
+  <DownloadFileName>WS4WSetup-2.0.2.exe</DownloadFileName>
   <!-- Release notes -->
-  <VersionNotes> - Add DNS Search Domains to client config (#50)
- - Allow customizing Allowed IPs per client config (#36)</VersionNotes>
+  <VersionNotes> - Support client IP address generation in IPv6 range (#54)
+ - Allow mutliple client IPs (#54)</VersionNotes>
   <ReleaseNotes></ReleaseNotes>
 </AppUpdate>

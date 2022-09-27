@@ -51,10 +51,10 @@ namespace WgServerforWindows.Models
                 Action = (conf, prop) =>
                 {
                     IPNetwork serverNetwork = IPNetwork.Parse(serverConfiguration.AddressProperty.Value);
-                    var possibleAddresses = serverNetwork.ListIPAddress().Skip(2).SkipLast(1).ToList(); // Skip reserved .0 and .1 and .255.
+                    var possibleAddresses = serverNetwork.ListIPAddress().Skip(2).SkipLast(1); // Skip reserved .0 and .1 and .255.
 
                     // If the current address is already in range, we're done
-                    if (possibleAddresses.Select(a => a.ToString()).Contains(prop.Value))
+                    if (IPAddress.TryParse(prop.Value, out var currentAddress) && serverNetwork.Contains(currentAddress))
                     {
                         return;
                     }
@@ -77,29 +77,41 @@ namespace WgServerforWindows.Models
                 {
                     string result = default;
 
-                    // First, try parsing with IPNetwork to see if it's in CIDR format
-                    if (IPNetwork.TryParse(obj.Value, out var network))
+                    if (string.IsNullOrEmpty(obj.Value))
                     {
-                        // At this point, we know it's a valid network. Let's see how many addresses are in range
-                        if (network.Usable > 1)
-                        {
-                            // It's CIDR, but it defines more than one address.
-                            // However, IPNetwork has a quirk that parses single addresses (without mask) as a range.
-                            // So now let's see if it's a single address
-                            if (IPAddress.TryParse(obj.Value, out _) == false)
-                            {
-                                // If we get here, it passed CIDR parsing, but it defined more than one address (i.e., had a mask). It's bad!
-                                result = Resources.ClientAddressValidationError;
-                            }
-                            // Else, it's a single address as parsed by IPAddress, so we're good!
-                        }
-                        // Else
-                        // It's in CIDR notation and only defines a single address (/32) so we're good!
+                        // Can't be empty
+                        result = Resources.ClientAddressValidationError;
                     }
                     else
                     {
-                        // Not even IPNetwork could parse it, so it's really bad!
-                        result = Resources.ClientAddressValidationError;
+                        // Handle multiple comma-separated values
+                        foreach (string address in obj.Value.Split(new[] { ',' }).Select(a => a.Trim()))
+                        {
+                            // First, try parsing with IPNetwork to see if it's in CIDR format
+                            if (IPNetwork.TryParse(address, out var network))
+                            {
+                                // At this point, we know it's a valid network. Let's see how many addresses are in range
+                                if (network.Usable > 1)
+                                {
+                                    // It's CIDR, but it defines more than one address.
+                                    // However, IPNetwork has a quirk that parses single addresses (without mask) as a range.
+                                    // So now let's see if it's a single address
+                                    if (IPAddress.TryParse(address, out _) == false)
+                                    {
+                                        // If we get here, it passed CIDR parsing, but it defined more than one address (i.e., had a mask). It's bad!
+                                        result = Resources.ClientAddressValidationError;
+                                    }
+                                    // Else, it's a single address as parsed by IPAddress, so we're good!
+                                }
+                                // Else
+                                // It's in CIDR notation and only defines a single address (/32) so we're good!
+                            }
+                            else
+                            {
+                                // Not even IPNetwork could parse it, so it's really bad!
+                                result = Resources.ClientAddressValidationError;
+                            }
+                        }
                     }
 
                     return result;
