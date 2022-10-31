@@ -203,8 +203,20 @@ namespace WgServerforWindows.Models
             {
                 new WireGuardExe().ExecuteCommand(new WireGuardCommand(string.Empty, WhichExe.Custom,
                         "powershell.exe",
-                        "-NoProfile Get-Help New-NetNat -Parameter InternalIPInterfaceAddressPrefix"),
+                        "-NoProfile if ((Get-Command New-NetNat).Parameters.ContainsKey('InternalIPInterfaceAddressPrefix')) { exit 0 } else { exit 1 }"),
                     out int exitCode);
+
+                if (exitCode == 0)
+                {
+                    return true;
+                }
+
+                // In case the Get-Command fails, fall back to the old check: Get-Help
+
+                new WireGuardExe().ExecuteCommand(new WireGuardCommand(string.Empty, WhichExe.Custom,
+                        "powershell.exe",
+                        "-NoProfile Get-Help New-NetNat -Parameter InternalIPInterfaceAddressPrefix"),
+                    out exitCode);
 
                 return exitCode == 0;
             }
