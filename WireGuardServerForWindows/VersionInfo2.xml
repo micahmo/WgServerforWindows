@@ -2,13 +2,12 @@
 <!-- Things to update: Version, Date, Release Notes -->
 <AppUpdate xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/micahmo/WgServerforWindows/master/WireGuardServerForWindows/AppUpdate.xsd">
-  <Version>2.0.2.0</Version>
-  <ReleaseDate>2022-09-27</ReleaseDate>
+  <Version>2.0.3.0</Version>
+  <ReleaseDate>2022-10-31</ReleaseDate>
   <!-- Default download -->
-  <DownloadLink>https://github.com/micahmo/WgServerforWindows/releases/download/v2.0.2/WS4WSetup-2.0.2.exe</DownloadLink>
-  <DownloadFileName>WS4WSetup-2.0.2.exe</DownloadFileName>
+  <DownloadLink>https://github.com/micahmo/WgServerforWindows/releases/download/v2.0.3/WS4WSetup-2.0.3.exe</DownloadLink>
+  <DownloadFileName>WS4WSetup-2.0.3.exe</DownloadFileName>
   <!-- Release notes -->
-  <VersionNotes> - Support client IP address generation in IPv6 range (#54)
- - Allow mutliple client IPs (#54)</VersionNotes>
+  <VersionNotes> - Fix New-NetNat feature check (#62)</VersionNotes>
   <ReleaseNotes></ReleaseNotes>
 </AppUpdate>
