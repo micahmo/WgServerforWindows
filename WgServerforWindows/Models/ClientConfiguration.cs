@@ -50,23 +50,20 @@ namespace WgServerforWindows.Models
                 DependencySatisfiedFunc = prop => string.IsNullOrEmpty(prop.Validation?.Validate?.Invoke(prop)),
                 Action = (conf, prop) =>
                 {
-                    IPNetwork serverNetwork = IPNetwork.Parse(serverConfiguration.AddressProperty.Value);
-                    var possibleAddresses = serverNetwork.ListIPAddress().Skip(2).SkipLast(1); // Skip reserved .0 and .1 and .255.
-
-                    // If the current address is already in range, we're done
-                    if (IPAddress.TryParse(prop.Value, out var currentAddress) && serverNetwork.Contains(currentAddress))
-                    {
-                        return;
-                    }
-
-                    WaitCursor.SetOverrideCursor(Cursors.Wait);
-
                     var existingAddresses = parentList.List.Select(c => c.AddressProperty.Value);
-
-                    // Find the first address that isn't used by another client
-                    prop.Value = possibleAddresses.FirstOrDefault(a => existingAddresses.Contains(a.ToString()) == false)?.ToString();
-
+                    WaitCursor.SetOverrideCursor(Cursors.Wait);
+                    var clientAddresses = serverConfiguration.AddressProperty.Value
+                        .Split(new[] { ',' })
+                        .Select(a => a.Trim())
+                        .Select(address => IPNetwork.Parse(address)
+                            .ListIPAddress()
+                            .Skip(2)
+                            .SkipLast(1)
+                            .FirstOrDefault(a => !existingAddresses.Contains(a.ToString()))
+                            ?.ToString()
+                        );
                     WaitCursor.SetOverrideCursor(null);
+                    prop.Value = string.Join(", ", clientAddresses);
                 }
             };
 
