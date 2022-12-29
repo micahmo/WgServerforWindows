@@ -4,6 +4,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Sockets;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Threading;
@@ -38,80 +39,103 @@ namespace WgServerforWindows.Models
             ServerPersistentKeepaliveProperty.TargetTypes.Add(typeof(ServerConfiguration));
 
             var serverConfiguration = new ServerConfiguration().Load<ServerConfiguration>(Configuration.LoadFromFile(ServerConfigurationPrerequisite.ServerDataPath));
-            string serverIp = serverConfiguration.AddressProperty.Value;
+            string serverAddresses = serverConfiguration.AddressProperty.Value;
+            IPNetwork serverIpv4Network = null;
+            IPNetwork serverIpv6Network = null;
+            foreach (var serverIPNetwork in ExtractIPs(serverConfiguration.AddressProperty.Value).Select(IPNetwork.Parse))
+            {
+                switch (serverIPNetwork.AddressFamily)
+                {
+                    case AddressFamily.InterNetwork: serverIpv4Network = serverIPNetwork; break;
+                    case AddressFamily.InterNetworkV6: serverIpv6Network = serverIPNetwork; break;
+                    default: break;
+                }
+            }
             string allowedIpsDefault = serverConfiguration.AllowedIpsProperty.Value;
 
             // Add support for generating client IP
             AddressProperty.Action = new ConfigurationPropertyAction(this)
             {
                 Name = nameof(Resources.GenerateFromServerAction),
-                Description = string.Format(Resources.GenerateClientAddressActionDescription, serverIp),
+                Description = string.Format(Resources.GenerateClientAddressActionDescription, serverAddresses),
                 DependentProperty = serverConfiguration.AddressProperty,
                 DependencySatisfiedFunc = prop => string.IsNullOrEmpty(prop.Validation?.Validate?.Invoke(prop)),
                 Action = (conf, prop) =>
                 {
-                    var existingAddresses = parentList.List.Select(c => c.AddressProperty.Value);
+                    IPAddress inputIPv4Address = null;
+                    IPAddress inputIPv6Address = null;
+                    foreach (var inputIPNetwork in ExtractIPs(prop.Value).Select(IPNetwork.Parse))
+                    {
+                        switch (inputIPNetwork.AddressFamily)
+                        {
+                            case AddressFamily.InterNetwork: inputIPv4Address = inputIPNetwork.Network; break;
+                            case AddressFamily.InterNetworkV6: inputIPv6Address = inputIPNetwork.Network; break;
+                            default: break;
+                        }
+                    }
+
+                    var clientAddresses = new List<string>(2);
+                    if (serverIpv4Network != null)
+                    {
+                        var ip = inputIPv4Address ?? serverIpv4Network.ListIPAddress(FilterEnum.Usable).Skip(1).FirstOrDefault(address => !OtherClientAddresses.Contains(address));
+                        clientAddresses.Add($"{ip}/32");
+                    }
+                    if (serverIpv6Network != null)
+                    {
+                        var ip = inputIPv6Address ?? serverIpv6Network.ListIPAddress(FilterEnum.Usable).FirstOrDefault(address => !OtherClientAddresses.Contains(address));
+                        clientAddresses.Add($"{ip}/128");
+                    }
+
                     WaitCursor.SetOverrideCursor(Cursors.Wait);
-                    var clientAddresses = serverConfiguration.AddressProperty.Value
-                        .Split(new[] { ',' })
-                        .Select(a => a.Trim())
-                        .Select(address => IPNetwork.Parse(address)
-                            .ListIPAddress()
-                            .Skip(2)
-                            .SkipLast(1)
-                            .FirstOrDefault(a => !existingAddresses.Contains(a.ToString()))
-                            ?.ToString()
-                        );
-                    WaitCursor.SetOverrideCursor(null);
                     prop.Value = string.Join(", ", clientAddresses);
+                    WaitCursor.SetOverrideCursor(null);
                 }
             };
 
-            // Do custom validation on the Address (we want a specific IP or a CIDR with /32)
+            // Do custom validation on the Address (we expect a CIDR with /32 for IPv4, or /128 for IPv6)
             AddressProperty.Validation = new ConfigurationPropertyValidation
             {
                 Validate = obj =>
                 {
-                    string result = default;
-
                     if (string.IsNullOrEmpty(obj.Value))
                     {
-                        // Can't be empty
-                        result = Resources.ClientAddressValidationError;
-                    }
-                    else
-                    {
-                        // Handle multiple comma-separated values
-                        foreach (string address in obj.Value.Split(new[] { ',' }).Select(a => a.Trim()))
-                        {
-                            // First, try parsing with IPNetwork to see if it's in CIDR format
-                            if (IPNetwork.TryParse(address, out var network))
-                            {
-                                // At this point, we know it's a valid network. Let's see how many addresses are in range
-                                if (network.Usable > 1)
-                                {
-                                    // It's CIDR, but it defines more than one address.
-                                    // However, IPNetwork has a quirk that parses single addresses (without mask) as a range.
-                                    // So now let's see if it's a single address
-                                    if (IPAddress.TryParse(address, out _) == false)
-                                    {
-                                        // If we get here, it passed CIDR parsing, but it defined more than one address (i.e., had a mask). It's bad!
-                                        result = Resources.ClientAddressValidationError;
-                                    }
-                                    // Else, it's a single address as parsed by IPAddress, so we're good!
-                                }
-                                // Else
-                                // It's in CIDR notation and only defines a single address (/32) so we're good!
-                            }
-                            else
-                            {
-                                // Not even IPNetwork could parse it, so it's really bad!
-                                result = Resources.ClientAddressValidationError;
-                            }
-                        }
+                        return Resources.ClientAddressValidationError;
                     }
 
-                    return result;
+                    var allAddressesAreValid = ExtractIPs(obj.Value).All(input =>
+                    {
+                        if (!IPNetwork.TryParse(input, out var ipNetwork))
+                        {
+                            return false;
+                        }
+
+                        switch (ipNetwork.AddressFamily)
+                        {
+                            case AddressFamily.InterNetwork:
+                                {
+                                    // must have /32 CIDR suffix, must be in the server network subnet usable IPs range, and not occupied by other clients.
+                                    return ipNetwork.Cidr.Equals(32) &&
+                                        (serverIpv4Network?.Contains(ipNetwork) ?? false) &&
+                                        serverIpv4Network.FirstUsable.AsIPNetwork().CompareTo(ipNetwork) == -1 &&
+                                        serverIpv4Network.LastUsable.AsIPNetwork().CompareTo(ipNetwork) == 1 &&
+                                        !OtherClientAddresses.Contains(ipNetwork.Network);
+                                }
+                            case AddressFamily.InterNetworkV6:
+                                {
+                                    // must have /128 CIDR suffix, must be in the server network subnet usable IPs range, and not occupied by other clients.
+                                    return ipNetwork.Cidr.Equals(128) &&
+                                        (serverIpv6Network?.Contains(ipNetwork) ?? false) &&
+                                        serverIpv6Network.FirstUsable.AsIPNetwork().CompareTo(ipNetwork) == -1 &&
+                                        !OtherClientAddresses.Contains(ipNetwork.Network);
+                                }
+                            default:
+                                {
+                                    return false;
+                                }
+                        }
+                    });
+
+                    return allAddressesAreValid ? default : Resources.ClientAddressValidationError;
                 }
             };
 
@@ -384,7 +408,7 @@ namespace WgServerforWindows.Models
             Name = nameof(Resources.ExportConfigurationFileAction),
             Action = (conf, prop) =>
             {
-                var saveFileDialog = new Microsoft.Win32.SaveFileDialog {FileName = $"{conf.NameProperty.Value}.conf", Filter = "Configuration Files (*.conf)|*.conf"};
+                var saveFileDialog = new Microsoft.Win32.SaveFileDialog { FileName = $"{conf.NameProperty.Value}.conf", Filter = "Configuration Files (*.conf)|*.conf" };
                 if (saveFileDialog.ShowDialog() == true)
                 {
                     Configuration configuration = ToConfiguration<ClientConfiguration>();
@@ -419,6 +443,16 @@ namespace WgServerforWindows.Models
         #region Private fields
 
         private readonly ClientConfigurationList _parentList;
+
+        private IEnumerable<IPAddress> OtherClientAddresses
+        {
+            get => _parentList.List.Where(item => item.Name != this.Name).SelectMany(c => c.AddressProperty.Value?.Split(',', StringSplitOptions.RemoveEmptyEntries).Select(a => IPNetwork.Parse(a.Trim()).Network));
+        }
+
+        private IEnumerable<string> ExtractIPs(string value)
+        {
+            return (value ?? "").Split(',', StringSplitOptions.RemoveEmptyEntries).Select(a => a.Trim()).Where(x => !string.IsNullOrEmpty(x));
+        }
 
         #endregion
     }
