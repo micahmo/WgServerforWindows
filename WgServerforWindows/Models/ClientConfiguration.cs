@@ -50,20 +50,51 @@ namespace WgServerforWindows.Models
                 DependencySatisfiedFunc = prop => string.IsNullOrEmpty(prop.Validation?.Validate?.Invoke(prop)),
                 Action = (conf, prop) =>
                 {
-                    var existingAddresses = parentList.List.Select(c => c.AddressProperty.Value);
                     WaitCursor.SetOverrideCursor(Cursors.Wait);
-                    var clientAddresses = serverConfiguration.AddressProperty.Value
+
+                    var serverAddresses = serverConfiguration.AddressProperty.Value
                         .Split(new[] { ',' })
-                        .Select(a => a.Trim())
-                        .Select(address => IPNetwork.Parse(address)
-                            .ListIPAddress()
-                            .Skip(2)
-                            .SkipLast(1)
-                            .FirstOrDefault(a => !existingAddresses.Contains(a.ToString()))
-                            ?.ToString()
-                        );
+                        .Select(a => IPNetwork.Parse(a.Trim()))
+                        .ToList(); // Prevent multiple enumeration
+
+                    var currentClientAddresses = prop.Value
+                        .Split(new[] { ',' })
+                        .Select(a =>
+                        {
+                            IPAddress.TryParse(a.Trim(), out var address);
+                            return address;
+                        })
+                        .Where(a => a != null)
+                        .ToList(); // Prevent multiple enumeration
+
+                    var newClientAddresses = new HashSet<string>();
+                    var serverAddressesToConsider = new List<IPNetwork>(serverAddresses); // Copy
+
+                    // See if any existing client addresses are in any of the server's address ranges
+                    foreach (var serverAddress in serverAddresses)
+                    {
+                        foreach (var clientAddress in currentClientAddresses)
+                        {
+                            if (serverAddress.Contains(clientAddress))
+                            {
+                                newClientAddresses.Add(clientAddress.ToString());
+                                serverAddressesToConsider.Remove(serverAddress);
+                            }
+                        }
+                    }
+
+                    var existingAddresses = parentList.List.Select(c => c.AddressProperty.Value);
+                    newClientAddresses.UnionWith(serverAddressesToConsider.Select(s => s
+                        .ListIPAddress()
+                        .Skip(2)
+                        .SkipLast(1)
+                        .FirstOrDefault(a => !existingAddresses.Contains(a.ToString()))
+                        ?.ToString()
+                    ));
+
+                    prop.Value = string.Join(", ", newClientAddresses);
+
                     WaitCursor.SetOverrideCursor(null);
-                    prop.Value = string.Join(", ", clientAddresses);
                 }
             };
 
