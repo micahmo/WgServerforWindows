@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Net.Sockets;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using WgServerforWindows.Properties;
@@ -34,25 +35,28 @@ namespace WgServerforWindows.Models
             {
                 Validate = obj =>
                 {
-                    string result = default;
-
-                    if (IPNetwork.TryParse(obj.Value, out _) == false)
+                    var allAddressesAreValid = obj.Value.Split(',').Select(input => input.Trim()).All(input =>
                     {
-                        result = Resources.NetworkAddressValidationError;
-                    }
-                    else // TryParse succeeded
-                    {
-                        // IPNetwork.TryParse recognizes single IP addresses as CIDR (with 8 mask).
-                        // This is not good, because we want an explicit CIDR for the server.
-                        // Therefore, if IPNetwork.TryParse succeeds, and IPAddress.TryParse also succeeds, we have a problem.
-                        if (IPAddress.TryParse(obj.Value, out _))
+                        // It must be a valid parsable IP (v4 or v6)...
+                        if (!IPNetwork.TryParse(input, out var address))
                         {
-                            // This is just a regular address. We want CIDR.
-                            result = Resources.NetworkAddressValidationError;
+                            return false;
                         }
-                    }
+                        // ...in the internal (local) addresses range
+                        if (!address.AddressFamily.Equals(AddressFamily.InterNetwork) && !address.AddressFamily.Equals(AddressFamily.InterNetworkV6))
+                        {
+                            return false;
+                        }
+                        // ...with at least one subnet mask IP address available in range
+                        if (address.Usable < 1)
+                        {
+                            return false;
+                        }
 
-                    return result;
+                        return true;
+                    });
+
+                    return allAddressesAreValid ? default : Resources.NetworkAddressValidationError;
                 }
             };
 
@@ -125,7 +129,9 @@ namespace WgServerforWindows.Models
         public ConfigurationProperty ListenPortProperty => _listenPortProperty ??= new ConfigurationProperty(this)
         {
             Index = 1,
-            PersistentPropertyName = "ListenPort", Name = nameof(ListenPortProperty), DefaultValue = "51820",
+            PersistentPropertyName = "ListenPort",
+            Name = nameof(ListenPortProperty),
+            DefaultValue = "51820",
             Validation = new ConfigurationPropertyValidation
             {
                 Validate = obj =>
@@ -154,7 +160,8 @@ namespace WgServerforWindows.Models
         {
             Index = 2,
             PersistentPropertyName = "AllowedIPs",
-            Name = nameof(AllowedIpsProperty), Description = Resources.ServerAllowedIpsDescription,
+            Name = nameof(AllowedIpsProperty),
+            Description = Resources.ServerAllowedIpsDescription,
             DefaultValue = "0.0.0.0/0",
             Validation = new ConfigurationPropertyValidation
             {
@@ -166,7 +173,7 @@ namespace WgServerforWindows.Models
                     }
 
                     // Support CSV allowed IPs
-                    foreach (string address in obj.Value.Split(new[] {','}, StringSplitOptions.RemoveEmptyEntries).Select(a => a.Trim()))
+                    foreach (string address in obj.Value.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(a => a.Trim()))
                     {
                         if (IPNetwork.TryParse(address, out _) == false)
                         {
@@ -206,7 +213,7 @@ namespace WgServerforWindows.Models
                         {
                             result = Resources.EndpointPortMismatch;
                         }
-                        
+
                         // If we get here, we passed all validation.
                     }
 
@@ -274,7 +281,7 @@ namespace WgServerforWindows.Models
             get
             {
                 string result = string.Empty;
-                
+
                 try
                 {
                     IPNetwork network = IPNetwork.Parse(AddressProperty.Value);
