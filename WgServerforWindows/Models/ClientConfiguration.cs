@@ -53,7 +53,7 @@ namespace WgServerforWindows.Models
                     WaitCursor.SetOverrideCursor(Cursors.Wait);
 
                     var serverAddresses = serverConfiguration.AddressProperty.Value
-                        .Split(new[] { ',' })
+                        .Split(',')
                         .Select(a => IPNetwork.Parse(a.Trim()))
                         .ToList(); // Prevent multiple enumeration
 
