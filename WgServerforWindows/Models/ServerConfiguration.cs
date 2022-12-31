@@ -34,25 +34,24 @@ namespace WgServerforWindows.Models
             {
                 Validate = obj =>
                 {
-                    string result = default;
-
-                    if (IPNetwork.TryParse(obj.Value, out _) == false)
+                    // Multiple server addresses are supported, so validate all of them
+                    foreach (string address in obj.Value.Split(',').Select(a => a.Trim()))
                     {
-                        result = Resources.NetworkAddressValidationError;
-                    }
-                    else // TryParse succeeded
-                    {
+                        if (IPNetwork.TryParse(address, out _) == false)
+                        {
+                            return Resources.NetworkAddressValidationError;
+                        }
                         // IPNetwork.TryParse recognizes single IP addresses as CIDR (with 8 mask).
                         // This is not good, because we want an explicit CIDR for the server.
                         // Therefore, if IPNetwork.TryParse succeeds, and IPAddress.TryParse also succeeds, we have a problem.
-                        if (IPAddress.TryParse(obj.Value, out _))
+                        if (IPAddress.TryParse(address, out _))
                         {
                             // This is just a regular address. We want CIDR.
-                            result = Resources.NetworkAddressValidationError;
+                            return Resources.NetworkAddressValidationError;
                         }
                     }
 
-                    return result;
+                    return default;
                 }
             };
 

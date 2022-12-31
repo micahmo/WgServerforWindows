@@ -2,12 +2,12 @@
 <!-- Things to update: Version, Date, Release Notes -->
 <AppUpdate xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/micahmo/WgServerforWindows/master/WireGuardServerForWindows/AppUpdate.xsd">
-  <Version>2.0.3.0</Version>
-  <ReleaseDate>2022-10-31</ReleaseDate>
+  <Version>2.0.4.0</Version>
+  <ReleaseDate>2022-12-31</ReleaseDate>
   <!-- Default download -->
-  <DownloadLink>https://github.com/micahmo/WgServerforWindows/releases/download/v2.0.3/WS4WSetup-2.0.3.exe</DownloadLink>
-  <DownloadFileName>WS4WSetup-2.0.3.exe</DownloadFileName>
+  <DownloadLink>https://github.com/micahmo/WgServerforWindows/releases/download/v2.0.4/WS4WSetup-2.0.4.exe</DownloadLink>
+  <DownloadFileName>WS4WSetup-2.0.4.exe</DownloadFileName>
   <!-- Release notes -->
-  <VersionNotes> - Fix New-NetNat feature check (#62)</VersionNotes>
+  <VersionNotes> - Add support for generating client addresses from mulitple server address subnets (#67 and #68). Thanks @xeptore!</VersionNotes>
   <ReleaseNotes></ReleaseNotes>
 </AppUpdate>

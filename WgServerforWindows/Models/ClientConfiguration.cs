@@ -50,21 +50,49 @@ namespace WgServerforWindows.Models
                 DependencySatisfiedFunc = prop => string.IsNullOrEmpty(prop.Validation?.Validate?.Invoke(prop)),
                 Action = (conf, prop) =>
                 {
-                    IPNetwork serverNetwork = IPNetwork.Parse(serverConfiguration.AddressProperty.Value);
-                    var possibleAddresses = serverNetwork.ListIPAddress().Skip(2).SkipLast(1); // Skip reserved .0 and .1 and .255.
-
-                    // If the current address is already in range, we're done
-                    if (IPAddress.TryParse(prop.Value, out var currentAddress) && serverNetwork.Contains(currentAddress))
-                    {
-                        return;
-                    }
-
                     WaitCursor.SetOverrideCursor(Cursors.Wait);
 
-                    var existingAddresses = parentList.List.Select(c => c.AddressProperty.Value);
+                    var serverAddresses = serverConfiguration.AddressProperty.Value
+                        .Split(',')
+                        .Select(a => IPNetwork.Parse(a.Trim()))
+                        .ToList(); // Prevent multiple enumeration
 
-                    // Find the first address that isn't used by another client
-                    prop.Value = possibleAddresses.FirstOrDefault(a => existingAddresses.Contains(a.ToString()) == false)?.ToString();
+                    var currentClientAddresses = prop.Value
+                        .Split(',')
+                        .Select(a =>
+                        {
+                            IPAddress.TryParse(a.Trim(), out var address);
+                            return address;
+                        })
+                        .Where(a => a != null)
+                        .ToList(); // Prevent multiple enumeration
+
+                    var newClientAddresses = new HashSet<string>();
+                    var serverAddressesToConsider = new List<IPNetwork>(serverAddresses); // Copy
+
+                    // See if any existing client addresses are in any of the server's address ranges
+                    foreach (var serverAddress in serverAddresses)
+                    {
+                        foreach (var clientAddress in currentClientAddresses)
+                        {
+                            if (serverAddress.Contains(clientAddress))
+                            {
+                                newClientAddresses.Add(clientAddress.ToString());
+                                serverAddressesToConsider.Remove(serverAddress);
+                            }
+                        }
+                    }
+
+                    var existingAddresses = parentList.List.Select(c => c.AddressProperty.Value);
+                    newClientAddresses.UnionWith(serverAddressesToConsider.Select(s => s
+                        .ListIPAddress()
+                        .Skip(2)
+                        .SkipLast(1)
+                        .FirstOrDefault(a => !existingAddresses.Contains(a.ToString()))
+                        ?.ToString()
+                    ));
+
+                    prop.Value = string.Join(", ", newClientAddresses);
 
                     WaitCursor.SetOverrideCursor(null);
                 }
