@@ -58,7 +58,7 @@ namespace WgServerforWindows.Models
                         .ToList(); // Prevent multiple enumeration
 
                     var currentClientAddresses = prop.Value
-                        .Split(new[] { ',' })
+                        .Split(',')
                         .Select(a =>
                         {
                             IPAddress.TryParse(a.Trim(), out var address);
