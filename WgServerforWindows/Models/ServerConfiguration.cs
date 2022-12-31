@@ -35,7 +35,7 @@ namespace WgServerforWindows.Models
                 Validate = obj =>
                 {
                     // Multiple server addresses are supported, so validate all of them
-                    foreach (string address in obj.Value.Split(new[] { ',' }).Select(a => a.Trim()))
+                    foreach (string address in obj.Value.Split(',').Select(a => a.Trim()))
                     {
                         if (IPNetwork.TryParse(address, out _) == false)
                         {
