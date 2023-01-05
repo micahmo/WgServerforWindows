@@ -66,6 +66,7 @@ namespace WgServerforWindows.Models
                         })
                         .Where(a => a != null) ?? Enumerable.Empty<IPAddress>())
                         .ToList(); // Prevent multiple enumeration
+
                     var newClientAddresses = new HashSet<string>();
                     var serverAddressesToConsider = new List<IPNetwork>(serverAddresses); // Copy
 
