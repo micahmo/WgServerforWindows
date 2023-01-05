@@ -57,14 +57,14 @@ namespace WgServerforWindows.Models
                         .Select(a => IPNetwork.Parse(a.Trim()))
                         .ToList(); // Prevent multiple enumeration
 
-                    var currentClientAddresses = prop.Value
+                    var currentClientAddresses = (prop.Value?
                         .Split(',')
                         .Select(a =>
                         {
                             IPAddress.TryParse(a.Trim(), out var address);
                             return address;
                         })
-                        .Where(a => a != null)
+                        .Where(a => a != null) ?? Enumerable.Empty<IPAddress>())
                         .ToList(); // Prevent multiple enumeration
 
                     var newClientAddresses = new HashSet<string>();

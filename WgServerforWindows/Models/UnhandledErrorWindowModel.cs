@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Windows;
 using System.Windows.Input;
 using GalaSoft.MvvmLight;
@@ -42,7 +44,18 @@ namespace WgServerforWindows.Models
                 exception = exception.InnerException;
             }
 
-            Clipboard.SetText(exceptionText.ToString());
+            // This can help to alleviate issues opening the clipboard like CLIPBRD_E_CANT_OPEN
+            // See: https://stackoverflow.com/a/69081 
+            foreach (var _ in Enumerable.Range(0, 10))
+            {
+                try
+                {
+                    Clipboard.SetText(exceptionText.ToString());
+                    break;
+                }
+                catch { }
+                Thread.Sleep(10);
+            }
         });
         private RelayCommand _copyErrorCommand;
     }
