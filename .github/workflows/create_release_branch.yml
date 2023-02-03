@@ -19,7 +19,7 @@ on:
 
 jobs:
   create_release_branch:
-    #runs-on: windows-latest
+    runs-on: ubuntu-latest
     steps:
     - name: Determine Latest Release
       id: latest
@@ -38,5 +38,4 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        branch: refs/heads/release/v${{ steps.increment_version.outputs.? }}
-      sha: '${{ github.sha }}'
+        branch: refs/heads/release/v${{ steps.increment_version.outputs.next-version }}
