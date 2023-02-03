@@ -161,6 +161,9 @@ namespace WgServerforWindows.Models
             // Initial value is server value
             AllowedRoutableIpsProperty.Value = allowedIpsDefault;
 
+            // The public key can be entered by the user
+            PublicKeyProperty.IsReadOnly = false;
+
             // The client generates the PSK
             PresharedKeyProperty.Action = new ConfigurationPropertyAction(this)
             {
