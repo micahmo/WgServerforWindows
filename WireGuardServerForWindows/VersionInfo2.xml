@@ -8,6 +8,7 @@
   <DownloadLink>https://github.com/micahmo/WgServerforWindows/releases/download/v2.0.5/WS4WSetup-2.0.5.exe</DownloadLink>
   <DownloadFileName>WS4WSetup-2.0.5.exe</DownloadFileName>
   <!-- Release notes -->
-  <VersionNotes> - Fix issue with generating client addresses (#70)</VersionNotes>
+  <VersionNotes> - Fix issue with generating client addresses (#70)Things to update: Version
+ - amd this</VersionNotes>
   <ReleaseNotes></ReleaseNotes>
 </AppUpdate>
