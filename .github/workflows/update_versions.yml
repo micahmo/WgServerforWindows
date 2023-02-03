@@ -1,0 +1,4 @@
+name: Update Versions
+
+on:
+  workflow_dispatch:

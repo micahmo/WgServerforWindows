@@ -1,0 +1,4 @@
+name: Generate Release
+
+on:
+  workflow_dispatch:
