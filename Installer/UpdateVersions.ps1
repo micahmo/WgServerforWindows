@@ -1,6 +1,10 @@
 # This script is intended to be run from the root of the repo, like .\Installer\UpdateVersions.ps1
 
-$newVersion = Read-Host "Enter the new version number (without 'v' and without trailing '.0')"
+$newVersion = $args[0]
+
+if ($args.count -eq 0) {
+    $newVersion = Read-Host "Enter the new version number (without 'v' and without trailing '.0')"
+}
 
 # Directory.Build.props
 $directoryBuildPropsFile = Get-Content "Directory.Build.props"
