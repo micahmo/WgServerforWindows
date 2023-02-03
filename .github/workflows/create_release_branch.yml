@@ -1,0 +1,42 @@
+name: Create Release Branch
+
+on:
+  workflow_dispatch:
+    inputs:
+      increment:
+        type: choice
+        description: 'SemVer segment to increment'
+        required: true
+        default: 'bug'
+        options: 
+        - major
+        - feature
+        - bug
+        - alpha
+        - beta
+        - pre
+        - rc
+
+jobs:
+  create_release_branch:
+    #runs-on: windows-latest
+    steps:
+    - name: Determine Latest Release
+      id: latest
+      uses: pozetroninc/github-action-get-latest-release@master
+      with:
+        repository: ${{ github.repository }}
+        excludes: prerelease, draft
+    - name: Increment Version Number
+      id: increment_version
+      uses: christian-draeger/increment-semantic-version@master
+      with:
+        current-version: ${{ steps.latest.outputs.release }}
+        version-fragment: ${{ github.event.inputs.increment }}
+    - name: Create Release Branch
+      uses: peterjgrainger/action-create-branch@v2.2.0
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        branch: refs/heads/release/v${{ steps.increment_version.outputs.? }}
+      sha: '${{ github.sha }}'
