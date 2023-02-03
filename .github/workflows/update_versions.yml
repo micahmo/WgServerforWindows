@@ -1,4 +1,28 @@
-name: Update Versions
+name: 2. Update Versions
 
 on:
   workflow_dispatch:
+    inputs:
+      version_notes:
+        description: 'Version Notes (example: " - First change`n - Second Change")'
+
+jobs:
+  update_versions:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Determine Version Number
+        id: determine_version_number
+        run: echo "VERSION_NUMBER=$($env:GITHUB_REF_NAME.Replace('release/v', ''))" >> $env:GITHUB_OUTPUT
+      - name: Run UpdateVersions.ps1
+        run: Installer\UpdateVersions.ps1 ${{ steps.determine_version_number.outputs.VERSION_NUMBER }} ${{ github.event.inputs.version_notes }}
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@main
+        with:
+          commit-message: Bump version to ${{ steps.determine_version_number.outputs.VERSION_NUMBER }}
+          title: Bump version to ${{ steps.determine_version_number.outputs.VERSION_NUMBER }}
+          body: >
+            Bump version to ${{ steps.determine_version_number.outputs.VERSION_NUMBER }}
+          branch: feature/update-versions-${{ steps.determine_version_number.outputs.VERSION_NUMBER }}

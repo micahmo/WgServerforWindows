@@ -8,6 +8,7 @@ foreach ($configuration in "Debug", "Release") {
     }
 }
 
+dotnet restore
 msbuild WgServerforWindows.sln /property:Configuration=Release
 
 Remove-Item Installer\WS4WSetup-*.exe
