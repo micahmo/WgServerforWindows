@@ -1,5 +1,5 @@
 name: Run Unit Tests
-
+concurrency: ${{ github.workflow }}
 on: [push, pull_request]
 
 jobs:
