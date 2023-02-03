@@ -1,6 +1,11 @@
 # This script is intended to be run from the root of the repo, like .\Installer\UpdateVersions.ps1
 
-$newVersion = Read-Host "Enter the new version number (without 'v' and without trailing '.0')"
+$newVersion = $args[0]
+$versionNotes = $args[1]
+
+if ($args.count -eq 0) {
+    $newVersion = Read-Host "Enter the new version number (without 'v' and without trailing '.0')"
+}
 
 # Directory.Build.props
 $directoryBuildPropsFile = Get-Content "Directory.Build.props"
@@ -53,7 +58,11 @@ for ($i = 0; $i -lt $versionInfo.Length; $i += 1) {
 
     if ($line -match "DownloadFileName") {
         $versionInfo[$i] = "  <DownloadFileName>WS4WSetup-$($newVersion).exe</DownloadFileName>"
-    }   
+    }
+
+    if ($line -match "VersionNotes") {
+        $versionInfo[$i] = "  <VersionNotes>$($versionNotes)</VersionNotes>"
+    }
 }
 
 Set-Content "WireGuardServerForWindows\VersionInfo2.xml" $versionInfo
