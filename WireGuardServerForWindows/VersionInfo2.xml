@@ -2,13 +2,13 @@
 <!-- Things to update: Version, Date, Release Notes -->
 <AppUpdate xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/micahmo/WgServerforWindows/master/WireGuardServerForWindows/AppUpdate.xsd">
-  <Version>2.0.5.0</Version>
-  <ReleaseDate>2023-01-05</ReleaseDate>
+  <Version>2.0.6.0</Version>
+  <ReleaseDate>2023-02-03</ReleaseDate>
   <!-- Default download -->
-  <DownloadLink>https://github.com/micahmo/WgServerforWindows/releases/download/v2.0.5/WS4WSetup-2.0.5.exe</DownloadLink>
-  <DownloadFileName>WS4WSetup-2.0.5.exe</DownloadFileName>
+  <DownloadLink>https://github.com/micahmo/WgServerforWindows/releases/download/v2.0.6/WS4WSetup-2.0.6.exe</DownloadLink>
+  <DownloadFileName>WS4WSetup-2.0.6.exe</DownloadFileName>
   <!-- Release notes -->
-  <VersionNotes> - Fix issue with generating client addresses (#70)Things to update: Version
- - amd this</VersionNotes>
+  <VersionNotes> - First change (#1)
+ - Second Change (#2)</VersionNotes>
   <ReleaseNotes></ReleaseNotes>
 </AppUpdate>
