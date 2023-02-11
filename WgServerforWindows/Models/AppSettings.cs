@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Windows;
 using GalaSoft.MvvmLight;
@@ -47,6 +48,7 @@ namespace WgServerforWindows.Models
             Tracker.Configure<AppSettings>()
                 .Property(a => a.CustomServerConfigDirectory)
                 .Property(a => a.CustomClientConfigDirectory)
+                .Property(a => a.ClientConfigurationExpansionStates)
                 .Track(this);
         }
 
@@ -78,6 +80,11 @@ namespace WgServerforWindows.Models
             set => Set(nameof(CustomClientConfigDirectory), ref _customClientConfigDirectory, value);
         }
         private string _customClientConfigDirectory;
+
+        /// <summary>
+        /// Tracks whether each client configuration is expanded in the UI or not
+        /// </summary>
+        public Dictionary<string, bool> ClientConfigurationExpansionStates = new Dictionary<string, bool>();
 
         /// <summary>
         /// The public tracker instance. Can be used to track things other than the <see cref="Instance"/>.

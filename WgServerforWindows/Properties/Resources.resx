@@ -545,4 +545,16 @@ Note: It is preferable to use a domain name with DDNS to avoid dynamic WAN IPs.<
   <data name="AllowedRoutableIpsProperty" xml:space="preserve">
     <value>Allowed IPs</value>
   </data>
+  <data name="ExpandAll" xml:space="preserve">
+    <value>Expand all</value>
+  </data>
+  <data name="CollapseAll" xml:space="preserve">
+    <value>Collapse all</value>
+  </data>
+  <data name="FilteredClientCount" xml:space="preserve">
+    <value>Count: {0} (filtered from: {1})</value>
+  </data>
+  <data name="ClientCount" xml:space="preserve">
+    <value>Count: {0}</value>
+  </data>
 </root>

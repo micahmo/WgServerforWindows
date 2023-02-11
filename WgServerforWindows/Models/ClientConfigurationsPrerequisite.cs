@@ -104,6 +104,14 @@ namespace WgServerforWindows.Models
                 clientConfigurations.List.Add(clientConfiguration);
             }
 
+            clientConfigurations.List.ToList().ForEach(c =>
+            {
+                if (AppSettings.Instance.ClientConfigurationExpansionStates.TryGetValue(c.Name, out bool expansionState))
+                {
+                    c.IsExpanded = expansionState;
+                }
+            });
+
             ClientConfigurationEditorWindow clientConfigurationEditorWindow = new ClientConfigurationEditorWindow {DataContext = clientConfigurations};
 
             WaitCursor.SetOverrideCursor(Cursors.Wait);
@@ -183,6 +191,10 @@ namespace WgServerforWindows.Models
 
                 WaitCursor.SetOverrideCursor(null);
             }
+
+            AppSettings.Instance.ClientConfigurationExpansionStates.Clear();
+            clientConfigurations.List.ToList().ForEach(c => AppSettings.Instance.ClientConfigurationExpansionStates[c.Name] = c.IsExpanded);
+            AppSettings.Instance.Save();
 
             Refresh();
         }

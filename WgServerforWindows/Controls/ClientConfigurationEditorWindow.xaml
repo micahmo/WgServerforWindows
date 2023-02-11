@@ -7,6 +7,8 @@
         xmlns:properties="clr-namespace:WgServerforWindows.Properties"
         xmlns:controls="clr-namespace:WgServerforWindows.Controls"
         xmlns:converters="clr-namespace:WgServerforWindows.Converters"
+        xmlns:c="clr-namespace:CalcBinding;assembly=CalcBinding"
+        xmlns:esb="clr-namespace:ExplorerSearchBox;assembly=ExplorerSearchBox"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance Type=models:ClientConfigurationList}"
         Width="600" Height="600"
@@ -14,6 +16,7 @@
 
     <Grid>
         <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
             <ColumnDefinition/>
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="Auto"/>
@@ -25,30 +28,53 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <Grid Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="3">
+        <Grid Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="4">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="40" />
+                <ColumnDefinition Width="40" />
+                <ColumnDefinition Width="5" />
             </Grid.ColumnDefinitions>
 
-            <Button Grid.Column="1" Grid.Row="0" Margin="0,10,0,10" Content="{x:Static properties:Resources.AddClient}" Command="{Binding AddClientConfigurationCommand}"/>
+            <Button Grid.Column="0" Grid.Row="0" Margin="10,10,5,10" Height="30" Content="{x:Static properties:Resources.AddClient}" Command="{Binding AddClientConfigurationCommand}"/>
+            <esb:ExplorerSearchBox Grid.Column="1" Margin="5,0,5,0" FocusManager.IsFocusScope="True" HintText="Filter" VerticalAlignment="Center" HorizontalAlignment="Stretch" SearchRequested="ExplorerSearchBox_SearchRequested" />
+            <Button Grid.Column="2" Grid.Row="0" Margin="5,10,5,10" Content="+" FontSize="15" ToolTip="{x:Static properties:Resources.ExpandAll}" Command="{Binding ExpandAllConfigurationsCommand}"/>
+            <Button Grid.Column="3" Grid.Row="0" Margin="5,10,5,10" Content="-" FontSize="15" ToolTip="{x:Static properties:Resources.CollapseAll}" Command="{Binding CollapseAllConfigurationsCommand}"/>
         </Grid>
 
-        <ScrollViewer Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="3" VerticalScrollBarVisibility="Auto">
+        <ScrollViewer Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="4" VerticalScrollBarVisibility="Visible">
             <ItemsControl ItemsSource="{Binding List}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <StackPanel Orientation="Vertical">
-                            <Canvas Height="10" Margin="20" Background="LightGray"/>
-                            <controls:ConfigurationEditorControl DataContext="{Binding}"/>
+                            <Expander IsExpanded="{Binding IsExpanded}" Margin="0,0,0,0" Visibility="{c:Binding IsVisible, FalseToVisibility=Collapsed}">
+                                <Expander.Header>
+                                    <Grid HorizontalAlignment="{Binding HorizontalAlignment, RelativeSource={RelativeSource AncestorType=ContentPresenter}, Mode=OneWayToSource}"
+                                          Margin="-23,-3,0,0"  Background="LightGray">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="20"/>
+                                            <ColumnDefinition/>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition/>
+                                            <ColumnDefinition Width="20"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Grid.Column="0" Text="{c:Binding 'IsExpanded ? ExpandedSymbol : CollapsedSymbol'}" VerticalAlignment="Center" TextAlignment="Center" FontWeight="Bold" TextTrimming="CharacterEllipsis"/>
+                                        <TextBlock Grid.Column="2" Text="{Binding NameProperty.Value}" TextAlignment="Center" FontWeight="Bold" FontSize="13" Padding="5" />
+                                    </Grid>
+                                </Expander.Header>
+                                <Grid Margin="0,5,0,0">
+                                    <controls:ConfigurationEditorControl DataContext="{Binding}"/>
+                                </Grid>
+                            </Expander>
                         </StackPanel>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
         </ScrollViewer>
 
-        <Button Grid.Column="1" Grid.Row="2" Margin="10,10,5,10" Padding="10,5,10,5" HorizontalAlignment="Right" Content="{x:Static properties:Resources.Cancel}" Click="CancelButton_Click"/>
-        <Button Grid.Column="2" Grid.Row="2" Margin="5,10,10,10" Padding="10,5,10,5" HorizontalAlignment="Right" Content="{x:Static properties:Resources.Save}" Click="SaveButton_Click"/>
+        <Label Grid.Column="0" Grid.Row="2" Content="{Binding CountString}" Padding="10,5,10,10" VerticalContentAlignment="Bottom"/>
+        <Button Grid.Column="2" Grid.Row="2" Margin="10,10,5,10" Padding="10,5,10,5" HorizontalAlignment="Right" Content="{x:Static properties:Resources.Cancel}" Click="CancelButton_Click"/>
+        <Button Grid.Column="3" Grid.Row="2" Margin="5,10,10,10" Padding="10,5,10,5" HorizontalAlignment="Right" Content="{x:Static properties:Resources.Save}" Click="SaveButton_Click"/>
     </Grid>
 </Window>

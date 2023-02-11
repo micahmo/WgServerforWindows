@@ -53,6 +53,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Reference Include="ExplorerSearchBox">
+      <HintPath>lib\ExplorerSearchBox.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
     <Resource Include="Images\cancel.png" />
     <Resource Include="Images\checked.png" />
     <Resource Include="Images\info.png" />
