@@ -37,6 +37,7 @@ namespace WgServerforWindows.Models
             PublicKeyProperty.TargetTypes.Add(typeof(ServerConfiguration));
             ServerPersistentKeepaliveProperty.TargetTypes.Add(typeof(ServerConfiguration));
 
+            ServerConfigurationPrerequisite.EnsureConfigFile();
             var serverConfiguration = new ServerConfiguration().Load<ServerConfiguration>(Configuration.LoadFromFile(ServerConfigurationPrerequisite.ServerDataPath));
             string serverIp = serverConfiguration.AddressProperty.Value;
             string allowedIpsDefault = serverConfiguration.AllowedIpsProperty.Value;

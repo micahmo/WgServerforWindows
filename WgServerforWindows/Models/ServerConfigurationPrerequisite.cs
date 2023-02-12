@@ -77,33 +77,7 @@ namespace WgServerforWindows.Models
 
         public override void Resolve()
         {
-            if (Directory.Exists(Path.GetDirectoryName(ServerDataPath)) == false)
-            {
-                Directory.CreateDirectory(Path.GetDirectoryName(ServerDataPath));
-            }
-
-            if (File.Exists(ServerDataPath) == false)
-            {
-#pragma warning disable CS0642
-                // There is intentionally no code block after the using statement,
-                // because we want to create and then release the file without holding it open.
-                using (File.Create(ServerDataPath));
-#pragma warning restore CS0642
-            }
-
-            if (Directory.Exists(Path.GetDirectoryName(ServerWGPath)) == false)
-            {
-                Directory.CreateDirectory(Path.GetDirectoryName(ServerWGPath));
-            }
-
-            if (File.Exists(ServerWGPath) == false)
-            {
-#pragma warning disable CS0642
-                // There is intentionally no code block after the using statement,
-                // because we want to create and then release the file without holding it open.
-                using (File.Create(ServerWGPath));
-#pragma warning restore CS0642
-            }
+            EnsureConfigFile();
 
             Configure();
         }
@@ -235,6 +209,29 @@ namespace WgServerforWindows.Models
         #endregion
 
         #region Public static methods
+
+        public static void EnsureConfigFile()
+        {
+            if (Directory.Exists(Path.GetDirectoryName(ServerDataPath)) == false)
+            {
+                Directory.CreateDirectory(Path.GetDirectoryName(ServerDataPath));
+            }
+
+            if (File.Exists(ServerDataPath) == false)
+            {
+                File.Create(ServerDataPath).Dispose();
+            }
+
+            if (Directory.Exists(Path.GetDirectoryName(ServerWGPath)) == false)
+            {
+                Directory.CreateDirectory(Path.GetDirectoryName(ServerWGPath));
+            }
+
+            if (File.Exists(ServerWGPath) == false)
+            {
+                File.Create(ServerWGPath).Dispose();
+            }
+        }
 
         public static Network GetNetwork(TimeSpan? timeout = null)
         {
