@@ -2,12 +2,13 @@
 <!-- Things to update: Version, Date, Release Notes -->
 <AppUpdate xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/micahmo/WgServerforWindows/master/WireGuardServerForWindows/AppUpdate.xsd">
-  <Version>2.0.6.0</Version>
-  <ReleaseDate>2023-02-03</ReleaseDate>
+  <Version>2.0.7.0</Version>
+  <ReleaseDate>2023-02-13</ReleaseDate>
   <!-- Default download -->
-  <DownloadLink>https://github.com/micahmo/WgServerforWindows/releases/download/v2.0.6/WS4WSetup-2.0.6.exe</DownloadLink>
-  <DownloadFileName>WS4WSetup-2.0.6.exe</DownloadFileName>
+  <DownloadLink>https://github.com/micahmo/WgServerforWindows/releases/download/v2.0.7/WS4WSetup-2.0.7.exe</DownloadLink>
+  <DownloadFileName>WS4WSetup-2.0.7.exe</DownloadFileName>
   <!-- Release notes -->
-  <VersionNotes> - Allow setting client public key without having private key (#76)</VersionNotes>
+  <VersionNotes> - Improve client configuration UI (expand/collapse/filter/count)
+ - Fix issue were clients could not be configured before server</VersionNotes>
   <ReleaseNotes></ReleaseNotes>
 </AppUpdate>
