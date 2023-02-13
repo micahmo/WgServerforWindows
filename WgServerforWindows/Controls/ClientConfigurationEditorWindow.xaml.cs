@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using System.Windows;
-using System.Windows.Input;
 using WgServerforWindows.Models;
 
 namespace WgServerforWindows.Controls
@@ -19,6 +18,13 @@ namespace WgServerforWindows.Controls
         protected override void OnActivated(EventArgs e)
         {
             WaitCursor.SetOverrideCursor(null);
+        }
+
+        protected override void OnSourceInitialized(EventArgs e)
+        {
+            base.OnSourceInitialized(e);
+
+            AppSettings.Instance.Tracker.Track(this);
         }
 
         #region Event handlers
