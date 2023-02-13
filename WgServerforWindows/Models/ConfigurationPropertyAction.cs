@@ -59,6 +59,11 @@ namespace WgServerforWindows.Models
 
         public Action<ConfigurationBase, ConfigurationProperty> Action { get; set; }
 
+        /// <summary>
+        /// An action to be invoked after the configuration has been loaded
+        /// </summary>
+        public Action<ConfigurationBase> OnLoadAction { get; set; }
+
         public ICommand ExecuteActionCommand => _executeActionCommand ??= new RelayCommand(() =>
         {
             Action?.Invoke(_parentConfiguration, null);

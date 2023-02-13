@@ -246,6 +246,12 @@ Current value: {1}</value>
   <data name="DeleteAction" xml:space="preserve">
     <value>Delete</value>
   </data>
+  <data name="Disable" xml:space="preserve">
+    <value>Disable</value>
+  </data>
+  <data name="Enable" xml:space="preserve">
+    <value>Enable</value>
+  </data>
   <data name="ConfirmDeleteClient" xml:space="preserve">
     <value>Are you sure you want to delete the client?</value>
   </data>

@@ -313,6 +313,15 @@ namespace WgServerforWindows.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Disable.
+        /// </summary>
+        public static string Disable {
+            get {
+                return ResourceManager.GetString("Disable", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Internet sharing is already enabled. Disabling....
         /// </summary>
         public static string DisablingInternetSharing {
@@ -381,6 +390,15 @@ namespace WgServerforWindows.Properties {
         public static string EmptyEndpointValidation {
             get {
                 return ResourceManager.GetString("EmptyEndpointValidation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enable.
+        /// </summary>
+        public static string Enable {
+            get {
+                return ResourceManager.GetString("Enable", resourceCulture);
             }
         }
         

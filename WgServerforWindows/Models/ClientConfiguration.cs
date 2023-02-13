@@ -225,6 +225,15 @@ namespace WgServerforWindows.Models
         };
         private ConfigurationProperty _index;
 
+        // Do not target this to any WG config. We only want it in the data.
+        public ConfigurationProperty IsEnabledProperty => _isEnabled ??= new ConfigurationProperty(this)
+        {
+            PersistentPropertyName = "IsEnabled",
+            DefaultValue = true.ToString(),
+            IsHidden = true
+        };
+        private ConfigurationProperty _isEnabled;
+
         /// <summary>
         /// This is a funny one. This is first defined on the server. Then the user can import that default value into the client config.
         /// Then the property needs to go to the server and be targeted to the client's config (under the server/peer section).
@@ -372,6 +381,26 @@ namespace WgServerforWindows.Models
             }
         };
         private ConfigurationPropertyAction _deleteAction;
+
+        public ConfigurationPropertyAction DisableAction => _disableAction ??= new ConfigurationPropertyAction(this)
+        {
+            Name = nameof(Resources.Disable),
+            OnLoadAction = conf =>
+            {
+                // If we're loading, we need to set the button state based on the loaded value of IsEnabled
+                DisableAction.Name = bool.TryParse(IsEnabledProperty.Value, out bool isEnabled) && isEnabled ? nameof(Resources.Disable) : nameof(Resources.Enable);
+            },
+            Action = (conf, prop) =>
+            {
+                if (bool.TryParse(IsEnabledProperty.Value, out bool isEnabled))
+                {
+                    bool newValue = !isEnabled;
+                    IsEnabledProperty.Value = newValue.ToString();
+                    DisableAction.Name = newValue ? nameof(Resources.Disable) : nameof(Resources.Enable);
+                }
+            }
+        };
+        private ConfigurationPropertyAction _disableAction;
 
         public ConfigurationPropertyAction GenerateQrCodeAction => _generateQrCodeAction ??= new ConfigurationPropertyAction(this)
         {

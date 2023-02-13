@@ -52,6 +52,8 @@ namespace WgServerforWindows.Models
                 }
             }
 
+            TopLevelActions.ForEach(a => a.OnLoadAction?.Invoke(this));
+
             return this;
         }
 
