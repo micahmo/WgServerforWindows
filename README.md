@@ -164,6 +164,9 @@ However, if you experience the following error message when enabling Internet Sh
 
 > Note: This issue is often triggered after creating a new virtual switch for a VM. The manual workaround should only be needed once after that and does not affect the virtual switch.
 
+# Compatibility
+WS4W has been tested and is known to work on Windows Server (2012 R2 and newer) and Windows Desktop (10 and newer).
+
 # Attribution
 
 WireGuard is a registered trademark of Jason A. Donenfeld.
