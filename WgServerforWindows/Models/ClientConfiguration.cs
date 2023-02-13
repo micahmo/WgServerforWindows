@@ -37,6 +37,7 @@ namespace WgServerforWindows.Models
             PublicKeyProperty.TargetTypes.Add(typeof(ServerConfiguration));
             ServerPersistentKeepaliveProperty.TargetTypes.Add(typeof(ServerConfiguration));
 
+            ServerConfigurationPrerequisite.EnsureConfigFile();
             var serverConfiguration = new ServerConfiguration().Load<ServerConfiguration>(Configuration.LoadFromFile(ServerConfigurationPrerequisite.ServerDataPath));
             string serverIp = serverConfiguration.AddressProperty.Value;
             string allowedIpsDefault = serverConfiguration.AllowedIpsProperty.Value;
@@ -447,6 +448,24 @@ namespace WgServerforWindows.Models
             }
         });
         private RelayCommand _removeClientCommand;
+
+        public bool IsVisible
+        {
+            get => _isVisible;
+            set => Set(nameof(IsVisible), ref _isVisible, value);
+        }
+        private bool _isVisible = true;
+
+        public bool IsExpanded
+        {
+            get => _isExpanded;
+            set => Set(nameof(IsExpanded), ref _isExpanded, value);
+        }
+        private bool _isExpanded = true;
+
+        public string ExpandedSymbol => "▼";
+
+        public string CollapsedSymbol => "▶";
 
         #endregion
 

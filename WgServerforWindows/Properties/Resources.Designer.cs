@@ -232,6 +232,15 @@ namespace WgServerforWindows.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Count: {0}.
+        /// </summary>
+        public static string ClientCount {
+            get {
+                return ResourceManager.GetString("ClientCount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Populate from Server.
         /// </summary>
         public static string ClientPresharedKeyPropertyAction {
@@ -246,6 +255,15 @@ namespace WgServerforWindows.Properties {
         public static string Close {
             get {
                 return ResourceManager.GetString("Close", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Collapse all.
+        /// </summary>
+        public static string CollapseAll {
+            get {
+                return ResourceManager.GetString("CollapseAll", resourceCulture);
             }
         }
         
@@ -424,6 +442,15 @@ namespace WgServerforWindows.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Expand all.
+        /// </summary>
+        public static string ExpandAll {
+            get {
+                return ResourceManager.GetString("ExpandAll", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Export Configuration File.
         /// </summary>
         public static string ExportConfigurationFileAction {
@@ -438,6 +465,15 @@ namespace WgServerforWindows.Properties {
         public static string FailedToIdentify {
             get {
                 return ResourceManager.GetString("FailedToIdentify", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Count: {0} (filtered from: {1}).
+        /// </summary>
+        public static string FilteredClientCount {
+            get {
+                return ResourceManager.GetString("FilteredClientCount", resourceCulture);
             }
         }
         

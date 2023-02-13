@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Linq;
 using System.Windows;
 using System.Windows.Input;
+using WgServerforWindows.Models;
 
 namespace WgServerforWindows.Controls
 {
@@ -34,5 +36,20 @@ namespace WgServerforWindows.Controls
         }
 
         #endregion
+
+        private void ExplorerSearchBox_SearchRequested(object sender, string e)
+        {
+            if (DataContext is ClientConfigurationList clientConfigurationList)
+            {
+                clientConfigurationList.List.ToList().ForEach(c => c.IsVisible = true);
+
+                if (!string.IsNullOrWhiteSpace(e))
+                {
+                    clientConfigurationList.List.Where(c => !c.Name.Contains(e, StringComparison.OrdinalIgnoreCase)).ToList().ForEach(c => c.IsVisible = false);
+                }
+
+                clientConfigurationList.RaisePropertyChanged(nameof(clientConfigurationList.CountString));
+            }
+        }
     }
 }
