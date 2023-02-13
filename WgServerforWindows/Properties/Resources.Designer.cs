@@ -613,6 +613,33 @@ namespace WgServerforWindows.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Latest Handshake.
+        /// </summary>
+        public static string LatestHandshakeProperty {
+            get {
+                return ResourceManager.GetString("LatestHandshakeProperty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Refresh.
+        /// </summary>
+        public static string LatestHandshakePropertyAction {
+            get {
+                return ResourceManager.GetString("LatestHandshakePropertyAction", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Displays the time at which this client most recently connected to the server. This field is purely informational..
+        /// </summary>
+        public static string LatestHandshakePropertyDescription {
+            get {
+                return ResourceManager.GetString("LatestHandshakePropertyDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Listen Port.
         /// </summary>
         public static string ListenPortProperty {

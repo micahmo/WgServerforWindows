@@ -563,4 +563,13 @@ Note: It is preferable to use a domain name with DDNS to avoid dynamic WAN IPs.<
   <data name="ClientCount" xml:space="preserve">
     <value>Count: {0}</value>
   </data>
+  <data name="LatestHandshakeProperty" xml:space="preserve">
+    <value>Latest Handshake</value>
+  </data>
+  <data name="LatestHandshakePropertyDescription" xml:space="preserve">
+    <value>Displays the time at which this client most recently connected to the server. This field is purely informational.</value>
+  </data>
+  <data name="LatestHandshakePropertyAction" xml:space="preserve">
+    <value>Refresh</value>
+  </data>
 </root>
