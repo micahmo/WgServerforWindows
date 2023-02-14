@@ -4,6 +4,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Threading;
@@ -225,6 +226,15 @@ namespace WgServerforWindows.Models
         };
         private ConfigurationProperty _index;
 
+        // Do not target this to any WG config. We only want it in the data.
+        public ConfigurationProperty IsEnabledProperty => _isEnabled ??= new ConfigurationProperty(this)
+        {
+            PersistentPropertyName = "IsEnabled",
+            DefaultValue = true.ToString(),
+            IsHidden = true
+        };
+        private ConfigurationProperty _isEnabled;
+
         /// <summary>
         /// This is a funny one. This is first defined on the server. Then the user can import that default value into the client config.
         /// Then the property needs to go to the server and be targeted to the client's config (under the server/peer section).
@@ -355,9 +365,63 @@ namespace WgServerforWindows.Models
             PersistentPropertyName = "PresharedKey",
             Name = nameof(PresharedKeyProperty),
             IsReadOnly = true, // Don't allow manual clearing; this would require a full resync anyway. See README.
-            Index = int.MaxValue // Put it at the end
+            Index = int.MaxValue - 1 // Put it at the end
         };
         private ConfigurationProperty _presharedKeyProperty;
+
+        public ConfigurationProperty LatestHandshakeProperty => _latestHandshakeProperty ??= new ConfigurationProperty(this)
+        {
+            Name = nameof(LatestHandshakeProperty),
+            Description = Resources.LatestHandshakePropertyDescription,
+            IsReadOnly = true,
+            IsCalculated = true,
+            GetValueFunc = () =>
+            {
+                string result = default;
+                
+                if (PublicKeyProperty.Value != null)
+                {
+                    WaitCursor.SetOverrideCursor(Cursors.Wait);
+
+                    // Get the current status
+                    string status = new WireGuardExe().ExecuteCommand(new ShowCommand(ServerConfigurationPrerequisite.WireGuardServerInterfaceName));
+
+                    bool foundClient = false;
+                    foreach (string line in status.Split(Environment.NewLine))
+                    {
+                        if (line.Contains("peer:"))
+                        {
+                            foundClient = false;
+                        }
+                        
+                        if (line.Contains(PublicKeyProperty.Value))
+                        {
+                            foundClient = true;
+                        }
+
+                        if (foundClient && line.Contains("latest handshake:"))
+                        {
+                            result = Regex.Replace(line, @"\s*latest handshake:\s*", string.Empty);
+                            break;
+                        }
+                    }
+
+                    WaitCursor.SetOverrideCursor(null);
+                }
+
+                return result;
+            },
+            Action = new ConfigurationPropertyAction(this)
+            {
+                Name = nameof(Resources.LatestHandshakePropertyAction),
+                Action = (conf, prop) =>
+                {
+                    LatestHandshakeProperty.RaisePropertyChanged(nameof(LatestHandshakeProperty.Value));
+                }
+            },
+            Index = int.MaxValue
+        };
+        private ConfigurationProperty _latestHandshakeProperty;
 
         public ConfigurationPropertyAction DeleteAction => _deleteAction ??= new ConfigurationPropertyAction(this)
         {
@@ -372,6 +436,26 @@ namespace WgServerforWindows.Models
             }
         };
         private ConfigurationPropertyAction _deleteAction;
+
+        public ConfigurationPropertyAction DisableAction => _disableAction ??= new ConfigurationPropertyAction(this)
+        {
+            Name = nameof(Resources.Disable),
+            OnLoadAction = conf =>
+            {
+                // If we're loading, we need to set the button state based on the loaded value of IsEnabled
+                DisableAction.Name = bool.TryParse(IsEnabledProperty.Value, out bool isEnabled) && isEnabled ? nameof(Resources.Disable) : nameof(Resources.Enable);
+            },
+            Action = (conf, prop) =>
+            {
+                if (bool.TryParse(IsEnabledProperty.Value, out bool isEnabled))
+                {
+                    bool newValue = !isEnabled;
+                    IsEnabledProperty.Value = newValue.ToString();
+                    DisableAction.Name = newValue ? nameof(Resources.Disable) : nameof(Resources.Enable);
+                }
+            }
+        };
+        private ConfigurationPropertyAction _disableAction;
 
         public ConfigurationPropertyAction GenerateQrCodeAction => _generateQrCodeAction ??= new ConfigurationPropertyAction(this)
         {

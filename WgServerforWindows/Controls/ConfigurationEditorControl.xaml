@@ -51,7 +51,7 @@
                                        Text="{Binding Name, Converter={StaticResource ResourceStringConverter}, StringFormat={x:Static properties:Resources.PropertyNameFormat}}"
                                        ToolTip="{Binding Name, Converter={StaticResource ResourceStringConverter}}"
                                        VerticalAlignment="Center"/>
-                        <TextBox x:Name="tb" Grid.Column="1" IsReadOnly="{Binding IsReadOnly}"
+                        <TextBox x:Name="tb" Grid.Column="1" IsReadOnly="{Binding IsReadOnly}" IsEnabled="{Binding IsEnabled}"
                                      Text="{Binding Value, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"
                                      ToolTipService.ShowDuration="60000"
                                      VerticalContentAlignment="Center">

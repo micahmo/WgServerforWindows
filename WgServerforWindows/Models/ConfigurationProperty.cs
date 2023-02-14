@@ -55,6 +55,8 @@ namespace WgServerforWindows.Models
 
         public bool IsReadOnly { get; set; }
 
+        public bool IsEnabled { get; set; } = true;
+
         public bool IsHidden { get; set; }
 
         /// <summary>

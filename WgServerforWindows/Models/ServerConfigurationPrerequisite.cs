@@ -178,9 +178,12 @@ namespace WgServerforWindows.Models
                 foreach (string clientConfigurationFile in Directory.GetFiles(ClientConfigurationsPrerequisite.ClientDataDirectory, "*.conf"))
                 {
                     var clientConfiguration = new ClientConfiguration(null).Load<ClientConfiguration>(Configuration.LoadFromFile(clientConfigurationFile));
-                    clientConfiguration.ServerPersistentKeepaliveProperty.Value = serverConfiguration.PersistentKeepaliveProperty.Value;
-                    
-                    configuration = configuration.Merge(clientConfiguration.ToConfiguration<ServerConfiguration>());
+
+                    if (clientConfiguration.IsEnabledProperty.Value == true.ToString())
+                    {
+                        clientConfiguration.ServerPersistentKeepaliveProperty.Value = serverConfiguration.PersistentKeepaliveProperty.Value;
+                        configuration = configuration.Merge(clientConfiguration.ToConfiguration<ServerConfiguration>());
+                    }
                 }
             }
 

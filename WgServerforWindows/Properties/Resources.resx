@@ -246,6 +246,12 @@ Current value: {1}</value>
   <data name="DeleteAction" xml:space="preserve">
     <value>Delete</value>
   </data>
+  <data name="Disable" xml:space="preserve">
+    <value>Disable</value>
+  </data>
+  <data name="Enable" xml:space="preserve">
+    <value>Enable</value>
+  </data>
   <data name="ConfirmDeleteClient" xml:space="preserve">
     <value>Are you sure you want to delete the client?</value>
   </data>
@@ -556,5 +562,14 @@ Note: It is preferable to use a domain name with DDNS to avoid dynamic WAN IPs.<
   </data>
   <data name="ClientCount" xml:space="preserve">
     <value>Count: {0}</value>
+  </data>
+  <data name="LatestHandshakeProperty" xml:space="preserve">
+    <value>Latest Handshake</value>
+  </data>
+  <data name="LatestHandshakePropertyDescription" xml:space="preserve">
+    <value>Displays the time at which this client most recently connected to the server. This field is purely informational.</value>
+  </data>
+  <data name="LatestHandshakePropertyAction" xml:space="preserve">
+    <value>Refresh</value>
   </data>
 </root>

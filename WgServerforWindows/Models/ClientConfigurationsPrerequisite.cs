@@ -158,7 +158,7 @@ namespace WgServerforWindows.Models
                 }
 
                 // Save to WG
-                foreach (ClientConfiguration clientConfiguration in clientConfigurations.List)
+                foreach (ClientConfiguration clientConfiguration in clientConfigurations.List.Where(c => c.IsEnabledProperty.Value == true.ToString()))
                 {
                     SaveWG(clientConfiguration);
                 }

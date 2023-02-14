@@ -313,6 +313,15 @@ namespace WgServerforWindows.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Disable.
+        /// </summary>
+        public static string Disable {
+            get {
+                return ResourceManager.GetString("Disable", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Internet sharing is already enabled. Disabling....
         /// </summary>
         public static string DisablingInternetSharing {
@@ -381,6 +390,15 @@ namespace WgServerforWindows.Properties {
         public static string EmptyEndpointValidation {
             get {
                 return ResourceManager.GetString("EmptyEndpointValidation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enable.
+        /// </summary>
+        public static string Enable {
+            get {
+                return ResourceManager.GetString("Enable", resourceCulture);
             }
         }
         
@@ -591,6 +609,33 @@ namespace WgServerforWindows.Properties {
         public static string KeyValidationError {
             get {
                 return ResourceManager.GetString("KeyValidationError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Latest Handshake.
+        /// </summary>
+        public static string LatestHandshakeProperty {
+            get {
+                return ResourceManager.GetString("LatestHandshakeProperty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Refresh.
+        /// </summary>
+        public static string LatestHandshakePropertyAction {
+            get {
+                return ResourceManager.GetString("LatestHandshakePropertyAction", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Displays the time at which this client most recently connected to the server. This field is purely informational..
+        /// </summary>
+        public static string LatestHandshakePropertyDescription {
+            get {
+                return ResourceManager.GetString("LatestHandshakePropertyDescription", resourceCulture);
             }
         }
         
