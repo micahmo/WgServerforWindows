@@ -40,7 +40,7 @@ namespace WgServerforWindows.Models
             // Create/update a Scheduled Task that sets the Private network category on boot.
             TaskDefinition td = TaskService.Instance.NewTask();
             td.Actions.Add(new ExecAction(Path.Combine(AppContext.BaseDirectory, "ws4w.exe"), typeof(PrivateNetworkCommand).GetVerb()));
-            td.Triggers.Add(new BootTrigger());
+            td.Triggers.Add(new BootTrigger { Delay = GlobalAppSettings.Instance.BootTaskDelay });
             TaskService.Instance.RootFolder.RegisterTaskDefinition(_privateNetworkTaskUniqueName, td, TaskCreation.CreateOrUpdate, "SYSTEM", null, TaskLogonType.ServiceAccount);
 
             Refresh();

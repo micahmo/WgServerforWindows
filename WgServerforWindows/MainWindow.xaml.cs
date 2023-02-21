@@ -41,6 +41,8 @@ namespace WgServerforWindows
             var internetSharingPrerequisite = new InternetSharingPrerequisite();
             var persistentInternetSharingPrerequisite = new PersistentInternetSharingPrerequisite();
             var serverStatusPrerequisite = new ServerStatusPrerequisite();
+            var bootTaskDelaySubCommand = new BootTaskDelaySubCommand();
+            var settingsPrerequisite = new SettingsPrerequisite(bootTaskDelaySubCommand);
 
             // -- Set up interdependencies --
 
@@ -113,6 +115,7 @@ namespace WgServerforWindows
             }
 
             mainWindowModel.PrerequisiteItems.Add(serverStatusPrerequisite);
+            mainWindowModel.PrerequisiteItems.Add(settingsPrerequisite);
 
             // If one of the prereqs changes, check the validity of all of them.
             // Do this recursively.

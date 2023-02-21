@@ -572,4 +572,19 @@ Note: It is preferable to use a domain name with DDNS to avoid dynamic WAN IPs.<
   <data name="LatestHandshakePropertyAction" xml:space="preserve">
     <value>Refresh</value>
   </data>
+  <data name="BootTaskDelaySuccess" xml:space="preserve">
+    <value>Set a delay for the automated tasks that run at boot time. This can help with network adapters which are slow to load.</value>
+  </data>
+  <data name="BootTaskDelayConfigure" xml:space="preserve">
+    <value>Set Boot Task Delay</value>
+  </data>
+  <data name="BootDelaySelectionTitle" xml:space="preserve">
+    <value>Set Boot Task Delay</value>
+  </data>
+  <data name="BootDelaySelectionText" xml:space="preserve">
+    <value>Set a delay for the automated tasks that run at boot time (hours:minutes:seconds).</value>
+  </data>
+  <data name="SettingsConfigure" xml:space="preserve">
+    <value>Settings</value>
+  </data>
 </root>

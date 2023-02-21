@@ -5,7 +5,11 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:properties="clr-namespace:WgServerforWindows.Properties"
         xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
+        xmlns:models="clr-namespace:WgServerforWindows.Models"
+        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+        xmlns:c="clr-namespace:CalcBinding;assembly=CalcBinding"
         mc:Ignorable="d"
+        d:DataContext="{d:DesignInstance Type=models:SelectionWindowModel}"
         Title="{Binding Title}" SizeToContent="WidthAndHeight" MaxWidth="350">
     <Grid>
         <Grid.ColumnDefinitions>
@@ -24,13 +28,18 @@
         <TextBlock Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="0" Margin="20,10,20,10" Text="{Binding Text}" TextWrapping="Wrap"/>
 
         <ComboBox Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="1" Margin="20,10,20,10" IsEditable="False"
-                  ItemsSource="{Binding Items}" SelectedItem="{Binding SelectedItem}" DisplayMemberPath="DisplayText">
+                  ItemsSource="{Binding Items}" SelectedItem="{Binding SelectedItem}" DisplayMemberPath="DisplayText"
+                  Visibility="{c:Binding IsList, FalseToVisibility=Collapsed}">
             <ComboBox.ItemContainerStyle>
                 <Style>
                     <Setter Property="Control.ToolTip" Value="{Binding Description}" />
                 </Style>
             </ComboBox.ItemContainerStyle>
         </ComboBox>
+
+        <xctk:DateTimeUpDown Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="1" Margin="20,10,20,10" Format="Custom" FormatString="HH:mm:ss"
+                             Value="{Binding SelectedItem.BackingObject}"
+                             Visibility="{c:Binding IsTimeSpan, FalseToVisibility=Collapsed}"/>
 
         <Button Grid.Column="1" Grid.Row="3" Padding="10,5,10,5" Margin="20,10,10,10" Content="{x:Static properties:Resources.Cancel}" Command="{Binding CancelCommand}">
             <b:Interaction.Triggers>

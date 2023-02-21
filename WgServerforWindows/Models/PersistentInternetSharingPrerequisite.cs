@@ -71,7 +71,7 @@ namespace WgServerforWindows.Models
             // Create/update a Scheduled Task that disables/enables internet sharing on boot.
             TaskDefinition td = TaskService.Instance.NewTask();
             td.Actions.Add(new ExecAction(Path.Combine(AppContext.BaseDirectory, "ws4w.exe"), typeof(RestartInternetSharingCommand).GetVerb()));
-            td.Triggers.Add(new BootTrigger());
+            td.Triggers.Add(new BootTrigger { Delay = GlobalAppSettings.Instance.BootTaskDelay });
             TaskService.Instance.RootFolder.RegisterTaskDefinition(RestartInternetSharingTaskUniqueName, td, TaskCreation.CreateOrUpdate, "SYSTEM", null, TaskLogonType.ServiceAccount);
 
             Refresh();

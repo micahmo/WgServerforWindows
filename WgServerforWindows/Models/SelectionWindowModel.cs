@@ -34,6 +34,10 @@ namespace WgServerforWindows.Models
         }
         private SelectionItem<T> _selectedItem;
 
+        public bool IsList { get; set; } = true;
+
+        public bool IsTimeSpan { get; set; }
+
         public bool? DialogResult { get; private set; }
 
         public ICommand CancelCommand => _cancelCommand ??= new RelayCommand(() =>

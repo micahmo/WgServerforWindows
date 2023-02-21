@@ -97,6 +97,42 @@ namespace WgServerforWindows.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Set a delay for the automated tasks that run at boot time (hours:minutes:seconds)..
+        /// </summary>
+        public static string BootDelaySelectionText {
+            get {
+                return ResourceManager.GetString("BootDelaySelectionText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Set Boot Task Delay.
+        /// </summary>
+        public static string BootDelaySelectionTitle {
+            get {
+                return ResourceManager.GetString("BootDelaySelectionTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Set Boot Task Delay.
+        /// </summary>
+        public static string BootTaskDelayConfigure {
+            get {
+                return ResourceManager.GetString("BootTaskDelayConfigure", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Set a delay for the automated tasks that run at boot time. This can help with network adapters which are slow to load..
+        /// </summary>
+        public static string BootTaskDelaySuccess {
+            get {
+                return ResourceManager.GetString("BootTaskDelaySuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Cancel.
         /// </summary>
         public static string Cancel {
@@ -1232,6 +1268,15 @@ namespace WgServerforWindows.Properties {
         public static string ServerSyncError {
             get {
                 return ResourceManager.GetString("ServerSyncError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Settings.
+        /// </summary>
+        public static string SettingsConfigure {
+            get {
+                return ResourceManager.GetString("SettingsConfigure", resourceCulture);
             }
         }
         

@@ -45,7 +45,7 @@ namespace WgServerforWindows.Models
             // Create/update a Scheduled Task that sets the NetIPAddress on boot.
             TaskDefinition td = TaskService.Instance.NewTask();
             td.Actions.Add(new ExecAction(Path.Combine(AppContext.BaseDirectory, "ws4w.exe"), $"{typeof(SetNetIpAddressCommand).GetVerb()} --{typeof(SetNetIpAddressCommand).GetOption(nameof(SetNetIpAddressCommand.ServerDataPath))} {serverDataPath ?? ServerConfigurationPrerequisite.ServerDataPath}"));
-            td.Triggers.Add(new BootTrigger());
+            td.Triggers.Add(new BootTrigger { Delay = GlobalAppSettings.Instance.BootTaskDelay });
             TaskService.Instance.RootFolder.RegisterTaskDefinition(_netIpAddressTaskUniqueName, td, TaskCreation.CreateOrUpdate, "SYSTEM", null, TaskLogonType.ServiceAccount);
 
             Refresh();
