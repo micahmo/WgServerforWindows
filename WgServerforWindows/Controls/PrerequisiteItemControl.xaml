@@ -31,9 +31,11 @@
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
 
-            <Image Grid.Column="0" Height="40" Margin="5" Source="/Images/checked.png" Visibility="{c:Binding Fulfilled, FalseToVisibility=Collapsed}"/>
-            <Image Grid.Column="0" Height="40" Margin="5" Source="/Images/cancel.png" Visibility="{c:Binding '!Fulfilled', FalseToVisibility=Collapsed}"/>
-            <Image Grid.Column="0" Height="40" Margin="5" Source="/Images/info.png" Visibility="{c:Binding IsInformational, FalseToVisibility=Collapsed}"/>
+            <Grid Grid.Column="0" Visibility="{c:Binding HasIcon, FalseToVisibility=Collapsed}">
+                <Image Height="40" Margin="5" Source="/Images/checked.png" Visibility="{c:Binding Fulfilled, FalseToVisibility=Collapsed}"/>
+                <Image Height="40" Margin="5" Source="/Images/cancel.png" Visibility="{c:Binding '!Fulfilled', FalseToVisibility=Collapsed}"/>
+                <Image Height="40" Margin="5" Source="/Images/info.png" Visibility="{c:Binding IsInformational, FalseToVisibility=Collapsed}"/>
+            </Grid>
 
             <Grid Grid.Column="1" Margin="5">
                 <Grid.RowDefinitions>
@@ -67,7 +69,7 @@
             </Grid>
 
             <Grid Grid.Column="2" Visibility="{c:Binding 'HasSubCommands'}">
-                <xctk:SplitButton Height="28" Padding="5" Margin="5" VerticalAlignment="Center"
+                <xctk:SplitButton x:Name="SplitButtonNotFulfilled" Height="28" Padding="5" Margin="5" VerticalAlignment="Center"
                     Content="{Binding ResolveText}" 
                     Command="{Binding Commands.ResolveCommand}"
                     Visibility="{c:Binding '!Fulfilled', FalseToVisibility=Collapsed}">
@@ -97,7 +99,7 @@
                         </ItemsControl>
                     </xctk:SplitButton.DropDownContent>
                 </xctk:SplitButton>
-                <xctk:SplitButton Height="28" Padding="5" Margin="5" VerticalAlignment="Center"
+                <xctk:SplitButton x:Name="SplitButtonFulfilled" Height="28" Padding="5" Margin="5" VerticalAlignment="Center"
                     Content="{Binding ConfigureText}" 
                     Command="{Binding Commands.ConfigureCommand}"
                     Visibility="{c:Binding 'Fulfilled', FalseToVisibility=Collapsed}">

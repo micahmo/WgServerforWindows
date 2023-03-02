@@ -4,9 +4,11 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
-using System.Windows.Input;
+using System.Windows;
+using System.Windows.Controls;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
+using Xceed.Wpf.AvalonDock.Controls;
 
 namespace WgServerforWindows.Models
 {
@@ -102,6 +104,8 @@ namespace WgServerforWindows.Models
 
         public virtual BooleanTimeCachedProperty IsInformational { get; } = new BooleanTimeCachedProperty(TimeSpan.Zero, () => false);
 
+        public virtual BooleanTimeCachedProperty HasIcon { get; } = new BooleanTimeCachedProperty(TimeSpan.Zero, () => true);
+
         public bool CanResolve => CanResolveFunc?.Invoke() ?? true;
 
         public Func<bool> CanResolveFunc { get; set; }
@@ -123,6 +127,8 @@ namespace WgServerforWindows.Models
         public IEnumerable<IGrouping<string, PrerequisiteItem>> ChildrenByCategory => Children.GroupBy(c => c.Category);
 
         public int SelectedChildIndex { get; set; }
+
+        public Control Control => Application.Current?.Windows.OfType<MainWindow>().FirstOrDefault()?.FindVisualChildren<Control>().FirstOrDefault(b => b.DataContext == this);
 
         #endregion
 
