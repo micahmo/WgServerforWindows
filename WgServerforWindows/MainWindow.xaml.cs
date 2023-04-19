@@ -37,7 +37,8 @@ namespace WgServerforWindows
             var privateNetworkTaskSubCommand = new PrivateNetworkTaskSubCommand();
             var privateNetworkPrerequisite = new PrivateNetworkPrerequisite(privateNetworkTaskSubCommand);
             var netIpAddressTaskSubCommand = new NewNetIpAddressTaskSubCommand();
-            var newNetNatPrerequisite = new NewNetNatPrerequisite(netIpAddressTaskSubCommand);
+            var netNatRangeSubCommand = new NetNatRangeSubCommand();
+            var newNetNatPrerequisite = new NewNetNatPrerequisite(netIpAddressTaskSubCommand, netNatRangeSubCommand);
             var internetSharingPrerequisite = new InternetSharingPrerequisite();
             var persistentInternetSharingPrerequisite = new PersistentInternetSharingPrerequisite();
             var serverStatusPrerequisite = new ServerStatusPrerequisite();
@@ -98,6 +99,7 @@ namespace WgServerforWindows
                                                              && !persistentInternetSharingPrerequisite.Fulfilled;
 
                 netIpAddressTaskSubCommand.CanResolveFunc = netIpAddressTaskSubCommand.CanConfigureFunc = () => newNetNatPrerequisite.Fulfilled;
+                netNatRangeSubCommand.CanConfigureFunc = () => serverConfigurationPrerequisite.Fulfilled;
 
                 var natPrerequisiteGroup = new NatPrerequisiteGroup(newNetNatPrerequisite, internetSharingPrerequisite, persistentInternetSharingPrerequisite);
 

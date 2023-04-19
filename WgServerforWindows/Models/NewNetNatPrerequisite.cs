@@ -15,9 +15,9 @@ namespace WgServerforWindows.Models
     {
         #region PrerequisiteItem members
 
-        public NewNetNatPrerequisite() : this(new NewNetIpAddressTaskSubCommand()) { }
+        public NewNetNatPrerequisite() : this(new NewNetIpAddressTaskSubCommand(), new NetNatRangeSubCommand()) { }
 
-        public NewNetNatPrerequisite(NewNetIpAddressTaskSubCommand newNetIpAddressTaskSubCommand) : base
+        public NewNetNatPrerequisite(NewNetIpAddressTaskSubCommand newNetIpAddressTaskSubCommand, NetNatRangeSubCommand netNatRangeSubCommand) : base
         (
             title: Resources.NewNatName,
             successMessage: Resources.NewNetSuccess,
@@ -28,6 +28,7 @@ namespace WgServerforWindows.Models
         {
             _newNetIpAddressTaskSubCommand = newNetIpAddressTaskSubCommand;
             SubCommands.Add(_newNetIpAddressTaskSubCommand);
+            SubCommands.Add(netNatRangeSubCommand);
         }
 
         public override BooleanTimeCachedProperty Fulfilled => _fulfilled ??= new BooleanTimeCachedProperty(TimeSpan.FromSeconds(1), () =>
@@ -52,7 +53,7 @@ namespace WgServerforWindows.Models
                     $"-NoProfile Get-NetNat -Name {_netNatName}"),
                 out int exitCode);
 
-            result &= exitCode == 0 && output.Contains(serverConfiguration.AddressProperty.Value);
+            result &= exitCode == 0 && output.Contains(GetDesiredAddressRange(serverConfiguration));
 
             // Verify the interface's IP address is correct
             output = new WireGuardExe().ExecuteCommand(new WireGuardCommand(string.Empty, WhichExe.Custom,
@@ -107,7 +108,7 @@ namespace WgServerforWindows.Models
             // Create the NAT routing rule
             output = new WireGuardExe().ExecuteCommand(new WireGuardCommand(string.Empty, WhichExe.Custom,
                     "powershell.exe",
-                    $"-NoProfile New-NetNat -Name {_netNatName} -InternalIPInterfaceAddressPrefix {serverConfiguration.AddressProperty.Value}"),
+                    $"-NoProfile New-NetNat -Name {_netNatName} -InternalIPInterfaceAddressPrefix {GetDesiredAddressRange(serverConfiguration)}"),
                 out exitCode);
 
             if (exitCode != 0)
@@ -192,6 +193,22 @@ namespace WgServerforWindows.Models
         }
 
         public override string Category => Resources.NetworkAddressTranslation;
+
+        #endregion
+
+        #region Private methods
+
+        private string GetDesiredAddressRange(ServerConfiguration serverConfiguration)
+        {
+            if (!string.IsNullOrEmpty(GlobalAppSettings.Instance.CustomNetNatRange))
+            {
+                return GlobalAppSettings.Instance.CustomNetNatRange;
+            }
+            else
+            {
+                return serverConfiguration.AddressProperty.Value;
+            }
+        }
 
         #endregion
 

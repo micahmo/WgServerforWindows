@@ -1,7 +1,8 @@
-﻿using System.Collections.ObjectModel;
-using System.Windows.Input;
-using GalaSoft.MvvmLight;
+﻿using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
+using System;
+using System.Collections.ObjectModel;
+using System.Windows.Input;
 
 namespace WgServerforWindows.Models
 {
@@ -21,6 +22,20 @@ namespace WgServerforWindows.Models
         }
         private string _text;
 
+        public string ValidationError
+        {
+            get => _validationError;
+            set => Set(nameof(ValidationError), ref _validationError, value);
+        }
+        private string _validationError;
+
+        public double MinWidth
+        {
+            get => _minWidth;
+            set => Set(nameof(MinWidth), ref _minWidth, value);
+        }
+        private double _minWidth;
+
         public ObservableCollection<SelectionItem<T>> Items { get; } = new ObservableCollection<SelectionItem<T>>();
 
         public SelectionItem<T> SelectedItem
@@ -30,6 +45,14 @@ namespace WgServerforWindows.Models
             {
                 Set(nameof(SelectedItem), ref _selectedItem, value);
                 RaisePropertyChanged(nameof(CanSelect));
+
+                SelectedItem.PropertyChanged += (_, args) =>
+                {
+                    if (args.PropertyName == nameof(SelectedItem.BackingObject))
+                    {
+                        RaisePropertyChanged(nameof(CanSelect));
+                    }
+                };
             }
         }
         private SelectionItem<T> _selectedItem;
@@ -37,6 +60,8 @@ namespace WgServerforWindows.Models
         public bool IsList { get; set; } = true;
 
         public bool IsTimeSpan { get; set; }
+
+        public bool IsString { get; set; }
 
         public bool? DialogResult { get; private set; }
 
@@ -52,7 +77,9 @@ namespace WgServerforWindows.Models
         });
         private RelayCommand _selectCommand;
 
-        public bool CanSelect => SelectedItem is { };
+        public bool CanSelect => CanSelectFunc?.Invoke() ?? SelectedItem is { };
+
+        public Func<bool> CanSelectFunc { get; set; }
     }
 
     public class SelectionItem : ObservableObject
