@@ -2,12 +2,12 @@
 <!-- Things to update: Version, Date, Release Notes -->
 <AppUpdate xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/micahmo/WgServerforWindows/master/WireGuardServerForWindows/AppUpdate.xsd">
-  <Version>2.0.9.0</Version>
-  <ReleaseDate>2023-03-02</ReleaseDate>
+  <Version>2.0.10.0</Version>
+  <ReleaseDate>2023-04-19</ReleaseDate>
   <!-- Default download -->
-  <DownloadLink>https://github.com/micahmo/WgServerforWindows/releases/download/v2.0.9/WS4WSetup-2.0.9.exe</DownloadLink>
-  <DownloadFileName>WS4WSetup-2.0.9.exe</DownloadFileName>
+  <DownloadLink>https://github.com/micahmo/WgServerforWindows/releases/download/v2.0.10/WS4WSetup-2.0.10.exe</DownloadLink>
+  <DownloadFileName>WS4WSetup-2.0.10.exe</DownloadFileName>
   <!-- Release notes -->
-  <VersionNotes> - Add the ability the configure a delay for boot tasks</VersionNotes>
+  <VersionNotes> - Specify a custom subnet range for NAT network</VersionNotes>
   <ReleaseNotes></ReleaseNotes>
 </AppUpdate>

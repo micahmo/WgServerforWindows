@@ -703,6 +703,42 @@ namespace WgServerforWindows.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Specify custom NAT Network range:.
+        /// </summary>
+        public static string NetNatRangeSelectionText {
+            get {
+                return ResourceManager.GetString("NetNatRangeSelectionText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to NAT Network Address Range.
+        /// </summary>
+        public static string NetNatRangeSelectionTitle {
+            get {
+                return ResourceManager.GetString("NetNatRangeSelectionTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Specify a custom subnet (must be a superset of the WireGuard network), allowing the NAT network to be shared by other adapters.
+        /// </summary>
+        public static string NetNatRangeSubCommandSuccessMessage {
+            get {
+                return ResourceManager.GetString("NetNatRangeSubCommandSuccessMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The NAT Network range does not contain the WireGuard server range ({0})..
+        /// </summary>
+        public static string NetNatRangeValidationError {
+            get {
+                return ResourceManager.GetString("NetNatRangeValidationError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Network Address Translation.
         /// </summary>
         public static string NetworkAddressTranslation {
@@ -789,6 +825,15 @@ namespace WgServerforWindows.Properties {
         public static string NewNetIpAddressTaskSubCommandSuccessMessage {
             get {
                 return ResourceManager.GetString("NewNetIpAddressTaskSubCommandSuccessMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Specify custom NAT Network range.
+        /// </summary>
+        public static string NewNetNatRangeSubCommandConfigureText {
+            get {
+                return ResourceManager.GetString("NewNetNatRangeSubCommandConfigureText", resourceCulture);
             }
         }
         

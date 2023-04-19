@@ -30,6 +30,7 @@ namespace WgServerforWindows.Models
             // Set up AppSettings tracking
             Tracker.Configure<GlobalAppSettings>()
                 .Property(a => a.BootTaskDelay)
+                .Property(a => a.CustomNetNatRange)
                 .Track(this);
         }
 
@@ -55,6 +56,13 @@ namespace WgServerforWindows.Models
             set => Set(nameof(BootTaskDelay), ref _bootTaskDelay, value);
         }
         private TimeSpan _bootTaskDelay;
+
+        public string CustomNetNatRange
+        {
+            get => _customNetNatRange;
+            set => Set(nameof(CustomNetNatRange), ref _customNetNatRange, value);
+        }
+        private string _customNetNatRange;
 
         /// <summary>
         /// The public tracker instance located in Public\Documents. Can be used to track things other than the <see cref="Instance"/>.

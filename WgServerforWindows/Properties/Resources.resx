@@ -587,4 +587,19 @@ Note: It is preferable to use a domain name with DDNS to avoid dynamic WAN IPs.<
   <data name="SettingsConfigure" xml:space="preserve">
     <value>Settings</value>
   </data>
+  <data name="NetNatRangeSubCommandSuccessMessage" xml:space="preserve">
+    <value>Specify a custom subnet (must be a superset of the WireGuard network), allowing the NAT network to be shared by other adapters</value>
+  </data>
+  <data name="NewNetNatRangeSubCommandConfigureText" xml:space="preserve">
+    <value>Specify custom NAT Network range</value>
+  </data>
+  <data name="NetNatRangeSelectionTitle" xml:space="preserve">
+    <value>NAT Network Address Range</value>
+  </data>
+  <data name="NetNatRangeSelectionText" xml:space="preserve">
+    <value>Specify custom NAT Network range:</value>
+  </data>
+  <data name="NetNatRangeValidationError" xml:space="preserve">
+    <value>The NAT Network range does not contain the WireGuard server range ({0}).</value>
+  </data>
 </root>
