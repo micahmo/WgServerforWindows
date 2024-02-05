@@ -215,28 +215,12 @@ namespace WgServerforWindows.Models
         };
         private EndpointConfigurationProperty _endpointProperty;
 
-        // Note: Although this property is configured on the server, it goes in the peer (client) section of the server's config,
-        // which means it also has to be defined on the client, targeted to the server's config.
-        // The client should return the server's value, and the server should not target this property to any config type.
-        public ConfigurationProperty PersistentKeepaliveProperty => _persistentKeepaliveProperty ??= new ConfigurationProperty(this)
+        // This property is now configured on the client (and targeted to the client's (peer) section in the server config).
+        // It exists here only for backwards compatibility, since it used to be configured here.
+        public ConfigurationProperty ServerPersistentKeepaliveProperty => _persistentKeepaliveProperty ??= new ConfigurationProperty(this)
         {
-            PersistentPropertyName = "PersistentKeepalive", // Don't really need this since it isn't saved from here
-            Name = nameof(PersistentKeepaliveProperty),
-            DefaultValue = 0.ToString(),
-            Validation = new ConfigurationPropertyValidation
-            {
-                Validate = prop =>
-                {
-                    string result = default;
-
-                    if (string.IsNullOrEmpty(prop.Value) || int.TryParse(prop.Value, out _) == false)
-                    {
-                        result = Resources.PersistentKeepaliveValidationError;
-                    }
-
-                    return result;
-                }
-            }
+            PersistentPropertyName = "PersistentKeepalive",
+            IsHidden = true
         };
         private ConfigurationProperty _persistentKeepaliveProperty;
 

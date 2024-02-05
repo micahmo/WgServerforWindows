@@ -36,7 +36,6 @@ namespace WgServerforWindows.Models
             // Server properties
             PresharedKeyProperty.TargetTypes.Add(typeof(ServerConfiguration));
             PublicKeyProperty.TargetTypes.Add(typeof(ServerConfiguration));
-            ServerPersistentKeepaliveProperty.TargetTypes.Add(typeof(ServerConfiguration));
 
             ServerConfigurationPrerequisite.EnsureConfigFile();
             var serverConfiguration = new ServerConfiguration().Load<ServerConfiguration>(Configuration.LoadFromFile(ServerConfigurationPrerequisite.ServerDataPath));
@@ -195,6 +194,39 @@ namespace WgServerforWindows.Models
             };
             Properties.Add(allowedIpsProperty);
 
+            // This is a client property which goes in the client's (peer) section of the server's config,
+            // so it should be defined and configured here, and should be targeted to the server's config.
+            ConfigurationProperty PersistentKeepaliveProperty = new ConfigurationProperty(this)
+            {
+                PersistentPropertyName = "PersistentKeepalive",
+                Name = nameof(PersistentKeepaliveProperty),
+                DefaultValue = 0.ToString(),
+                Validation = new ConfigurationPropertyValidation
+                {
+                    Validate = prop =>
+                    {
+                        string result = default;
+
+                        if (string.IsNullOrEmpty(prop.Value) || int.TryParse(prop.Value, out _) == false)
+                        {
+                            result = Resources.PersistentKeepaliveValidationError;
+                        }
+
+                        return result;
+                    }
+                }
+            };
+            // On load, do a migration of the old value from the server config, if needed.
+            PersistentKeepaliveProperty.OnLoadAction = _ =>
+            {
+                if (string.IsNullOrEmpty(PersistentKeepaliveProperty.Value))
+                {
+                    PersistentKeepaliveProperty.Value = serverConfiguration.ServerPersistentKeepaliveProperty.Value ?? 0.ToString();
+                }
+            };
+            Properties.Add(PersistentKeepaliveProperty);
+            PersistentKeepaliveProperty.TargetTypes.Add(typeof(ServerConfiguration));
+
             // Adjust index of properties and resort
             AddressProperty.Index = 1;
             DnsProperty.Index = 2;
@@ -346,16 +378,6 @@ namespace WgServerforWindows.Models
                 DnsSearchDomainsProperty.Value?.Split(new[] { ',' }) ?? Enumerable.Empty<string>()).Select(a => a.Trim()).Where(a => !string.IsNullOrWhiteSpace(a))))
         };
         private ConfigurationProperty _fullDnsProperty;
-
-        // Note: This is really a server property, but it goes in the in the (peer) client section of the server's config.
-        // So we'll trick the config generator by putting it in the client, targeting it to the server, and returning the server's value,
-        // which the server will set on the client while saving
-        public ConfigurationProperty ServerPersistentKeepaliveProperty => _persistentKeepaliveProperty ??= new ConfigurationProperty(this)
-        {
-            PersistentPropertyName = "PersistentKeepalive",
-            IsHidden = true
-        };
-        private ConfigurationProperty _persistentKeepaliveProperty;
 
         // Note: This is a client-specific property. It goes in the peer (client) section of the server's config, and is thus targeted to the server config type.
         // However, it also goes in the peer (server) section of the client config.
