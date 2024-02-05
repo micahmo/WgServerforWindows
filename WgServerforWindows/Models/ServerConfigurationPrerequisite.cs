@@ -181,7 +181,6 @@ namespace WgServerforWindows.Models
 
                     if (clientConfiguration.IsEnabledProperty.Value == true.ToString())
                     {
-                        clientConfiguration.ServerPersistentKeepaliveProperty.Value = serverConfiguration.PersistentKeepaliveProperty.Value;
                         configuration = configuration.Merge(clientConfiguration.ToConfiguration<ServerConfiguration>());
                     }
                 }

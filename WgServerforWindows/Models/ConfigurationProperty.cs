@@ -73,6 +73,11 @@ namespace WgServerforWindows.Models
 
         public HashSet<Type> TargetTypes { get; } = new HashSet<Type>();
 
+        /// <summary>
+        /// An action to be invoked after the configuration has been loaded
+        /// </summary>
+        public Action<ConfigurationBase> OnLoadAction { get; set; }
+
         #region Commands
 
         public ICommand ExecuteActionCommand => _executeActionCommand ??= new RelayCommand(() =>
