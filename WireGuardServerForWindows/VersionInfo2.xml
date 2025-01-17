@@ -2,12 +2,13 @@
 <!-- Things to update: Version, Date, Release Notes -->
 <AppUpdate xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/micahmo/WgServerforWindows/master/WireGuardServerForWindows/AppUpdate.xsd">
-  <Version>2.0.11.0</Version>
-  <ReleaseDate>2024-02-05</ReleaseDate>
+  <Version>2.1.0.0</Version>
+  <ReleaseDate>2025-01-17</ReleaseDate>
   <!-- Default download -->
-  <DownloadLink>https://github.com/micahmo/WgServerforWindows/releases/download/v2.0.11/WS4WSetup-2.0.11.exe</DownloadLink>
-  <DownloadFileName>WS4WSetup-2.0.11.exe</DownloadFileName>
+  <DownloadLink>https://github.com/micahmo/WgServerforWindows/releases/download/v2.1.0/WS4WSetup-2.1.0.exe</DownloadLink>
+  <DownloadFileName>WS4WSetup-2.1.0.exe</DownloadFileName>
   <!-- Release notes -->
-  <VersionNotes> - Allow PersistentKeepalive to be configured per client</VersionNotes>
+  <VersionNotes> - Upgraded to .NET 8 (Please be on the lookout for broken functionality and report any issues on GitHub!)
+ - Added the ability to view the names of clients in the server status</VersionNotes>
   <ReleaseNotes></ReleaseNotes>
 </AppUpdate>
