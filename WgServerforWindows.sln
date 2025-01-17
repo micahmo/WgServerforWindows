@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.30804.86
+# Visual Studio Version 17
+VisualStudioVersion = 17.12.35527.113 d17.12
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WgServerforWindows", "WgServerforWindows\WgServerforWindows.csproj", "{BF1E275D-A372-4C32-A118-EF85A28B60C8}"
 EndProject
@@ -10,8 +10,16 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{42A258C8-5F33-4D0D-B0CF-0861EB334E97}"
 	ProjectSection(SolutionItems) = preProject
 		.gitignore = .gitignore
+		.github\workflows\create_release_branch.yml = .github\workflows\create_release_branch.yml
 		Directory.Build.props = Directory.Build.props
+		Installer\GenerateRelease.ps1 = Installer\GenerateRelease.ps1
+		.github\workflows\generate_release.yml = .github\workflows\generate_release.yml
 		README.md = README.md
+		Installer\README.md = Installer\README.md
+		.github\workflows\restore_build_test.yml = .github\workflows\restore_build_test.yml
+		Installer\UpdateVersions.ps1 = Installer\UpdateVersions.ps1
+		.github\workflows\update_versions.yml = .github\workflows\update_versions.yml
+		Installer\WS4WSetupScript.iss = Installer\WS4WSetupScript.iss
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WgServerforWindows.Cli", "WgServerforWindowsCli\WgServerforWindows.Cli.csproj", "{94DDF147-2EA8-45F4-B843-9470EA3C38F5}"

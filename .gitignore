@@ -352,3 +352,4 @@ MigrationBackup/
 # Do not commit the generated install file or associated dependencies
 WS4WSetup*.exe
 windowsdesktop-runtime-3.1.21-win-x64.exe
+windowsdesktop-runtime-8.0.11-win-x64.exe

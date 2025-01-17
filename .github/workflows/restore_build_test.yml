@@ -8,17 +8,17 @@ jobs:
     runs-on: windows-latest
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       
       # Setup: Need .NET Core for restore, MSBuild for build, and VSTest for test
       - name: Setup .NET
-        uses: actions/setup-dotnet@v1.7.2
+        uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: 3.1.x
+          dotnet-version: 8.0.x
       - name: Setup MSBuild
-        uses: microsoft/setup-msbuild@v1.0.3
+        uses: microsoft/setup-msbuild@v2
       - name: Setup VSTest
-        uses: darenm/Setup-VSTest@v1
+        uses: darenm/Setup-VSTest@v1.2
       
       # Restore, build, test
       - name: Restore
@@ -26,4 +26,4 @@ jobs:
       - name: Build
         run: msbuild
       - name: Test
-        run: vstest.console WgServerforWindows.Tests\bin\Debug\netcoreapp3.1\WgServerforWindows.Tests.dll
+        run: vstest.console WgServerforWindows.Tests\bin\Debug\net80-windows\WgServerforWindows.Tests.dll

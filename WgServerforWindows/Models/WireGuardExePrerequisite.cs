@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
-using System.Net;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Flurl.Http;
 using WgAPI;
 using WgServerforWindows.Properties;
 
@@ -32,12 +32,13 @@ namespace WgServerforWindows.Models
         public override void Resolve()
         {
             WaitCursor.SetOverrideCursor(Cursors.Wait);
-            
-            string downloadPath = Path.Combine(Path.GetTempPath(), "wireguard.exe");
-            new WebClient().DownloadFile(wireGuardExeDownload, downloadPath);
+
+            string downloadPath = Path.GetTempPath();
+            string downloadFileName = "wireguard.exe";
+            wireGuardExeDownload.DownloadFileAsync(downloadPath, downloadFileName).GetAwaiter().GetResult();
             Process.Start(new ProcessStartInfo
             {
-                FileName = downloadPath,
+                FileName = Path.Combine(downloadPath, downloadFileName),
                 Verb = "runas", // For elevation
                 UseShellExecute = true // Must be true to use "runas"
             });

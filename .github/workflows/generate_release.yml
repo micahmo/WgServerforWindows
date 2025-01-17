@@ -19,8 +19,8 @@ jobs:
           echo "EOF" >> $env:GITHUB_OUTPUT
       - name: Setup MSBuild
         uses: microsoft/setup-msbuild@main
-      - name: Download .NET Core Runtime
-        run: Invoke-WebRequest https://download.visualstudio.microsoft.com/download/pr/3f56df9d-6dc0-4897-a49b-ea891f9ad0f4/076e353a29908c70e24ba8b8d0daefb8/windowsdesktop-runtime-3.1.21-win-x64.exe -OutFile Installer\windowsdesktop-runtime-3.1.21-win-x64.exe
+      - name: Download .NET Runtime
+        run: Invoke-WebRequest https://download.visualstudio.microsoft.com/download/pr/27bcdd70-ce64-4049-ba24-2b14f9267729/d4a435e55182ce5424a7204c2cf2b3ea/windowsdesktop-runtime-8.0.11-win-x64.exe -OutFile Installer\windowsdesktop-runtime-8.0.11-win-x64.exe
       - name: Generate Release
         run: Installer\GenerateRelease.ps1
       - name: Publish Release

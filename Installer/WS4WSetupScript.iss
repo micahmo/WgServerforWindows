@@ -5,9 +5,9 @@
 #define MyAppURL "https://github.com/micahmo/WgServerforWindows"
 #define MyAppExeName "WgServerforWindows.exe"
 #define CliName "ws4w.exe"
-#define NetCoreRuntimeMinorVersion "21"
-#define NetCoreRuntimeVersion "3.1." + NetCoreRuntimeMinorVersion
-#define NetCoreRuntime "windowsdesktop-runtime-" + NetCoreRuntimeVersion + "-win-x64.exe"
+#define NetRuntimeMinorVersion "11"
+#define NetRuntimeVersion "8.0." + NetRuntimeMinorVersion
+#define NetRuntime "windowsdesktop-runtime-" + NetRuntimeVersion + "-win-x64.exe"
 #define UniversalCrtKb "KB3118401"
 #define BuildConfig "Release"
 ;#define BuildConfig "Debug"
@@ -29,7 +29,7 @@ DefaultDirName={autopf}\WS4W
 DefaultGroupName=WS4W
 AllowNoIcons=yes
 ; This is relative to the .iss file location
-SourceDir=..\WgServerforWindows\bin\{#BuildConfig}\netcoreapp3.1\
+SourceDir=..\WgServerforWindows\bin\{#BuildConfig}\net80-windows\
 ; These are relative to SourceDir (see RepoRoot)
 OutputDir={#RepoRoot}\Installer
 SetupIconFile={#RepoRoot}\WgServerforWindows\Images\logo.ico
@@ -39,14 +39,14 @@ OutputBaseFilename=WS4WSetup-{#MyAppVersion}
 Compression=lzma
 SolidCompression=yes
 WizardStyle=modern
-; .NET Core Desktop Runtime install can trigger this, but it doesn't actually require a restart
+; .NET Desktop Runtime install can trigger this, but it doesn't actually require a restart
 RestartIfNeededByRun=no
 
 [CustomMessages]
 UCrtError={#MyAppName} requires the Universal C Runtime. Please perform all outstanding Windows Updates or search for and install {#UniversalCrtKb} before installing WS4W.
 
 [Code]
-function NetCoreRuntimeNotInstalled: Boolean;
+function NetRuntimeNotInstalled: Boolean;
 var
   InstalledRuntimes: TArrayOfString;
   I: Integer;
@@ -63,8 +63,8 @@ begin
     begin
       for I := 0 to GetArrayLength(InstalledRuntimes)-1 do
       begin 
-        // See if the runtime starts with 3.1.
-        if WildcardMatch(InstalledRuntimes[I], '3.1.*') then
+        // See if the runtime starts with 8.0.
+        if WildcardMatch(InstalledRuntimes[I], '8.0.*') then
         begin
           // Get just the minor version and convert it to an int
           MinorVersion := InstalledRuntimes[I];
@@ -72,7 +72,7 @@ begin
           MinorVersionInt := StrToIntDef(MinorVersion, 0);
           
           // Check if it's at least the version we want
-          if MinorVersionInt >= {#NetCoreRuntimeMinorVersion} then
+          if MinorVersionInt >= {#NetRuntimeMinorVersion} then
           begin
             // Finally, this system has a new enough version installed
             Result := False;
@@ -129,15 +129,15 @@ Type: files; Name: "{autodesktop}\{#MyAppNameOld}.lnk"
 [Files]
 ; These are relative to SourceDir
 Source: "*"; DestDir: "{app}"; Excludes: "de,es"; Flags: recursesubdirs;
-Source: "..\..\..\..\Installer\{#NetCoreRuntime}"; DestDir: "{tmp}"; Flags: deleteafterinstall; Check: NetCoreRuntimeNotInstalled
+Source: "..\..\..\..\Installer\{#NetRuntime}"; DestDir: "{tmp}"; Flags: deleteafterinstall; Check: NetRuntimeNotInstalled
 
 [Icons]
 Name: "{group}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
 Name: "{autodesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: desktopicon
 
 [Run]
-; .NET Core Desktop Runtime
-Filename: "{tmp}\{#NetCoreRuntime}"; Flags: runascurrentuser; StatusMsg: "Installing .NET Core Desktop Runtime..."; Check: NetCoreRuntimeNotInstalled
+; .NET Desktop Runtime
+Filename: "{tmp}\{#NetRuntime}"; Flags: runascurrentuser; StatusMsg: "Installing .NET Desktop Runtime..."; Check: NetRuntimeNotInstalled
 
 ; CLI in Path
 Filename: "{app}\{#CliName}"; Parameters: "setpath"; Flags: runhidden nowait skipifsilent runascurrentuser; Tasks: setpath

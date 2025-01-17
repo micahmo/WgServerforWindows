@@ -4,7 +4,7 @@
 
 Download and install [Inno Setup](https://jrsoftware.org/isinfo.php).
 
-Download the [.NET Core 3.1 Desktop Runtime (v3.1.21)](https://dotnet.microsoft.com/download/dotnet/thank-you/runtime-desktop-3.1.21-windows-x64-installer) and place it in `WgServerforWindows\Installer`.
+Download the [.NET 8.0 Desktop Runtime (v8.0.11)](https://dotnet.microsoft.com/en-us/download/dotnet/thank-you/runtime-desktop-8.0.11-windows-x64-installer) and place it in `WgServerforWindows\Installer`.
 
 ## Generate Installer for New Version
 
