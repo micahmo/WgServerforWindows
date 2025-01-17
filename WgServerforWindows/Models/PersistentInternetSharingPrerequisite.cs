@@ -1,7 +1,9 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Management;
+using System.Windows;
 using System.Windows.Input;
 using Microsoft.Win32;
 using Microsoft.Win32.TaskScheduler;
@@ -29,26 +31,33 @@ namespace WgServerforWindows.Models
         {
             bool result = false;
 
-            // First, check whether the service is set to start automatically
-            if (GetICSService() is { } service)
+            try
             {
-                bool isAutomatic = service.Properties["StartMode"].Value as string == "Automatic" ||
-                                   service.Properties["StartMode"].Value as string == "Auto";
-
-                if (isAutomatic)
+                // First, check whether the service is set to start automatically
+                if (GetICSService() is { } service)
                 {
-                    // Now check whether the special registry entry exists
-                    // If good, result is true
-                    if (GetRegistryKeyValue() is {} value && value == 1)
+                    bool isAutomatic = service.Properties["StartMode"].Value as string == "Automatic" ||
+                                       service.Properties["StartMode"].Value as string == "Auto";
+
+                    if (isAutomatic)
                     {
-                        // Finally, verify that the task exists and that all of the parameters are correct.
-                        result = TaskService.Instance.FindTask(RestartInternetSharingTaskUniqueName) is { Enabled: true } task 
-                                 && task.Definition.Triggers.FirstOrDefault() is BootTrigger 
-                                 && task.Definition.Actions.FirstOrDefault() is ExecAction action 
-                                 && action.Path == Path.Combine(AppContext.BaseDirectory, "ws4w.exe") 
-                                 && action.Arguments == typeof(RestartInternetSharingCommand).GetVerb();
+                        // Now check whether the special registry entry exists
+                        // If good, result is true
+                        if (GetRegistryKeyValue() is { } value && value == 1)
+                        {
+                            // Finally, verify that the task exists and that all of the parameters are correct.
+                            result = TaskService.Instance.FindTask(RestartInternetSharingTaskUniqueName) is { Enabled: true } task
+                                     && task.Definition.Triggers.FirstOrDefault() is BootTrigger
+                                     && task.Definition.Actions.FirstOrDefault() is ExecAction action
+                                     && action.Path == Path.Combine(AppContext.BaseDirectory, "ws4w.exe")
+                                     && action.Arguments == typeof(RestartInternetSharingCommand).GetVerb();
+                        }
                     }
                 }
+            }
+            catch 
+            {
+                // If there's any error getting the ICS Service, then it's clearly not resolved, so return false.
             }
 
             return result;
@@ -116,14 +125,21 @@ namespace WgServerforWindows.Models
 
         private int? GetRegistryKeyValue()
         {
-            var sharedAccessKey = Registry.LocalMachine.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\SharedAccess");
+            RegistryKey sharedAccessKey = Registry.LocalMachine.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\SharedAccess");
             return sharedAccessKey?.GetValue("EnableRebootPersistConnection") as int?;
         }
 
         private void SetRegistryKeyValue(int value)
         {
-            var sharedAccessKey = Registry.LocalMachine.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\SharedAccess", writable: true);
-            sharedAccessKey?.SetValue("EnableRebootPersistConnection", value);
+            RegistryKey sharedAccessKey = Registry.LocalMachine.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\SharedAccess", writable: true)
+                                          ?? Registry.LocalMachine.CreateSubKey(@"Software\Microsoft\Windows\CurrentVersion\SharedAccess", writable: true);
+
+            if (sharedAccessKey is null)
+            {
+                throw new Exception("There was an error setting the SharedAccess registry key.");
+            }
+
+            sharedAccessKey.SetValue("EnableRebootPersistConnection", value);
         }
 
         #endregion

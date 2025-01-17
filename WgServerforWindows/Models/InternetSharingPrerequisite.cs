@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Management;
 using System.Net.NetworkInformation;
+using System.Reflection;
 using System.Windows.Input;
 using Humanizer;
 using NETCONLib;
@@ -69,20 +70,27 @@ namespace WgServerforWindows.Models
             // Occasionally have to poke networks via WMI to really disable all ICS
             // - https://github.com/micahmo/WireGuardServerForWindows/issues/16
             // - https://github.com/utapyngo/icsmanager/issues/17
-            ManagementObjectSearcher managementObjectSearcher = new ManagementObjectSearcher(@"root\Microsoft\HomeNet", "select * from hnet_connectionproperties");
-            foreach (var netConnection in managementObjectSearcher.Get().OfType<ManagementObject>())
+            try
             {
-                if (netConnection.GetPropertyValue("IsIcsPrivate") is bool isIcsPrivate && isIcsPrivate)
+                ManagementObjectSearcher managementObjectSearcher = new ManagementObjectSearcher(@"root\Microsoft\HomeNet", "select * from hnet_connectionproperties");
+                foreach (ManagementObject netConnection in managementObjectSearcher.Get().OfType<ManagementObject>())
                 {
-                    netConnection.SetPropertyValue("IsIcsPrivate", false);
-                    netConnection.Put(new PutOptions {Type = PutType.UpdateOnly});
-                }
+                    if (netConnection.GetPropertyValue("IsIcsPrivate") is bool isIcsPrivate && isIcsPrivate)
+                    {
+                        netConnection.SetPropertyValue("IsIcsPrivate", false);
+                        netConnection.Put(new PutOptions { Type = PutType.UpdateOnly });
+                    }
 
-                if (netConnection.GetPropertyValue("IsIcsPublic") is bool isIcsPublic && isIcsPublic)
-                {
-                    netConnection.SetPropertyValue("IsIcsPublic", false);
-                    netConnection.Put(new PutOptions {Type = PutType.UpdateOnly});
+                    if (netConnection.GetPropertyValue("IsIcsPublic") is bool isIcsPublic && isIcsPublic)
+                    {
+                        netConnection.SetPropertyValue("IsIcsPublic", false);
+                        netConnection.Put(new PutOptions { Type = PutType.UpdateOnly });
+                    }
                 }
+            }
+            catch (PlatformNotSupportedException)
+            {
+                throw new Exception("WS4W was unable to enable Internet Sharing due to an old version of .NET Framework. Please apply all Windows Updates before continuing, and then try again.");
             }
 
             WaitCursor.SetOverrideCursor(null);

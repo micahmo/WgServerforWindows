@@ -1,11 +1,16 @@
 ﻿using System;
 using System.IO;
+using System.Text;
+using System.Text.RegularExpressions;
 using System.Windows.Threading;
+using SharpConfig;
 using WgAPI;
 using WgAPI.Commands;
 using WgServerforWindows.Cli.Options;
 using WgServerforWindows.Controls;
 using WgServerforWindows.Properties;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace WgServerforWindows.Models
 {
@@ -63,7 +68,49 @@ namespace WgServerforWindows.Models
 
         #region Public properties
 
-        public string ServerStatus => new WireGuardExe().ExecuteCommand(new ShowCommand(ServerConfigurationPrerequisite.WireGuardServerInterfaceName));
+        public string ServerStatus
+        {
+            get
+            {
+                Dictionary<string, string> clients = new();
+                try
+                {
+                    // First, load all of the clients, so we can associate peer IDs.
+                    ClientConfigurationList clientConfigurations = new ClientConfigurationList();
+                    List<ClientConfiguration> clientConfigurationsFromFile = new List<ClientConfiguration>();
+                    foreach (string clientConfigurationFile in Directory.GetFiles(ClientConfigurationsPrerequisite.ClientDataDirectory, "*.conf"))
+                    {
+                        clientConfigurationsFromFile.Add(new ClientConfiguration(clientConfigurations).Load<ClientConfiguration>(Configuration.LoadFromFile(clientConfigurationFile)));
+                    }
+
+                    clients = clientConfigurationsFromFile.ToDictionary(c => c.PublicKeyProperty.Value, c => c.Name);
+                }
+                catch
+                {
+                    // Ignore if there's any problem with this
+                }
+
+                // Get the output of the status command
+                string statusOutput = new WireGuardExe().ExecuteCommand(new ShowCommand(ServerConfigurationPrerequisite.WireGuardServerInterfaceName));
+
+                // Iterate through the output and correlate peer IDs to names
+                StringBuilder result = new StringBuilder();
+                foreach (string line in statusOutput.Split(Environment.NewLine))
+                {
+                    Match match = _peerRegex.Match(line);
+                    if (match.Success && clients.ContainsKey(match.Groups[1].Value))
+                    {
+                        result.AppendLine(_peerRegex.Replace(line, $"peer: {clients[match.Groups[1].Value]} ({match.Groups[1].Value})"));
+                    }
+                    else
+                    {
+                        result.AppendLine(line);
+                    }
+                }
+
+                return result.ToString();
+            }
+        }
 
         public bool UpdateLive
         {
@@ -77,6 +124,7 @@ namespace WgServerforWindows.Models
         #region Private fields
 
         private readonly DispatcherTimer _updateTimer;
+        private readonly Regex _peerRegex = new Regex(@"peer:\s([^\s]+)", RegexOptions.Compiled);
 
         #endregion
     }

@@ -23,7 +23,7 @@ namespace WgServerforWindows.Cli
                     var result = CliWrap.Cli.Wrap("WgServerforWindows.exe")
                         .WithArguments(args)
                         .WithValidation(CommandResultValidation.None)
-                        .ExecuteBufferedAsync().Task.Result;
+                        .ExecuteBufferedAsync().GetAwaiter().GetResult();
 
                     Console.Write(result.StandardOutput);
                     Console.WriteLine(result.ExitCode == 0 ? Resources.CommandSucceeded : Resources.CommandFailed);

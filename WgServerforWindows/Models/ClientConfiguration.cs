@@ -55,7 +55,7 @@ namespace WgServerforWindows.Models
 
                     var serverAddresses = serverConfiguration.AddressProperty.Value
                         .Split(',')
-                        .Select(a => IPNetwork.Parse(a.Trim()))
+                        .Select(a => IPNetwork2.Parse(a.Trim()))
                         .ToList(); // Prevent multiple enumeration
 
                     var currentClientAddresses = (prop.Value?
@@ -69,7 +69,7 @@ namespace WgServerforWindows.Models
                         .ToList(); // Prevent multiple enumeration
 
                     var newClientAddresses = new HashSet<string>();
-                    var serverAddressesToConsider = new List<IPNetwork>(serverAddresses); // Copy
+                    var serverAddressesToConsider = new List<IPNetwork2>(serverAddresses); // Copy
 
                     // See if any existing client addresses are in any of the server's address ranges
                     foreach (var serverAddress in serverAddresses)
@@ -117,7 +117,7 @@ namespace WgServerforWindows.Models
                         foreach (string address in obj.Value.Split(new[] { ',' }).Select(a => a.Trim()))
                         {
                             // First, try parsing with IPNetwork to see if it's in CIDR format
-                            if (IPNetwork.TryParse(address, out var network))
+                            if (IPNetwork2.TryParse(address, out var network))
                             {
                                 // At this point, we know it's a valid network. Let's see how many addresses are in range
                                 if (network.Usable > 1)

@@ -54,8 +54,8 @@ namespace WgServerforWindows.Models
                     }
 
                     // Ensure that this range contains the server range
-                    IPNetwork netNatRange = IPNetwork.Parse(selectionWindowModel.SelectedItem.BackingObject);
-                    IPNetwork serverRange = IPNetwork.Parse(serverConfiguration.AddressProperty.Value);
+                    IPNetwork2 netNatRange = IPNetwork2.Parse(selectionWindowModel.SelectedItem.BackingObject);
+                    IPNetwork2 serverRange = IPNetwork2.Parse(serverConfiguration.AddressProperty.Value);
                     if (!netNatRange.Contains(serverRange))
                     {
                         selectionWindowModel.ValidationError = string.Format(Resources.NetNatRangeValidationError, serverRange);

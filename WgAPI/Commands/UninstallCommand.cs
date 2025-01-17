@@ -1,8 +1,10 @@
 ﻿using System.Linq;
+using System.Runtime.Versioning;
 using Microsoft.Win32;
 
 namespace WgAPI
 {
+    [SupportedOSPlatform("windows")] // Suppress warnings about registry not working on all platforms
     public class UninstallCommand : WireGuardCommand
     {
         public UninstallCommand() : base(string.Empty, WhichExe.Custom)

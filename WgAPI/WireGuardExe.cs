@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using CliWrap;
 using CliWrap.Buffered;
 
@@ -79,14 +80,27 @@ namespace WgAPI
                         .Add(command.Switch)
                         .Add(command.Args)).WithValidation(CommandResultValidation.None);
 
-                    // For some reason, awaiting this can hang, so this method must do everything synchronously.
-                    var bufferedResult = cmd.ExecuteBufferedAsync().Task.Result;
-                    result = bufferedResult.StandardOutput.Trim();
-                    exitCode = bufferedResult.ExitCode;
-
-                    if (exitCode != 0)
+                    // For some reason, awaiting this can hang, so add a little retry and invoke the command in a task
+                    for (int i = 0; i < 10; ++i)
                     {
-                        result += bufferedResult.StandardError.Trim();
+                        int taskExitCode = 1;
+                        Task.Run(() =>
+                        {
+                            var bufferedResultTask = cmd.ExecuteBufferedAsync();
+                            if (bufferedResultTask.Task.Wait(TimeSpan.FromSeconds(10)))
+                            {
+                                var bufferedResult = bufferedResultTask.GetAwaiter().GetResult();
+                                result = bufferedResult.StandardOutput.Trim();
+                                taskExitCode = bufferedResult.ExitCode;
+
+                                if (taskExitCode != 0)
+                                {
+                                    result += bufferedResult.StandardError.Trim();
+                                }
+                            }
+                        }).GetAwaiter().GetResult();
+                        
+                        exitCode = taskExitCode;
                     }
 
                     break;

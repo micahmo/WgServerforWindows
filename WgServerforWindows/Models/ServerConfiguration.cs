@@ -260,7 +260,7 @@ namespace WgServerforWindows.Models
                 
                 try
                 {
-                    IPNetwork network = IPNetwork.Parse(AddressProperty.Value);
+                    IPNetwork2 network = IPNetwork2.Parse(AddressProperty.Value);
                     result = network.ListIPAddress().Skip(1).FirstOrDefault()?.ToString() ?? string.Empty;
                 }
                 catch
@@ -285,7 +285,7 @@ namespace WgServerforWindows.Models
 
                 try
                 {
-                    IPNetwork network = IPNetwork.Parse(AddressProperty.Value);
+                    IPNetwork2 network = IPNetwork2.Parse(AddressProperty.Value);
                     result = network.Cidr.ToString();
                 }
                 catch
