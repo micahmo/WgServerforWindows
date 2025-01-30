@@ -37,13 +37,13 @@ namespace WgServerforWindows.Models
                     // Multiple server addresses are supported, so validate all of them
                     foreach (string address in obj.Value.Split(',').Select(a => a.Trim()))
                     {
-                        if (IPNetwork.TryParse(address, out _) == false)
+                        if (IPNetwork2.TryParse(address, out _) == false)
                         {
                             return Resources.NetworkAddressValidationError;
                         }
-                        // IPNetwork.TryParse recognizes single IP addresses as CIDR (with 8 mask).
+                        // IPNetwork2.TryParse recognizes single IP addresses as CIDR (with 8 mask).
                         // This is not good, because we want an explicit CIDR for the server.
-                        // Therefore, if IPNetwork.TryParse succeeds, and IPAddress.TryParse also succeeds, we have a problem.
+                        // Therefore, if IPNetwork2.TryParse succeeds, and IPAddress.TryParse also succeeds, we have a problem.
                         if (IPAddress.TryParse(address, out _))
                         {
                             // This is just a regular address. We want CIDR.
@@ -167,7 +167,7 @@ namespace WgServerforWindows.Models
                     // Support CSV allowed IPs
                     foreach (string address in obj.Value.Split(new[] {','}, StringSplitOptions.RemoveEmptyEntries).Select(a => a.Trim()))
                     {
-                        if (IPNetwork.TryParse(address, out _) == false)
+                        if (IPNetwork2.TryParse(address, out _) == false)
                         {
                             return Resources.NetworkAddressValidationError;
                         }
