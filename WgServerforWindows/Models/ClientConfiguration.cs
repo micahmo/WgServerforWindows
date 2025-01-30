@@ -290,7 +290,7 @@ namespace WgServerforWindows.Models
                     // Support CSV allowed IPs
                     foreach (string address in obj.Value.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(a => a.Trim()))
                     {
-                        if (IPNetwork.TryParse(address, out _) == false)
+                        if (IPNetwork2.TryParse(address, out _) == false)
                         {
                             return Resources.NetworkAddressValidationError;
                         }

@@ -38,14 +38,14 @@ namespace WgServerforWindows.Models
             {
                 if (!string.IsNullOrWhiteSpace(selectionWindowModel.SelectedItem.BackingObject))
                 {
-                    if (!IPNetwork.TryParse(selectionWindowModel.SelectedItem.BackingObject, out _))
+                    if (!IPNetwork2.TryParse(selectionWindowModel.SelectedItem.BackingObject, out _))
                     {
                         selectionWindowModel.ValidationError = Resources.NetworkAddressValidationError;
                         return false;
                     }
-                    // IPNetwork.TryParse recognizes single IP addresses as CIDR (with 8 mask).
+                    // IPNetwork2.TryParse recognizes single IP addresses as CIDR (with 8 mask).
                     // This is not good, because we want an explicit CIDR for the server.
-                    // Therefore, if IPNetwork.TryParse succeeds, and IPAddress.TryParse also succeeds, we have a problem.
+                    // Therefore, if IPNetwork2.TryParse succeeds, and IPAddress.TryParse also succeeds, we have a problem.
                     if (IPAddress.TryParse(selectionWindowModel.SelectedItem.BackingObject, out _))
                     {
                         // This is just a regular address. We want CIDR.
