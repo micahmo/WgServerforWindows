@@ -124,23 +124,26 @@ namespace WgServerforWindows.Models
                 // Update the tunnel service, if everyone is happy
                 if (Fulfilled && (clientConfigurationsPrerequisite.Fulfilled || !ClientConfigurationsPrerequisite.AnyClients) && new TunnelServicePrerequisite().Fulfilled)
                 {
-                    // Sync conf to tunnel
-                    string output = new WireGuardExe().ExecuteCommand(new SyncConfigurationCommand(WireGuardServerInterfaceName, ServerWGPath), out int exitCode);
-
-                    if (exitCode != 0)
+                    using (TemporaryFile temporaryFile = new(ServerWGPath, ServerWGPathWithCustomTunnelName))
                     {
-                        // Notify the user that there was an error syncing the server conf.
-                        WaitCursor.SetOverrideCursor(null);
+                        // Sync conf to tunnel
+                        string output = new WireGuardExe().ExecuteCommand(new SyncConfigurationCommand(GlobalAppSettings.Instance.TunnelServiceName, temporaryFile.NewFilePath), out int exitCode);
 
-                        new UnhandledErrorWindow
+                        if (exitCode != 0)
                         {
-                            DataContext = new UnhandledErrorWindowModel
+                            // Notify the user that there was an error syncing the server conf.
+                            WaitCursor.SetOverrideCursor(null);
+
+                            new UnhandledErrorWindow
                             {
-                                Title = Resources.Error,
-                                Text = $"{Resources.ServerSyncError}{Environment.NewLine}{Environment.NewLine}{output}",
-                                Exception = new Exception(output)
-                            }
-                        }.ShowDialog();
+                                DataContext = new UnhandledErrorWindowModel
+                                {
+                                    Title = Resources.Error,
+                                    Text = $"{Resources.ServerSyncError}{Environment.NewLine}{Environment.NewLine}{output}",
+                                    Exception = new Exception(output)
+                                }
+                            }.ShowDialog();
+                        }
                     }
                 }
 
@@ -202,11 +205,11 @@ namespace WgServerforWindows.Models
 
         public static string ServerWGPath => Path.Combine(ServerWGDirectory, "wg_server.conf");
 
+        public static string ServerWGPathWithCustomTunnelName => Path.Combine(Path.GetDirectoryName(ServerWGPath)!, GlobalAppSettings.Instance.TunnelServiceName + Path.GetExtension(ServerWGPath));
+
         public static string ServerDataDirectory => Path.Combine(ServerConfigDirectory, "server_data");
 
         public static string ServerDataPath => Path.Combine(ServerDataDirectory, "wg_server.conf");
-
-        public static string WireGuardServerInterfaceName => Path.GetFileNameWithoutExtension(ServerWGPath);
 
         #endregion
 
@@ -245,7 +248,7 @@ namespace WgServerforWindows.Models
             {
                 // Windows API code pack can show stale adapters, and incorrect names.
                 // First, get the real interface here.
-                if (NetworkInterface.GetAllNetworkInterfaces().FirstOrDefault(i => i.Name == WireGuardServerInterfaceName) is { } networkInterface)
+                if (NetworkInterface.GetAllNetworkInterfaces().FirstOrDefault(i => i.Name == GlobalAppSettings.Instance.TunnelServiceName) is { } networkInterface)
                 {
                     // Now use the ID to get the network from API code pack
                     if (NetworkListManager.GetNetworks(NetworkConnectivityLevels.All).FirstOrDefault(n => n.Connections.Any(c => c.AdapterId == new Guid(networkInterface.Id))) is { } network)

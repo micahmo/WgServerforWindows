@@ -35,7 +35,7 @@ namespace WgServerforWindows.Models
             
             // Find the WireGuard interface
             var wg_server = netSharingManager.EnumEveryConnection.OfType<INetConnection>()
-                .FirstOrDefault(n => netSharingManager.NetConnectionProps[n].Name == ServerConfigurationPrerequisite.WireGuardServerInterfaceName);
+                .FirstOrDefault(n => netSharingManager.NetConnectionProps[n].Name == GlobalAppSettings.Instance.TunnelServiceName);
 
             if (wg_server is { })
             {
@@ -103,7 +103,7 @@ namespace WgServerforWindows.Models
             };
 
             // Add all of the interfaces to the selection list
-            foreach (var connection in netSharingManager.EnumEveryConnection.OfType<INetConnection>().Where(c => netSharingManager.NetConnectionProps[c].Name != ServerConfigurationPrerequisite.WireGuardServerInterfaceName))
+            foreach (var connection in netSharingManager.EnumEveryConnection.OfType<INetConnection>().Where(c => netSharingManager.NetConnectionProps[c].Name != GlobalAppSettings.Instance.TunnelServiceName))
             {
                 // Status is an enum like NCS_MEDIA_DISCONNECTED
                 // Humanize() will convert it to "NCS MEDIA DISCONNECTED"
@@ -146,7 +146,7 @@ namespace WgServerforWindows.Models
             {
                 WaitCursor.SetOverrideCursor(Cursors.Wait);
 
-                var wg_server = netSharingManager.EnumEveryConnection.OfType<INetConnection>().FirstOrDefault(n => netSharingManager.NetConnectionProps[n].Name == ServerConfigurationPrerequisite.WireGuardServerInterfaceName);
+                var wg_server = netSharingManager.EnumEveryConnection.OfType<INetConnection>().FirstOrDefault(n => netSharingManager.NetConnectionProps[n].Name == GlobalAppSettings.Instance.TunnelServiceName);
 
                 if (wg_server is { })
                 {
@@ -190,7 +190,7 @@ namespace WgServerforWindows.Models
             
             NetSharingManagerClass netSharingManager = new NetSharingManagerClass();
 
-            foreach (var connection in netSharingManager.EnumEveryConnection.OfType<INetConnection>().Where(c => netSharingManager.NetConnectionProps[c].Name != ServerConfigurationPrerequisite.WireGuardServerInterfaceName))
+            foreach (var connection in netSharingManager.EnumEveryConnection.OfType<INetConnection>().Where(c => netSharingManager.NetConnectionProps[c].Name != GlobalAppSettings.Instance.TunnelServiceName))
             {
                 if (netSharingManager.INetSharingConfigurationForINetConnection[connection].SharingEnabled &&
                     netSharingManager.INetSharingConfigurationForINetConnection[connection].SharingConnectionType == tagSHARINGCONNECTIONTYPE.ICSSHARINGTYPE_PUBLIC)

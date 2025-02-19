@@ -602,4 +602,13 @@ Note: It is preferable to use a domain name with DDNS to avoid dynamic WAN IPs.<
   <data name="NetNatRangeValidationError" xml:space="preserve">
     <value>The NAT Network range does not contain the WireGuard server range ({0}).</value>
   </data>
+  <data name="TunnelServiceNameSubCommandConfigureText" xml:space="preserve">
+    <value>Change tunnel service name</value>
+  </data>
+  <data name="CustomTunnelServiceNameSelectionTitle" xml:space="preserve">
+    <value>Tunnel Service Name</value>
+  </data>
+  <data name="CustomTunnelServiceNameSelectionText" xml:space="preserve">
+    <value>Customize the name of the WireGuard tunnel service (default is wg_server). Only letters, numbers, and underscores are allowed.</value>
+  </data>
 </root>

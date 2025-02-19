@@ -33,7 +33,8 @@ namespace WgServerforWindows
             var openClientConfigDirectorySubCommand = new OpenClientConfigDirectorySubCommand();
             var changeClientConfigDirectorySubCommand = new ChangeClientConfigDirectorySubCommand();
             var clientConfigurationsPrerequisite = new ClientConfigurationsPrerequisite(openClientConfigDirectorySubCommand, changeClientConfigDirectorySubCommand);
-            var tunnelServicePrerequisite = new TunnelServicePrerequisite();
+            var tunnelServiceNameSubCommand = new TunnelServiceNameSubCommand();
+            var tunnelServicePrerequisite = new TunnelServicePrerequisite(tunnelServiceNameSubCommand);
             var privateNetworkTaskSubCommand = new PrivateNetworkTaskSubCommand();
             var privateNetworkPrerequisite = new PrivateNetworkPrerequisite(privateNetworkTaskSubCommand);
             var netIpAddressTaskSubCommand = new NewNetIpAddressTaskSubCommand();
@@ -54,6 +55,9 @@ namespace WgServerforWindows
             serverConfigurationPrerequisite.CanResolveFunc = clientConfigurationsPrerequisite.CanResolveFunc =
             serverConfigurationPrerequisite.CanConfigureFunc = clientConfigurationsPrerequisite.CanConfigureFunc = () => wireGuardExePrerequisite.Fulfilled;
             
+            // Can't rename the tunnel service if it's already installed
+            tunnelServiceNameSubCommand.CanConfigureFunc = () => tunnelServicePrerequisite.Fulfilled == false;
+
             // Can't install tunnel until WireGuard exe is installed and server is configured
             tunnelServicePrerequisite.CanResolveFunc = () =>
                 wireGuardExePrerequisite.Fulfilled && serverConfigurationPrerequisite.Fulfilled;

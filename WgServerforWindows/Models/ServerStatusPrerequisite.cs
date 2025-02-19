@@ -91,7 +91,7 @@ namespace WgServerforWindows.Models
                 }
 
                 // Get the output of the status command
-                string statusOutput = new WireGuardExe().ExecuteCommand(new ShowCommand(ServerConfigurationPrerequisite.WireGuardServerInterfaceName));
+                string statusOutput = new WireGuardExe().ExecuteCommand(new ShowCommand(GlobalAppSettings.Instance.TunnelServiceName));
 
                 // Iterate through the output and correlate peer IDs to names
                 StringBuilder result = new StringBuilder();

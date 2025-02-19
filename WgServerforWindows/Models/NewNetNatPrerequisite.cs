@@ -44,7 +44,7 @@ namespace WgServerforWindows.Models
             var serverConfiguration = new ServerConfiguration().Load<ServerConfiguration>(Configuration.LoadFromFile(ServerConfigurationPrerequisite.ServerDataPath));
 
             // Get the network interface
-            int? index = NetworkInterface.GetAllNetworkInterfaces().FirstOrDefault(i => i.Name == ServerConfigurationPrerequisite.WireGuardServerInterfaceName)?
+            int? index = NetworkInterface.GetAllNetworkInterfaces().FirstOrDefault(i => i.Name == GlobalAppSettings.Instance.TunnelServiceName)?
                 .GetIPProperties()?.GetIPv4Properties()?.Index;
 
             // Verify the NAT rule exists and is correct
@@ -77,7 +77,7 @@ namespace WgServerforWindows.Models
             WaitCursor.SetOverrideCursor(Cursors.Wait);
 
             // Get the network interface
-            int? index = NetworkInterface.GetAllNetworkInterfaces().FirstOrDefault(i => i.Name == ServerConfigurationPrerequisite.WireGuardServerInterfaceName)?
+            int? index = NetworkInterface.GetAllNetworkInterfaces().FirstOrDefault(i => i.Name == GlobalAppSettings.Instance.TunnelServiceName)?
                 .GetIPProperties()?.GetIPv4Properties()?.Index;
 
             var serverConfiguration = new ServerConfiguration().Load<ServerConfiguration>(Configuration.LoadFromFile(serverDataPath ?? ServerConfigurationPrerequisite.ServerDataPath));
