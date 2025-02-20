@@ -2,12 +2,14 @@
 <!-- Things to update: Version, Date, Release Notes -->
 <AppUpdate xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/micahmo/WgServerforWindows/master/WireGuardServerForWindows/AppUpdate.xsd">
-  <Version>2.1.1.0</Version>
-  <ReleaseDate>2025-01-30</ReleaseDate>
+  <Version>2.1.2.0</Version>
+  <ReleaseDate>2025-02-20</ReleaseDate>
   <!-- Default download -->
-  <DownloadLink>https://github.com/micahmo/WgServerforWindows/releases/download/v2.1.1/WS4WSetup-2.1.1.exe</DownloadLink>
-  <DownloadFileName>WS4WSetup-2.1.1.exe</DownloadFileName>
+  <DownloadLink>https://github.com/micahmo/WgServerforWindows/releases/download/v2.1.2/WS4WSetup-2.1.2.exe</DownloadLink>
+  <DownloadFileName>WS4WSetup-2.1.2.exe</DownloadFileName>
   <!-- Release notes -->
-  <VersionNotes> - This is a quick update which fixes an IP address validation issue reported in #182</VersionNotes>
+  <VersionNotes> - Added the ability to customize the tunnel service name (#104)
+ - Delay the WS4W Set NetIPAddress task (#108)
+ - Show a warning if the user is running with a temporary profile (#122)</VersionNotes>
   <ReleaseNotes></ReleaseNotes>
 </AppUpdate>
