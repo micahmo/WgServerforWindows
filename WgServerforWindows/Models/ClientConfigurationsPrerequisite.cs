@@ -170,22 +170,25 @@ namespace WgServerforWindows.Models
                 // Update the tunnel service, if everyone is happy
                 if ((Fulfilled || !AnyClients) && serverConfigurationPrerequisite.Fulfilled && new TunnelServicePrerequisite().Fulfilled)
                 {
-                    string output = new WireGuardExe().ExecuteCommand(new SyncConfigurationCommand(ServerConfigurationPrerequisite.WireGuardServerInterfaceName, ServerConfigurationPrerequisite.ServerWGPath), out int exitCode);
-
-                    if (exitCode != 0)
+                    using (TemporaryFile temporaryFile = new(originalFilePath: ServerConfigurationPrerequisite.ServerWGPath, newFilePath: ServerConfigurationPrerequisite.ServerWGPathWithCustomTunnelName))
                     {
-                        // Notify the user that there was an error syncing the server conf.
-                        WaitCursor.SetOverrideCursor(null);
+                        string output = new WireGuardExe().ExecuteCommand(new SyncConfigurationCommand(GlobalAppSettings.Instance.TunnelServiceName, temporaryFile.NewFilePath), out int exitCode);
 
-                        new UnhandledErrorWindow
+                        if (exitCode != 0)
                         {
-                            DataContext = new UnhandledErrorWindowModel
+                            // Notify the user that there was an error syncing the server conf.
+                            WaitCursor.SetOverrideCursor(null);
+
+                            new UnhandledErrorWindow
                             {
-                                Title = Resources.Error,
-                                Text = $"{Resources.ServerSyncError}{Environment.NewLine}{Environment.NewLine}{output}",
-                                Exception = new Exception(output)
-                            }
-                        }.ShowDialog();
+                                DataContext = new UnhandledErrorWindowModel
+                                {
+                                    Title = Resources.Error,
+                                    Text = $"{Resources.ServerSyncError}{Environment.NewLine}{Environment.NewLine}{output}",
+                                    Exception = new Exception(output)
+                                }
+                            }.ShowDialog();
+                        }
                     }
                 }
 

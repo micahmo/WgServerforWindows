@@ -406,7 +406,7 @@ namespace WgServerforWindows.Models
                     WaitCursor.SetOverrideCursor(Cursors.Wait);
 
                     // Get the current status
-                    string status = new WireGuardExe().ExecuteCommand(new ShowCommand(ServerConfigurationPrerequisite.WireGuardServerInterfaceName));
+                    string status = new WireGuardExe().ExecuteCommand(new ShowCommand(GlobalAppSettings.Instance.TunnelServiceName));
 
                     bool foundClient = false;
                     foreach (string line in status.Split(Environment.NewLine))

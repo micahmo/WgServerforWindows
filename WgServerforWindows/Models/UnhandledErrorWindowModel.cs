@@ -6,6 +6,7 @@ using System.Windows;
 using System.Windows.Input;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
+using WgServerforWindows.Properties;
 
 namespace WgServerforWindows.Models
 {
@@ -32,7 +33,25 @@ namespace WgServerforWindows.Models
         }
         private Exception _exception;
 
-        public ICommand CopyErrorCommand => _copyErrorCommand ??= new RelayCommand(() =>
+        public string SecondaryButtonText
+        {
+            get => _secondaryButtonText;
+            set => Set(nameof(SecondaryButtonText), ref _secondaryButtonText, value);
+        }
+        private string _secondaryButtonText = Resources.CopyDetails;
+
+        public Action SecondaryButtonAction
+        {
+            get => _secondaryButtonAction ?? CopyExceptionToClipboard;
+            set => _secondaryButtonAction = value;
+
+        }
+        private Action _secondaryButtonAction;
+
+        public ICommand CopyErrorCommand => _copyErrorCommand ??= new RelayCommand(() => SecondaryButtonAction?.Invoke());
+        private RelayCommand _copyErrorCommand;
+
+        private void CopyExceptionToClipboard()
         {
             var exception = Exception;
             StringBuilder exceptionText = new StringBuilder();
@@ -56,7 +75,6 @@ namespace WgServerforWindows.Models
                 catch { }
                 Thread.Sleep(10);
             }
-        });
-        private RelayCommand _copyErrorCommand;
+        }
     }
 }

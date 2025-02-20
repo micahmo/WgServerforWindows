@@ -31,6 +31,8 @@ namespace WgServerforWindows.Models
             Tracker.Configure<GlobalAppSettings>()
                 .Property(a => a.BootTaskDelay)
                 .Property(a => a.CustomNetNatRange)
+                .Property(a => a.TunnelServiceName)
+                .Property(a => a.DoNotShowTemporaryProfileWarning)
                 .Track(this);
         }
 
@@ -63,6 +65,27 @@ namespace WgServerforWindows.Models
             set => Set(nameof(CustomNetNatRange), ref _customNetNatRange, value);
         }
         private string _customNetNatRange;
+
+        /// <summary>
+        /// Describes the name of the tunnel service used by WireGuard, defaults to wg_server
+        /// </summary>
+        public string TunnelServiceName
+        {
+            get => _tunnelServiceName;
+            set => Set(nameof(TunnelServiceName), ref _tunnelServiceName, value);
+        }
+        private string _tunnelServiceName = "wg_server";
+
+        /// <summary>
+        /// Set this to `true` if the user does NOT want to see the temporary profile warning.
+        /// The default is `false` meaning they CAN see the warning.
+        /// </summary>
+        public bool DoNotShowTemporaryProfileWarning
+        {
+            get => _doNotShowTemporaryProfileWarning;
+            set => Set(nameof(DoNotShowTemporaryProfileWarning), ref _doNotShowTemporaryProfileWarning, value);
+        }
+        private bool _doNotShowTemporaryProfileWarning;
 
         /// <summary>
         /// The public tracker instance located in Public\Documents. Can be used to track things other than the <see cref="Instance"/>.

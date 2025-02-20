@@ -7,6 +7,7 @@ using System.Windows.Input;
 using Bluegrams.Application;
 using Bluegrams.Application.WPF;
 using SharpConfig;
+using WgServerforWindows.Controls;
 using WgServerforWindows.Models;
 using SplashScreen = WgServerforWindows.Controls.SplashScreen;
 
@@ -33,7 +34,8 @@ namespace WgServerforWindows
             var openClientConfigDirectorySubCommand = new OpenClientConfigDirectorySubCommand();
             var changeClientConfigDirectorySubCommand = new ChangeClientConfigDirectorySubCommand();
             var clientConfigurationsPrerequisite = new ClientConfigurationsPrerequisite(openClientConfigDirectorySubCommand, changeClientConfigDirectorySubCommand);
-            var tunnelServicePrerequisite = new TunnelServicePrerequisite();
+            var tunnelServiceNameSubCommand = new TunnelServiceNameSubCommand();
+            var tunnelServicePrerequisite = new TunnelServicePrerequisite(tunnelServiceNameSubCommand);
             var privateNetworkTaskSubCommand = new PrivateNetworkTaskSubCommand();
             var privateNetworkPrerequisite = new PrivateNetworkPrerequisite(privateNetworkTaskSubCommand);
             var netIpAddressTaskSubCommand = new NewNetIpAddressTaskSubCommand();
@@ -54,6 +56,9 @@ namespace WgServerforWindows
             serverConfigurationPrerequisite.CanResolveFunc = clientConfigurationsPrerequisite.CanResolveFunc =
             serverConfigurationPrerequisite.CanConfigureFunc = clientConfigurationsPrerequisite.CanConfigureFunc = () => wireGuardExePrerequisite.Fulfilled;
             
+            // Can't rename the tunnel service if it's already installed
+            tunnelServiceNameSubCommand.CanConfigureFunc = () => tunnelServicePrerequisite.Fulfilled == false;
+
             // Can't install tunnel until WireGuard exe is installed and server is configured
             tunnelServicePrerequisite.CanResolveFunc = () =>
                 wireGuardExePrerequisite.Fulfilled && serverConfigurationPrerequisite.Fulfilled;
@@ -176,6 +181,27 @@ namespace WgServerforWindows
 
             // Check for updates
             _updateChecker = new MyUpdateChecker("https://raw.githubusercontent.com/micahmo/WgServerforWindows/master/WireGuardServerForWindows/VersionInfo2.xml", this);
+
+            // Check whether the user's profile contains the word "TEMP". If that's the case, they may be working with a temporary Windows profile.
+            // A temporary profile can be lost at any time, so we should warn the user accordingly.
+            string appDataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+            if (appDataPath.Contains("temp", StringComparison.OrdinalIgnoreCase))
+            {
+                UnhandledErrorWindow temporaryProfileWarningWindow = new UnhandledErrorWindow();
+                temporaryProfileWarningWindow.DataContext = new UnhandledErrorWindowModel
+                {
+                    Title = Properties.Resources.TemporaryProfileDetected,
+                    Text = Properties.Resources.TemporaryProfileDetectedText,
+                    SecondaryButtonText = Properties.Resources.DontShowAgain,
+                    SecondaryButtonAction = () =>
+                    {
+                        GlobalAppSettings.Instance.DoNotShowTemporaryProfileWarning = true;
+                        GlobalAppSettings.Instance.Save();
+                        temporaryProfileWarningWindow.Close();
+                    }
+                };
+                temporaryProfileWarningWindow.ShowDialog();
+            }
         }
 
         #region Private fields
