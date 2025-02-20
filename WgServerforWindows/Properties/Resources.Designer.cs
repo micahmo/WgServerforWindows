@@ -430,6 +430,15 @@ namespace WgServerforWindows.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Don&apos;t Show Again.
+        /// </summary>
+        public static string DontShowAgain {
+            get {
+                return ResourceManager.GetString("DontShowAgain", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Client must have a name.
         /// </summary>
         public static string EmptyClientNameError {
@@ -1349,6 +1358,24 @@ namespace WgServerforWindows.Properties {
         public static string SplashScreenText {
             get {
                 return ResourceManager.GetString("SplashScreenText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Temporary Profile Detected.
+        /// </summary>
+        public static string TemporaryProfileDetected {
+            get {
+                return ResourceManager.GetString("TemporaryProfileDetected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to WS4W has detected that you may be running with a temporary Windows profile (e.g., C:\Users\TEMP). This can happen if your normal profile is unavailable or corrupted. Any configurations saved in this session may be lost when the temporary profile is removed. To avoid losing your settings, consider switching to a permanent user profile before proceeding..
+        /// </summary>
+        public static string TemporaryProfileDetectedText {
+            get {
+                return ResourceManager.GetString("TemporaryProfileDetectedText", resourceCulture);
             }
         }
         

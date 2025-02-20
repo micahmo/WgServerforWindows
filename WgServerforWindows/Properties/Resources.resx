@@ -611,4 +611,13 @@ Note: It is preferable to use a domain name with DDNS to avoid dynamic WAN IPs.<
   <data name="CustomTunnelServiceNameSelectionText" xml:space="preserve">
     <value>Customize the name of the WireGuard tunnel service (default is wg_server). Only letters, numbers, and underscores are allowed.</value>
   </data>
+  <data name="TemporaryProfileDetected" xml:space="preserve">
+    <value>Temporary Profile Detected</value>
+  </data>
+  <data name="TemporaryProfileDetectedText" xml:space="preserve">
+    <value>WS4W has detected that you may be running with a temporary Windows profile (e.g., C:\Users\TEMP). This can happen if your normal profile is unavailable or corrupted. Any configurations saved in this session may be lost when the temporary profile is removed. To avoid losing your settings, consider switching to a permanent user profile before proceeding.</value>
+  </data>
+  <data name="DontShowAgain" xml:space="preserve">
+    <value>Don't Show Again</value>
+  </data>
 </root>
