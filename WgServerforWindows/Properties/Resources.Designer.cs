@@ -1018,6 +1018,15 @@ namespace WgServerforWindows.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Potential Port Conflict.
+        /// </summary>
+        public static string PotentialPortConflict {
+            get {
+                return ResourceManager.GetString("PotentialPortConflict", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Preshared Key.
         /// </summary>
         public static string PresharedKeyProperty {
@@ -1362,6 +1371,15 @@ namespace WgServerforWindows.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Another process is listening on TCP Port {0}. Since WireGuard uses UDP, there should not (but there may) be a conflict. Do you wish to proceed?.
+        /// </summary>
+        public static string TCPPortConflictMessage {
+            get {
+                return ResourceManager.GetString("TCPPortConflictMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Temporary Profile Detected.
         /// </summary>
         public static string TemporaryProfileDetected {
@@ -1412,6 +1430,15 @@ namespace WgServerforWindows.Properties {
         public static string TunnelServiceNotInstalled {
             get {
                 return ResourceManager.GetString("TunnelServiceNotInstalled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Another process is listening on UDP Port {0} which may conflict with WireGuard. If you continue, WS4W may fail to install the tunnel service. Do you wish to proceed?.
+        /// </summary>
+        public static string UDPPortConflictMessage {
+            get {
+                return ResourceManager.GetString("UDPPortConflictMessage", resourceCulture);
             }
         }
         

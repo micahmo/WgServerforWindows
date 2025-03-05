@@ -620,4 +620,13 @@ Note: It is preferable to use a domain name with DDNS to avoid dynamic WAN IPs.<
   <data name="DontShowAgain" xml:space="preserve">
     <value>Don't Show Again</value>
   </data>
+  <data name="PotentialPortConflict" xml:space="preserve">
+    <value>Potential Port Conflict</value>
+  </data>
+  <data name="UDPPortConflictMessage" xml:space="preserve">
+    <value>Another process is listening on UDP Port {0} which may conflict with WireGuard. If you continue, WS4W may fail to install the tunnel service. Do you wish to proceed?</value>
+  </data>
+  <data name="TCPPortConflictMessage" xml:space="preserve">
+    <value>Another process is listening on TCP Port {0}. Since WireGuard uses UDP, there should not (but there may) be a conflict. Do you wish to proceed?</value>
+  </data>
 </root>
