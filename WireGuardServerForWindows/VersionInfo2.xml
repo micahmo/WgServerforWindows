@@ -2,12 +2,12 @@
 <!-- Things to update: Version, Date, Release Notes -->
 <AppUpdate xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/micahmo/WgServerforWindows/master/WireGuardServerForWindows/AppUpdate.xsd">
-  <Version>2.1.3.0</Version>
-  <ReleaseDate>2025-03-05</ReleaseDate>
+  <Version>2.1.4.0</Version>
+  <ReleaseDate>2025-03-17</ReleaseDate>
   <!-- Default download -->
-  <DownloadLink>https://github.com/micahmo/WgServerforWindows/releases/download/v2.1.3/WS4WSetup-2.1.3.exe</DownloadLink>
-  <DownloadFileName>WS4WSetup-2.1.3.exe</DownloadFileName>
+  <DownloadLink>https://github.com/micahmo/WgServerforWindows/releases/download/v2.1.4/WS4WSetup-2.1.4.exe</DownloadLink>
+  <DownloadFileName>WS4WSetup-2.1.4.exe</DownloadFileName>
   <!-- Release notes -->
-  <VersionNotes> - Show warning if another process is listening on the configured WireGuard server port (#138 and #188)</VersionNotes>
+  <VersionNotes> - Fix issue where NAT boot task could fail (#139)</VersionNotes>
   <ReleaseNotes></ReleaseNotes>
 </AppUpdate>
