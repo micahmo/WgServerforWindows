@@ -2,12 +2,12 @@
 <!-- Things to update: Version, Date, Release Notes -->
 <AppUpdate xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/micahmo/WgServerforWindows/master/WireGuardServerForWindows/AppUpdate.xsd">
-  <Version>2.1.4.0</Version>
-  <ReleaseDate>2025-03-17</ReleaseDate>
+  <Version>2.1.5.0</Version>
+  <ReleaseDate>2026-03-02</ReleaseDate>
   <!-- Default download -->
-  <DownloadLink>https://github.com/micahmo/WgServerforWindows/releases/download/v2.1.4/WS4WSetup-2.1.4.exe</DownloadLink>
-  <DownloadFileName>WS4WSetup-2.1.4.exe</DownloadFileName>
+  <DownloadLink>https://github.com/micahmo/WgServerforWindows/releases/download/v2.1.5/WS4WSetup-2.1.5.exe</DownloadLink>
+  <DownloadFileName>WS4WSetup-2.1.5.exe</DownloadFileName>
   <!-- Release notes -->
-  <VersionNotes> - Fix issue where NAT boot task could fail (#139)</VersionNotes>
+  <VersionNotes> - Fix issues with NIC not getting IP when not usnig Internet Sharing (#20, #211)</VersionNotes>
   <ReleaseNotes></ReleaseNotes>
 </AppUpdate>
