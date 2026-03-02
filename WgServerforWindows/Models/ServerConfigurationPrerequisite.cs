@@ -124,8 +124,11 @@ namespace WgServerforWindows.Models
                 // Update the tunnel service, if everyone is happy
                 if (Fulfilled && (clientConfigurationsPrerequisite.Fulfilled || !ClientConfigurationsPrerequisite.AnyClients) && new TunnelServicePrerequisite().Fulfilled)
                 {
-                    using (TemporaryFile temporaryFile = new(ServerWGPath, ServerWGPathWithCustomTunnelName))
+                    using (TemporaryFile temporaryFile = new(ServerWGPath, ServerWGPathWithCustomTunnelName + ".tmp"))
                     {
+                        // remove config settings that arent's supported by wg
+                        WireGuardCommand.StripConfigFile(temporaryFile.NewFilePath);
+
                         // Sync conf to tunnel
                         string output = new WireGuardExe().ExecuteCommand(new SyncConfigurationCommand(GlobalAppSettings.Instance.TunnelServiceName, temporaryFile.NewFilePath), out int exitCode);
 
